@@ -1,0 +1,30 @@
+{% extends "@Energycalculator/baselayout.html.twig" %}
+
+{% import "@Energycalculator/_form.html.twig" as forms %}
+
+{% block container %}
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>{{ "comestible.title.create"|translate(locale) }}</h1>
+            <form action="{{ path_for('comestible_create', {'locale': locale}) }}" method="post" class="form-horizontal">
+                {{ forms.renderInputText(comestible, 'name', 'comestible.label.name', errorMessages, locale) }}
+                {{ forms.renderInputText(comestible, 'calorie', 'comestible.label.calorie', errorMessages, locale) }}
+                {{ forms.renderInputText(comestible, 'protein', 'comestible.label.protein', errorMessages, locale) }}
+                {{ forms.renderInputText(comestible, 'carbohydrate', 'comestible.label.carbohydrate', errorMessages, locale) }}
+                {{ forms.renderInputText(comestible, 'fat', 'comestible.label.fat', errorMessages, locale) }}
+                {{ forms.renderInputText(comestible, 'defaultValue', 'comestible.label.defaultValue', errorMessages, locale) }}
+                <input type="hidden" name="csrf" value="{{ csrf }}">
+                <div class="form-group">
+                    <div class="col-lg-offset-2 col-lg-10">
+                        <button type="submit" class="btn btn-success" name="save" value="save" title="{{ "comestible.label.save"|translate(locale) }}">
+                            <i class="glyphicon glyphicon-save"></i>
+                        </button>
+                        <a class="btn btn-default" href="{{ path_for('comestible_list', {'locale': locale}) }}" title="{{ "comestible.action.list"|translate(locale) }}">
+                            <i class="glyphicon glyphicon-list-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

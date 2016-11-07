@@ -1,0 +1,46 @@
+{% extends "@Energycalculator/baselayout.html.twig" %}
+
+{% block container %}
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>{{ "comestible.title.list"|translate(locale) }}</h1>
+            <div class="button-bar">
+                <a class="btn btn-default btn-sm" href="{{ path_for('comestible_create', {'locale': locale}) }}" title="{{ "comestible.action.create"|translate(locale) }}">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    {{ "comestible.action.create"|translate(locale) }}
+                </a>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>{{ "comestible.label.id"|translate(locale) }}</th>
+                        <th>{{ "comestible.label.name"|translate(locale) }}</th>
+                        <th>{{ "comestible.label.actions"|translate(locale) }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for comestible in comestibles %}
+                        <tr>
+                            <td>{{ comestible.id }}</td>
+                            <td>{{ comestible.name }}</td>
+                            <td>
+                                <a href="{{ path_for('comestible_edit', {'locale': locale, 'id': comestible.id}) }}" type="button" class="btn btn-default btn-sm" title="{{ "comestible.action.edit"|translate(locale) }}">
+                                    <i class="glyphicon glyphicon-pencil"></i>
+                                </a>
+                                <a href="{{ path_for('comestible_view', {'locale': locale, 'id': comestible.id}) }}" type="button" class="btn btn-default btn-sm" title="{{ "comestible.action.view"|translate(locale) }}">
+                                    <i class="glyphicon glyphicon-eye-open"></i>
+                                </a>
+                                <form action="{{ path_for('comestible_delete', {'locale': locale, 'id': comestible.id}) }}" method="post" class="inline-form">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                    <button type="submit" class="btn btn-danger btn-sm" title="{{ "comestible.action.delete"|translate(locale) }}">
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
