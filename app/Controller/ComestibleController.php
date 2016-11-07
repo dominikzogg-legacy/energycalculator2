@@ -102,7 +102,7 @@ final class ComestibleController
             throw HttpException::create($request, $response, 403, 'comestible.error.permissiondenied');
         }
 
-        $comestibles = $this->comestibleRepository->findBy(['user_id' => $authenticatedUser->getId()]);
+        $comestibles = $this->comestibleRepository->findBy(['userId' => $authenticatedUser->getId()]);
 
         return $this->twig->render($response, '@Energycalculator/comestible/list.html.twig',
             $this->templateData->aggregate($request, [

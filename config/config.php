@@ -28,7 +28,7 @@ return [
         'monolog.level' => 'notice',
         'security.authorization.rolehierarchy' => [
             'ADMIN' => ['USER'],
-            'USER' => ['COMESTIBLE_LIST', 'COMESTIBLE_VIEW', 'COMESTIBLE_CREATE', 'COMESTIBLE_EDIT'],
+            'USER' => ['COMESTIBLE_LIST', 'COMESTIBLE_VIEW', 'COMESTIBLE_CREATE', 'COMESTIBLE_EDIT', 'COMESTIBLE_DELETE'],
         ],
         'session.expirationTime' => 1200,
         'session.privateRsaKey' => '6t332+EAscTgRQstgHjUOYvTeTbhk7CaW9AptDT9Fhw=', // https://github.com/AndrewCarterUK/CryptoKey

@@ -64,6 +64,20 @@ $container->extend('security.authorization.authorizations', function (array $aut
     return $authorizations;
 });
 
+
+$container->extend('security.authorization.rolehierarchy', function (array $rolehierarchy) use ($container) {
+    $rolehierarchy['ADMIN'] = ['USER'];
+    $rolehierarchy['USER'] = [
+        'COMESTIBLE_LIST',
+        'COMESTIBLE_VIEW',
+        'COMESTIBLE_CREATE',
+        'COMESTIBLE_EDIT',
+        'COMESTIBLE_DELETE'
+    ];
+
+    return $rolehierarchy;
+});
+
 $container->extend('translator.providers', function (array $providers) use ($container) {
     $translationDir = $container['appDir'].'/Resources/translations';
     $providers[] = new LocaleTranslationProvider('de', require $translationDir.'/de.php');
@@ -225,6 +239,11 @@ $container[TemplateData::class] = function () use ($container) {
         $container['debug'],
         $container['session'],
         [
+            'comestible_create' => ['comestible_list'],
+            'comestible_delete' => ['comestible_list'],
+            'comestible_edit' => ['comestible_list'],
+            'comestible_list' => [],
+            'comestible_view' => ['comestible_list'],
             'user_create' => ['user_list'],
             'user_delete' => ['user_list'],
             'user_edit' => ['user_list'],

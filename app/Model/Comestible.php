@@ -7,6 +7,7 @@ use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
 use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
 use Ramsey\Uuid\Uuid;
+use Respect\Validation\Rules\FloatVal;
 use Respect\Validation\Validator as v;
 
 final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, ValidatableModelInterface
@@ -157,7 +158,7 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
      */
     public function getOwnedByUserId(): string
     {
-        return $this->getUser();
+        return $this->getUser()->getId();
     }
 
     /**
@@ -312,11 +313,11 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
      */
     public static function fromRow(array $data): ModelInterface
     {
-        $comestible = new self($data['id'], new \DateTime($data['created_at']));
+        $comestible = new self($data['id'], new \DateTime($data['createdAt']));
 
-        $comestible->updatedAt = null !== $data['updated_at'] ? new \DateTime($data['updated_at']) : null;
+        $comestible->updatedAt = null !== $data['updatedAt'] ? new \DateTime($data['updatedAt']) : null;
         $comestible->userResolver = $data['user_resolver'];
-        $comestible->userId = $data['user_id'];
+        $comestible->userId = $data['userId'];
         $comestible->name = $data['name'];
         $comestible->calorie = (float) $data['calorie'];
         $comestible->protein = (float) $data['protein'];
@@ -334,9 +335,9 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
     {
         return [
             'id' => $this->id,
-            'created_at' => $this->createdAt->format('Y-m-d H:i:s'),
-            'updated_at' => null !== $this->updatedAt ? $this->updatedAt->format('Y-m-d H:i:s') : null,
-            'user' => null !== $this->user ? $this->user->getId() : null,
+            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
+            'updatedAt' => null !== $this->updatedAt ? $this->updatedAt->format('Y-m-d H:i:s') : null,
+            'userId' => null !== $this->user ? $this->user->getId() : null,
             'name' => $this->name,
             'calorie' => $this->calorie,
             'protein' => $this->protein,
@@ -353,15 +354,15 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
     {
         return [
             'id' => $this->id,
-            'created_at' => $this->createdAt->format('Y-m-d H:i:s'),
-            'updated_at' => null !== $this->updatedAt ? $this->updatedAt->format('Y-m-d H:i:s') : null,
+            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
+            'updatedAt' => null !== $this->updatedAt ? $this->updatedAt->format('Y-m-d H:i:s') : null,
             'user' => null !== $this->user ? $this->user->jsonSerialize() : null,
             'name' => $this->name,
             'calorie' => $this->calorie,
             'protein' => $this->protein,
             'carbohydrate' => $this->carbohydrate,
             'fat' => $this->fat,
-            'default_value' => $this->defaultValue,
+            'defaultValue' => $this->defaultValue,
         ];
     }
 
@@ -370,7 +371,7 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
      */
     public function getModelValidator()
     {
-        return v::create()->addRule(new UniqueModelRule(['user_id', 'name']));
+        return v::create()->addRule(new UniqueModelRule(['userId', 'name']));
     }
 
     /**
@@ -381,11 +382,11 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
         return [
             'user' => v::notEmpty(),
             'name' => v::notBlank(),
-            'calorie' => v::notBlank()->floatVal(),
-            'protein' => v::notBlank()->floatVal(),
-            'carbohydrate' => v::notBlank()->floatVal(),
-            'fat' => v::notBlank()->floatVal(),
-            'defaultValue' => v::floatVal(),
+            'calorie' => v::floatVal(),
+            'protein' => v::floatVal(),
+            'carbohydrate' => v::floatVal(),
+            'fat' => v::floatVal(),
+            'defaultValue' => v::optional(new FloatVal()),
         ];
     }
 }
