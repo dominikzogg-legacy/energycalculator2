@@ -64,7 +64,6 @@ $container->extend('security.authorization.authorizations', function (array $aut
     return $authorizations;
 });
 
-
 $container->extend('security.authorization.rolehierarchy', function (array $rolehierarchy) use ($container) {
     $rolehierarchy['ADMIN'] = ['USER'];
     $rolehierarchy['USER'] = [
