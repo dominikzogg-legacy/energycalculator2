@@ -163,11 +163,11 @@ final class ComestibleController
             $comestible = $comestible
                 ->withUser($authenticatedUser)
                 ->withName($data['name'] ?? '')
-                ->withCalorie($data['calorie'] ?? 0.0)
-                ->withProtein($data['protein'] ?? 0.0)
-                ->withCarbohydrate($data['carbohydrate'] ?? 0.0)
-                ->withFat($data['fat'] ?? 0.0)
-                ->withDefaultValue($data['defaultValue'] ?? null)
+                ->withCalorie($data['calorie'] ?? 0)
+                ->withProtein($data['protein'] ?? 0)
+                ->withCarbohydrate($data['carbohydrate'] ?? 0)
+                ->withFat($data['fat'] ?? 0)
+                ->withDefaultValue($data['defaultValue'] ? (float) $data['defaultValue'] : null)
             ;
 
             if ([] === $errorMessages = $this->validator->validateModel($comestible)) {
@@ -224,13 +224,12 @@ final class ComestibleController
             $data = $request->getParsedBody();
 
             $comestible = $comestible
-                ->withUser($authenticatedUser)
                 ->withName($data['name'] ?? '')
-                ->withCalorie($data['calorie'] ?? 0.0)
-                ->withProtein($data['protein'] ?? 0.0)
-                ->withCarbohydrate($data['carbohydrate'] ?? 0.0)
-                ->withFat($data['fat'] ?? 0.0)
-                ->withDefaultValue($data['defaultValue'] ?? null)
+                ->withCalorie($data['calorie'] ?? 0)
+                ->withProtein($data['protein'] ?? 0)
+                ->withCarbohydrate($data['carbohydrate'] ?? 0)
+                ->withFat($data['fat'] ?? 0)
+                ->withDefaultValue($data['defaultValue'] ? (float) $data['defaultValue'] : null)
             ;
 
             if ([] === $errorMessages = $this->validator->validateModel($comestible)) {
