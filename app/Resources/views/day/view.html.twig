@@ -1,0 +1,25 @@
+{% extends "@Energycalculator/baselayout.html.twig" %}
+
+{% block container %}
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>{{ "day.title.view"|translate(locale) }}</h1>
+            <table class="table table-striped">
+                {% for property, value in day %}
+                    <tr>
+                        <td>{{ ("day.label."~property)|translate(locale) }}</td>
+                        <td>{% if value is iterable %}{% for subvalue in value %}{% if subvalue is not iterable %}{{ subvalue }}{% else %}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{{ value }}{% endif %}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <div class="form-group">
+                <a class="btn btn-default" href="{{ path_for('day_edit', {'locale': locale, 'id': day.id}) }}" title="{{ "day.action.edit"|translate(locale) }}">
+                    <i class="glyphicon glyphicon-pencil"></i>
+                </a>
+                <a class="btn btn-default" href="{{ path_for('day_list', {'locale': locale}) }}" title="{{ "day.action.list"|translate(locale) }}">
+                    <i class="glyphicon glyphicon-list-alt"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

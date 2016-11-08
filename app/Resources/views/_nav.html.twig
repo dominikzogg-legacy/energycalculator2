@@ -11,6 +11,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
+                <li{% if 'day_list' in trail %} class="active"{% endif %}><a href="{{ path_for('day_list', {'locale': locale}) }}">{{ "nav.days"|translate(locale) }}</a></li>
                 <li{% if 'comestible_list' in trail %} class="active"{% endif %}><a href="{{ path_for('comestible_list', {'locale': locale}) }}">{{ "nav.comestibles"|translate(locale) }}</a></li>
                 <li{% if 'user_list' in trail %} class="active"{% endif %}><a href="{{ path_for('user_list', {'locale': locale}) }}">{{ "nav.users"|translate(locale) }}</a></li>
             </ul>

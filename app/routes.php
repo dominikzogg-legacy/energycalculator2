@@ -4,6 +4,7 @@ use Slim\App;
 use Slim\Container;
 use Energycalculator\Controller\AuthController;
 use Energycalculator\Controller\ComestibleController;
+use Energycalculator\Controller\DayController;
 use Energycalculator\Controller\HomeController;
 use Energycalculator\Controller\UserController;
 
@@ -22,6 +23,14 @@ $app->group('/{locale:'.implode('|', $container['locales']).'}', function () use
         $app->map(['GET', 'POST'], '/{id}/edit', ComestibleController::class.':edit')->setName('comestible_edit');
         $app->get('/{id}/view', ComestibleController::class.':view')->setName('comestible_view');
         $app->post('/{id}/delete', ComestibleController::class.':delete')->setName('comestible_delete');
+    })->add($container['security.authentication.middleware']);
+
+    $app->group('/days', function () use ($app, $container) {
+        $app->get('', DayController::class.':listAll')->setName('day_list');
+        $app->map(['GET', 'POST'], '/create', DayController::class.':create')->setName('day_create');
+        $app->map(['GET', 'POST'], '/{id}/edit', DayController::class.':edit')->setName('day_edit');
+        $app->get('/{id}/view', DayController::class.':view')->setName('day_view');
+        $app->post('/{id}/delete', DayController::class.':delete')->setName('day_delete');
     })->add($container['security.authentication.middleware']);
 
     $app->group('/users', function () use ($app, $container) {
