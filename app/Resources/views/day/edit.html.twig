@@ -7,7 +7,7 @@
         <div class="col-xs-12">
             <h1>{{ "day.title.edit"|translate(locale) }}</h1>
             <form action="{{ path_for('day_edit', {'locale': locale, 'id': day.id}) }}" method="post" class="form-horizontal">
-                {{ forms.renderInputText(day, 'date', 'day.label.date', errorMessages, locale) }}
+                {{ forms.renderInputDate(day, 'date', 'day.label.date', errorMessages, locale) }}
                 {{ forms.renderInputText(day, 'weight', 'day.label.weight', errorMessages, locale) }}
                 <input type="hidden" name="csrf" value="{{ csrf }}">
                 <div class="form-group">

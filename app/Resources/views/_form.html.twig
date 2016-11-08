@@ -12,6 +12,20 @@
     </div>
 {% endmacro %}
 
+{% macro renderInputDate(model, property, propertyLabel, errorMessages, locale) %}
+    <div class="form-group{% if errorMessages[property] is defined %} has-error{% endif %}">
+        <label class="control-label col-lg-2" for="{{ property }}">{{ propertyLabel|translate(locale) }}</label>
+        <div class="col-lg-10">
+            <input type="text" id="{{ property }}" name="{{ property }}" value="{{ model[property] }}" data-provide="datepicker" data-date-format="yyyy-mm-dd" class="form-control">
+            {% if errorMessages[property] is defined %}
+                {% for message in errorMessages[property] %}
+                    <span class="help-block">{{ message|translate(locale) }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
 {% macro renderInputPassword(model, property, propertyLabel, errorMessages, locale) %}
     <div class="form-group{% if errorMessages[property] is defined %} has-error{% endif %}">
         <label class="control-label col-lg-2" for="{{ property }}">{{ propertyLabel|translate(locale) }}</label>
