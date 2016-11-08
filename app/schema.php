@@ -26,7 +26,7 @@ $comestibles->addColumn('calorie', 'decimal', ['precision' => 10, 'scale' => 4])
 $comestibles->addColumn('protein', 'decimal', ['precision' => 10, 'scale' => 4]);
 $comestibles->addColumn('carbohydrate', 'decimal', ['precision' => 10, 'scale' => 4]);
 $comestibles->addColumn('fat', 'decimal', ['precision' => 10, 'scale' => 4]);
-$comestibles->addColumn('default_value', 'decimal', ['precision' => 10, 'scale' => 4, 'notnull' => false]);
+$comestibles->addColumn('defaultValue', 'decimal', ['precision' => 10, 'scale' => 4, 'notnull' => false]);
 $comestibles->setPrimaryKey(['id']);
 $comestibles->addUniqueIndex(['userId', 'name']);
 $comestibles->addForeignKeyConstraint($users, ['userId'], ['id'], ['onDelete' => 'CASCADE']);

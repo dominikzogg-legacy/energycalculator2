@@ -33,7 +33,7 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
     private $userResolver;
 
     /**
-     * @var User|null
+     * @var User|\Closure|null
      */
     private $user;
 
@@ -144,10 +144,9 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
      */
     public function getUser()
     {
-        if (null !== $this->userResolver) {
-            $userResolver = $this->userResolver;
-            $this->userResolver = null;
-            $this->user = $userResolver($this->userId);
+        if ($this->user instanceof \Closure) {
+            $user = $this->user;
+            $this->user = $user();
         }
 
         return $this->user;
@@ -316,14 +315,14 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
         $comestible = new self($data['id'], new \DateTime($data['createdAt']));
 
         $comestible->updatedAt = null !== $data['updatedAt'] ? new \DateTime($data['updatedAt']) : null;
-        $comestible->userResolver = $data['user_resolver'];
+        $comestible->user = $data['userResolver'];
         $comestible->userId = $data['userId'];
         $comestible->name = $data['name'];
         $comestible->calorie = (float) $data['calorie'];
         $comestible->protein = (float) $data['protein'];
         $comestible->carbohydrate = (float) $data['carbohydrate'];
         $comestible->fat = (float) $data['fat'];
-        $comestible->defaultValue = null !== $data['default_value'] ? (float) $data['default_value'] : null;
+        $comestible->defaultValue = null !== $data['defaultValue'] ? (float) $data['defaultValue'] : null;
 
         return $comestible;
     }
@@ -337,13 +336,13 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
             'id' => $this->id,
             'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
             'updatedAt' => null !== $this->updatedAt ? $this->updatedAt->format('Y-m-d H:i:s') : null,
-            'userId' => null !== $this->user ? $this->user->getId() : null,
+            'userId' => null !== $this->user ? $this->user->getId() : null, // exception?
             'name' => $this->name,
             'calorie' => $this->calorie,
             'protein' => $this->protein,
             'carbohydrate' => $this->carbohydrate,
             'fat' => $this->fat,
-            'default_value' => $this->defaultValue,
+            'defaultValue' => $this->defaultValue,
         ];
     }
 
@@ -356,7 +355,7 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
             'id' => $this->id,
             'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
             'updatedAt' => null !== $this->updatedAt ? $this->updatedAt->format('Y-m-d H:i:s') : null,
-            'user' => null !== $this->user ? $this->user->jsonSerialize() : null,
+            'user' => null !== $this->user ? $this->user->jsonSerialize() : null, // exception?
             'name' => $this->name,
             'calorie' => $this->calorie,
             'protein' => $this->protein,
