@@ -1,4 +1,4 @@
-# dominikzogg/energycalculator
+# dominikzogg/energycalculator2
 
 ## Description
 
