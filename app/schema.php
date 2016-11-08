@@ -39,6 +39,7 @@ $day->addColumn('userId', 'string');
 $day->addColumn('date', 'date');
 $day->addColumn('weight', 'decimal', ['precision' => 7, 'scale' => 1]);
 $day->setPrimaryKey(['id']);
+$day->addUniqueIndex(['userId', 'date']);
 $day->addForeignKeyConstraint($users, ['userId'], ['id'], ['onDelete' => 'CASCADE']);
 
 $comestibleWithinDay = $schema->createTable('comestible_within_day');
