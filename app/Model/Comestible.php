@@ -63,7 +63,7 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
     private $fat = 0;
 
     /**
-     * @var float
+     * @var float|null
      */
     private $defaultValue;
 
@@ -126,7 +126,7 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
      */
     public function withUser(User $user): Comestible
     {
-        $comestible = $this->cloneWithModification(__METHOD__, $user, $this->user);
+        $comestible = $this->cloneWithModification(__METHOD__, $user->getId(), $this->userId);
         $comestible->user = $user;
         $comestible->userId = $user->getId();
 
