@@ -6,26 +6,18 @@ use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
 use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
+use Energycalculator\Model\Traits\CloneWithModificationTrait;
+use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
+use Energycalculator\Model\Traits\IdTrait;
 use Ramsey\Uuid\Uuid;
 use Respect\Validation\Rules\FloatVal;
 use Respect\Validation\Validator as v;
 
 final class Day implements \JsonSerializable, OwnedByUserModelInterface, ValidatableModelInterface
 {
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var \DateTime
-     */
-    private $createdAt;
-
-    /**
-     * @var \DateTime
-     */
-    private $updatedAt;
+    use CloneWithModificationTrait;
+    use CreatedAndUpdatedAtTrait;
+    use IdTrait;
 
     /**
      * @var User|\Closure|null
@@ -48,55 +40,13 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
     private $weight;
 
     /**
-     * @var array
-     */
-    private $__modifications = [];
-
-    /**
      * @param string|null    $id
      * @param \DateTime|null $createdAt
      */
     public function __construct(string $id = null, \DateTime $createdAt = null)
     {
         $this->id = $id ?? (string) Uuid::uuid4();
-        $this->createdAt = $createdAt ?? new \DateTime();
-    }
-
-    /**
-     * @return string
-     */
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt(): \DateTime
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @param \DateTime $updatedAt
-     *
-     * @return Day
-     */
-    public function withUpdatedAt(\DateTime $updatedAt): Day
-    {
-        $day = $this->cloneWithModification(__METHOD__, $updatedAt, $this->updatedAt);
-        $day->updatedAt = $updatedAt;
-
-        return $day;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUpdatedAt(): string
-    {
-        return $this->updatedAt;
+        $this->createdAt = ($createdAt ?? new \DateTime())->format('Y-m-d H:i:s');
     }
 
     /**
@@ -141,8 +91,9 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
      */
     public function withDate(\DateTime $date): Day
     {
-        $day = $this->cloneWithModification(__METHOD__, $date->format('Y-m-d'), $this->date);
-        $day->date = $date->format('Y-m-d');
+        $date = $date->format('Y-m-d');
+        $day = $this->cloneWithModification(__METHOD__, $date, $this->date);
+        $day->date = $date;
 
         return $day;
     }
@@ -177,25 +128,6 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
     }
 
     /**
-     * @param string $method
-     * @param mixed  $new
-     * @param mixed  $old
-     *
-     * @return Day
-     */
-    private function cloneWithModification(string $method, $new, $old): Day
-    {
-        $day = clone $this;
-        $day->__modifications[] = [
-            'method' => $method,
-            'new' => $new,
-            'old' => $old,
-        ];
-
-        return $day;
-    }
-
-    /**
      * @param array $data
      *
      * @return Day|ModelInterface
@@ -204,7 +136,7 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
     {
         $day = new self($data['id'], new \DateTime($data['createdAt']));
 
-        $day->updatedAt = null !== $data['updatedAt'] ? new \DateTime($data['updatedAt']) : null;
+        $day->updatedAt = $data['updatedAt'];
         $day->user = $data['user'];
         $day->userId = $data['userId'];
         $day->date = $data['date'];
@@ -220,8 +152,8 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
     {
         return [
             'id' => $this->id,
-            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
-            'updatedAt' => null !== $this->updatedAt ? $this->updatedAt->format('Y-m-d H:i:s') : null,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
             'userId' => $this->userId,
             'date' => $this->date,
             'weight' => $this->weight
@@ -235,9 +167,9 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
     {
         return [
             'id' => $this->id,
-            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
-            'updatedAt' => null !== $this->updatedAt ? $this->updatedAt->format('Y-m-d H:i:s') : null,
-            'user' => $this->getUser(),
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
+            'user' => null !== $this->userId ? $this->getUser()->jsonSerialize() : null,
             'date' => $this->date,
             'weight' => $this->weight,
         ];
@@ -258,7 +190,7 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
     {
         return [
             'user' => v::notEmpty(),
-            'date' => v::date('Y-m-d'),
+            'date' => v::date(),
             'weight' => v::optional(new FloatVal()),
         ];
     }

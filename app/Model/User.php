@@ -6,25 +6,17 @@ use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\UserPasswordInterface;
 use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
+use Energycalculator\Model\Traits\CloneWithModificationTrait;
+use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
+use Energycalculator\Model\Traits\IdTrait;
 use Ramsey\Uuid\Uuid;
 use Respect\Validation\Validator as v;
 
 final class User implements \JsonSerializable, UserPasswordInterface, ValidatableModelInterface
 {
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var \DateTime
-     */
-    private $createdAt;
-
-    /**
-     * @var \DateTime
-     */
-    private $updatedAt;
+    use CloneWithModificationTrait;
+    use CreatedAndUpdatedAtTrait;
+    use IdTrait;
 
     /**
      * @var string
@@ -47,55 +39,13 @@ final class User implements \JsonSerializable, UserPasswordInterface, Validatabl
     private $roles;
 
     /**
-     * @var array
-     */
-    private $__modifications = [];
-
-    /**
      * @param string|null    $id
      * @param \DateTime|null $createdAt
      */
     public function __construct(string $id = null, \DateTime $createdAt = null)
     {
         $this->id = $id ?? (string) Uuid::uuid4();
-        $this->createdAt = $createdAt ?? new \DateTime();
-    }
-
-    /**
-     * @return string
-     */
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt(): \DateTime
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @param \DateTime $updatedAt
-     *
-     * @return User
-     */
-    public function withUpdatedAt(\DateTime $updatedAt): User
-    {
-        $user = $this->cloneWithModification(__METHOD__, $updatedAt, $this->updatedAt);
-        $user->updatedAt = $updatedAt;
-
-        return $user;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUpdatedAt(): string
-    {
-        return $this->updatedAt;
+        $this->createdAt = ($createdAt ?? new \DateTime())->format('Y-m-d H:i:s');
     }
 
     /**
@@ -171,25 +121,6 @@ final class User implements \JsonSerializable, UserPasswordInterface, Validatabl
     }
 
     /**
-     * @param string $method
-     * @param mixed  $new
-     * @param mixed  $old
-     *
-     * @return User
-     */
-    private function cloneWithModification(string $method, $new, $old): User
-    {
-        $user = clone $this;
-        $user->__modifications[] = [
-            'method' => $method,
-            'new' => $new,
-            'old' => $old,
-        ];
-
-        return $user;
-    }
-
-    /**
      * @param array $data
      *
      * @return User|ModelInterface
@@ -198,7 +129,7 @@ final class User implements \JsonSerializable, UserPasswordInterface, Validatabl
     {
         $user = new self($data['id'], new \DateTime($data['createdAt']));
 
-        $user->updatedAt = null !== $data['updatedAt'] ? new \DateTime($data['updatedAt']) : null;
+        $user->updatedAt = $data['updatedAt'];
         $user->username = $data['username'];
         $user->email = $data['email'];
         $user->password = $data['password'];
@@ -214,8 +145,8 @@ final class User implements \JsonSerializable, UserPasswordInterface, Validatabl
     {
         return [
             'id' => $this->id,
-            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
-            'updatedAt' => null !== $this->updatedAt ? $this->updatedAt->format('Y-m-d H:i:s') : null,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
             'username' => $this->username,
             'email' => $this->email,
             'password' => $this->password,
@@ -230,8 +161,8 @@ final class User implements \JsonSerializable, UserPasswordInterface, Validatabl
     {
         return [
             'id' => $this->id,
-            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
-            'updatedAt' => null !== $this->updatedAt ? $this->updatedAt->format('Y-m-d H:i:s') : null,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
             'username' => $this->username,
             'email' => $this->email,
             'roles' => $this->roles,

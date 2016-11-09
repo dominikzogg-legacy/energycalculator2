@@ -6,26 +6,18 @@ use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
 use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
+use Energycalculator\Model\Traits\CloneWithModificationTrait;
+use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
+use Energycalculator\Model\Traits\IdTrait;
 use Ramsey\Uuid\Uuid;
 use Respect\Validation\Rules\FloatVal;
 use Respect\Validation\Validator as v;
 
 final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, ValidatableModelInterface
 {
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var \DateTime
-     */
-    private $createdAt;
-
-    /**
-     * @var \DateTime
-     */
-    private $updatedAt;
+    use CloneWithModificationTrait;
+    use CreatedAndUpdatedAtTrait;
+    use IdTrait;
 
     /**
      * @var User|\Closure|null
@@ -68,55 +60,13 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
     private $defaultValue;
 
     /**
-     * @var array
-     */
-    private $__modifications = [];
-
-    /**
      * @param string|null    $id
      * @param \DateTime|null $createdAt
      */
     public function __construct(string $id = null, \DateTime $createdAt = null)
     {
         $this->id = $id ?? (string) Uuid::uuid4();
-        $this->createdAt = $createdAt ?? new \DateTime();
-    }
-
-    /**
-     * @return string
-     */
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt(): \DateTime
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @param \DateTime $updatedAt
-     *
-     * @return Comestible
-     */
-    public function withUpdatedAt(\DateTime $updatedAt): Comestible
-    {
-        $comestible = $this->cloneWithModification(__METHOD__, $updatedAt, $this->updatedAt);
-        $comestible->updatedAt = $updatedAt;
-
-        return $comestible;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUpdatedAt(): string
-    {
-        return $this->updatedAt;
+        $this->createdAt = ($createdAt ?? new \DateTime())->format('Y-m-d H:i:s');
     }
 
     /**
@@ -281,25 +231,6 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
     }
 
     /**
-     * @param string $method
-     * @param mixed  $new
-     * @param mixed  $old
-     *
-     * @return Comestible
-     */
-    private function cloneWithModification(string $method, $new, $old): Comestible
-    {
-        $comestible = clone $this;
-        $comestible->__modifications[] = [
-            'method' => $method,
-            'new' => $new,
-            'old' => $old,
-        ];
-
-        return $comestible;
-    }
-
-    /**
      * @param array $data
      *
      * @return Comestible|ModelInterface
@@ -308,7 +239,7 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
     {
         $comestible = new self($data['id'], new \DateTime($data['createdAt']));
 
-        $comestible->updatedAt = null !== $data['updatedAt'] ? new \DateTime($data['updatedAt']) : null;
+        $comestible->updatedAt = $data['updatedAt'];
         $comestible->user = $data['user'];
         $comestible->userId = $data['userId'];
         $comestible->name = $data['name'];
@@ -328,8 +259,8 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
     {
         return [
             'id' => $this->id,
-            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
-            'updatedAt' => null !== $this->updatedAt ? $this->updatedAt->format('Y-m-d H:i:s') : null,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
             'userId' => $this->userId,
             'name' => $this->name,
             'calorie' => $this->calorie,
@@ -347,9 +278,9 @@ final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, 
     {
         return [
             'id' => $this->id,
-            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
-            'updatedAt' => null !== $this->updatedAt ? $this->updatedAt->format('Y-m-d H:i:s') : null,
-            'user' => $this->getUser(),
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
+            'user' => null !== $this->userId ? $this->getUser()->jsonSerialize(): null,
             'name' => $this->name,
             'calorie' => $this->calorie,
             'protein' => $this->protein,
