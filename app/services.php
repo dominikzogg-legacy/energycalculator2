@@ -68,17 +68,20 @@ $container->extend('security.authorization.authorizations', function (array $aut
 
 $container->extend('security.authorization.rolehierarchy', function (array $rolehierarchy) use ($container) {
     $rolehierarchy['ADMIN'] = ['USER'];
-    $rolehierarchy['USER'] = [
+    $rolehierarchy['USER'] = ['COMESTIBLE', 'DAY'];
+    $rolehierarchy['COMESTIBLE'] = [
         'COMESTIBLE_LIST',
         'COMESTIBLE_VIEW',
         'COMESTIBLE_CREATE',
         'COMESTIBLE_EDIT',
         'COMESTIBLE_DELETE',
+    ];
+    $rolehierarchy['DAY'] = [
         'DAY_LIST',
         'DAY_VIEW',
         'DAY_CREATE',
         'DAY_EDIT',
-        'DAY_DELETE'
+        'DAY_DELETE',
     ];
 
     return $rolehierarchy;
