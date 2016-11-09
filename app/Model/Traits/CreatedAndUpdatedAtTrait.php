@@ -15,6 +15,15 @@ trait CreatedAndUpdatedAtTrait
     private $updatedAt;
 
     /**
+     * @param \DateTime $createdAt
+     */
+    private function setCreatedAt(\DateTime $createdAt)
+    {
+        $createdAt = $createdAt->format('Y-m-d H:i:s');
+        $this->createdAt = $createdAt;
+    }
+
+    /**
      * @return \DateTime
      */
     public function getCreatedAt(): \DateTime

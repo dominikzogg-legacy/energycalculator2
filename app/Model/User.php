@@ -45,7 +45,7 @@ final class User implements \JsonSerializable, UserPasswordInterface, Validatabl
     public function __construct(string $id = null, \DateTime $createdAt = null)
     {
         $this->id = $id ?? (string) Uuid::uuid4();
-        $this->createdAt = ($createdAt ?? new \DateTime())->format('Y-m-d H:i:s');
+        $this->setCreatedAt($createdAt ?? new \DateTime());
     }
 
     /**
