@@ -7,14 +7,12 @@ use Chubbyphp\Model\Cache\ModelCacheInterface;
 use Chubbyphp\Model\ModelInterface;
 use Doctrine\DBAL\Connection;
 use Energycalculator\Model\Comestible;
+use Energycalculator\Repository\Traits\UserResolverTrait;
 use Psr\Log\LoggerInterface;
 
 final class ComestibleRepository extends AbstractDoctrineRepository
 {
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
+    use UserResolverTrait;
 
     /**
      * @param UserRepository $userRepository
@@ -47,13 +45,7 @@ final class ComestibleRepository extends AbstractDoctrineRepository
      */
     protected function fromRow(array $row): ModelInterface
     {
-        $row['user'] = function () use ($row) {
-            if (null === $row['userId']) {
-                return null;
-            }
-
-            return $this->userRepository->find($row['userId']);
-        };
+        $row['user'] = $this->getUserResolver($row['userId']);
 
         return parent::fromRow($row);
     }
