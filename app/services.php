@@ -73,7 +73,12 @@ $container->extend('security.authorization.rolehierarchy', function (array $role
         'COMESTIBLE_VIEW',
         'COMESTIBLE_CREATE',
         'COMESTIBLE_EDIT',
-        'COMESTIBLE_DELETE'
+        'COMESTIBLE_DELETE',
+        'DAY_LIST',
+        'DAY_VIEW',
+        'DAY_CREATE',
+        'DAY_EDIT',
+        'DAY_DELETE'
     ];
 
     return $rolehierarchy;
@@ -272,6 +277,11 @@ $container[TemplateData::class] = function () use ($container) {
             'comestible_edit' => ['comestible_list'],
             'comestible_list' => [],
             'comestible_view' => ['comestible_list'],
+            'day_create' => ['day_list'],
+            'day_delete' => ['day_list'],
+            'day_edit' => ['day_list'],
+            'day_list' => [],
+            'day_view' => ['day_list'],
             'user_create' => ['user_list'],
             'user_delete' => ['user_list'],
             'user_edit' => ['user_list'],
