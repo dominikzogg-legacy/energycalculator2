@@ -7,25 +7,35 @@ use Chubbyphp\Model\Cache\ModelCacheInterface;
 use Chubbyphp\Model\ModelInterface;
 use Doctrine\DBAL\Connection;
 use Energycalculator\Model\Comestible;
-use Energycalculator\Repository\Traits\UserResolverTrait;
 use Psr\Log\LoggerInterface;
 
 final class ComestibleRepository extends AbstractDoctrineRepository
 {
-    use UserResolverTrait;
+    /**
+     * @var Resolver
+     */
+    private $resolver;
 
     /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @param Resolver $resolver
      * @param UserRepository $userRepository
      * @param Connection $connection
      * @param ModelCacheInterface|null $cache
      * @param LoggerInterface|null $logger
      */
     public function __construct(
+        Resolver $resolver,
         UserRepository $userRepository,
         Connection $connection,
         ModelCacheInterface $cache = null,
         LoggerInterface $logger = null
     ) {
+        $this->resolver = $resolver;
         $this->userRepository = $userRepository;
 
         parent::__construct($connection, $cache, $logger);
@@ -45,7 +55,7 @@ final class ComestibleRepository extends AbstractDoctrineRepository
      */
     protected function fromRow(array $row): ModelInterface
     {
-        $row['user'] = $this->getUserResolver($row['userId']);
+        $row['user'] = $this->resolver->getOneResolver($this->userRepository, $row['userId']);
 
         return parent::fromRow($row);
     }

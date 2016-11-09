@@ -31,6 +31,7 @@ use Energycalculator\Middleware\LocaleMiddleware;
 use Energycalculator\Provider\TwigProvider;
 use Energycalculator\Repository\DayRepository;
 use Energycalculator\Repository\ComestibleRepository;
+use Energycalculator\Repository\Resolver;
 use Energycalculator\Repository\UserRepository;
 use Energycalculator\Service\RedirectForPath;
 use Energycalculator\Service\TemplateData;
@@ -207,6 +208,7 @@ $container[LocaleMiddleware::class] = function () use ($container) {
 // repositories
 $container[ComestibleRepository::class] = function () use ($container) {
     return new ComestibleRepository(
+        $container[Resolver::class],
         $container[UserRepository::class],
         $container['db'],
         new ModelCache(),
@@ -216,6 +218,7 @@ $container[ComestibleRepository::class] = function () use ($container) {
 
 $container[DayRepository::class] = function () use ($container) {
     return new DayRepository(
+        $container[Resolver::class],
         $container[UserRepository::class],
         $container['db'],
         new ModelCache(),
@@ -225,6 +228,10 @@ $container[DayRepository::class] = function () use ($container) {
 
 $container[UserRepository::class] = function () use ($container) {
     return new UserRepository($container['db'], new ModelCache(), $container['logger']);
+};
+
+$container[Resolver::class] = function () {
+    return new Resolver();
 };
 
 // services
