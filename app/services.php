@@ -31,6 +31,7 @@ use Energycalculator\Middleware\LocaleMiddleware;
 use Energycalculator\Provider\TwigProvider;
 use Energycalculator\Repository\DayRepository;
 use Energycalculator\Repository\ComestibleRepository;
+use Energycalculator\Repository\ComestibleWithinDayRepository;
 use Energycalculator\Repository\Resolver;
 use Energycalculator\Repository\UserRepository;
 use Energycalculator\Service\RedirectForPath;
@@ -210,6 +211,16 @@ $container[ComestibleRepository::class] = function () use ($container) {
     return new ComestibleRepository(
         $container[Resolver::class],
         $container[UserRepository::class],
+        $container['db'],
+        new ModelCache(),
+        $container['logger']
+    );
+};
+
+$container[ComestibleWithinDayRepository::class] = function () use ($container) {
+    return new ComestibleWithinDayRepository(
+        $container[Resolver::class],
+        $container[ComestibleRepository::class],
         $container['db'],
         new ModelCache(),
         $container['logger']
