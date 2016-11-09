@@ -46,11 +46,11 @@ $comestibleWithinDays = $schema->createTable('comestible_within_days');
 $comestibleWithinDays->addColumn('id', 'guid');
 $comestibleWithinDays->addColumn('createdAt', 'datetime');
 $comestibleWithinDays->addColumn('updatedAt', 'datetime', ['notnull' => false]);
-$comestibleWithinDays->addColumn('daysId', 'string');
+$comestibleWithinDays->addColumn('dayId', 'string');
 $comestibleWithinDays->addColumn('comestibleId', 'string');
 $comestibleWithinDays->addColumn('amount', 'decimal', ['precision' => 7, 'scale' => 1]);
 $comestibleWithinDays->setPrimaryKey(['id']);
-$comestibleWithinDays->addForeignKeyConstraint($days, ['daysId'], ['id'], ['onDelete' => 'CASCADE']);
+$comestibleWithinDays->addForeignKeyConstraint($days, ['dayId'], ['id'], ['onDelete' => 'CASCADE']);
 $comestibleWithinDays->addForeignKeyConstraint($comestibles, ['comestibleId'], ['id'], ['onDelete' => 'CASCADE']);
 
 return $schema;
