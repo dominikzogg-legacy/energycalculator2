@@ -9,6 +9,7 @@ use Chubbyphp\Validation\ValidatableModelInterface;
 use Energycalculator\Model\Traits\CloneWithModificationTrait;
 use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
+use Energycalculator\Model\Traits\OwnedByUserTrait;
 use Ramsey\Uuid\Uuid;
 use Respect\Validation\Rules\FloatVal;
 use Respect\Validation\Validator as v;
@@ -18,16 +19,7 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
     use CloneWithModificationTrait;
     use CreatedAndUpdatedAtTrait;
     use IdTrait;
-
-    /**
-     * @var User|\Closure|null
-     */
-    private $user;
-
-    /**
-     * @var string
-     */
-    private $userId;
+    use OwnedByUserTrait;
 
     /**
      * @var string
@@ -47,41 +39,6 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
     {
         $this->id = $id ?? (string) Uuid::uuid4();
         $this->createdAt = ($createdAt ?? new \DateTime())->format('Y-m-d H:i:s');
-    }
-
-    /**
-     * @param User $user
-     *
-     * @return Day
-     */
-    public function withUser(User $user): Day
-    {
-        $day = $this->cloneWithModification(__METHOD__, $user->getId(), $this->userId);
-        $day->user = $user;
-        $day->userId = $user->getId();
-
-        return $day;
-    }
-
-    /**
-     * @return User|null
-     */
-    public function getUser()
-    {
-        if ($this->user instanceof \Closure) {
-            $user = $this->user;
-            $this->user = $user();
-        }
-
-        return $this->user;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOwnedByUserId(): string
-    {
-        return $this->userId;
     }
 
     /**
