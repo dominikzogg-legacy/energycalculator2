@@ -98,7 +98,7 @@ final class DayController
     {
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
-        if (!$this->authorization->isGranted($authenticatedUser, 'COMESTIBLE_LIST')) {
+        if (!$this->authorization->isGranted($authenticatedUser, 'DAY_LIST')) {
             throw HttpException::create($request, $response, 403, 'day.error.permissiondenied');
         }
 
@@ -130,7 +130,7 @@ final class DayController
         }
 
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
-        if (!$this->authorization->isGranted($authenticatedUser, 'COMESTIBLE_VIEW', $day)) {
+        if (!$this->authorization->isGranted($authenticatedUser, 'DAY_VIEW', $day)) {
             throw HttpException::create($request, $response, 403, 'day.error.permissiondenied');
         }
 
@@ -151,7 +151,7 @@ final class DayController
     {
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
-        if (!$this->authorization->isGranted($authenticatedUser, 'COMESTIBLE_CREATE')) {
+        if (!$this->authorization->isGranted($authenticatedUser, 'DAY_CREATE')) {
             throw HttpException::create($request, $response, 403, 'day.error.permissiondenied');
         }
 
@@ -213,7 +213,7 @@ final class DayController
         }
 
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
-        if (!$this->authorization->isGranted($authenticatedUser, 'COMESTIBLE_EDIT', $day)) {
+        if (!$this->authorization->isGranted($authenticatedUser, 'DAY_EDIT', $day)) {
             throw HttpException::create($request, $response, 403, 'day.error.permissiondenied');
         }
 
@@ -273,7 +273,7 @@ final class DayController
         }
 
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
-        if (!$this->authorization->isGranted($authenticatedUser, 'COMESTIBLE_DELETE', $day)) {
+        if (!$this->authorization->isGranted($authenticatedUser, 'DAY_DELETE', $day)) {
             throw HttpException::create($request, $response, 403, 'day.error.permissiondenied');
         }
 
