@@ -57,7 +57,7 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
     {
         $row['comestible'] = $this->resolver->getOneResolver(
             $this->comestibleRepository,
-            ['comestibleId' => $row['comestibleId']]
+            ['id' => $row['comestibleId']]
         );
 
         return parent::fromRow($row);
