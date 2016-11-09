@@ -8,17 +8,25 @@ class Resolver
 {
     /**
      * @param RepositoryInterface $repository
-     * @param string|null $id
-     * @return \Closure|null
+     * @param array $criteria
+     * @return \Closure
      */
-    public function getOneResolver(RepositoryInterface $repository, string $id = null)
+    public function getManyResolver(RepositoryInterface $repository, array $criteria)
     {
-        if (null === $id) {
-            return null;
-        }
+        return function () use ($repository, $criteria) {
+            return $repository->findBy($criteria);
+        };
+    }
 
-        return function () use ($repository, $id) {
-            return $repository->find($id);
+    /**
+     * @param RepositoryInterface $repository
+     * @param array $criteria
+     * @return \Closure
+     */
+    public function getOneResolver(RepositoryInterface $repository, array $criteria)
+    {
+        return function () use ($repository, $criteria) {
+            return $repository->findOneBy($criteria);
         };
     }
 }
