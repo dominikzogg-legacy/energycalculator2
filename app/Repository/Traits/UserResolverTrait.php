@@ -13,15 +13,15 @@ trait UserResolverTrait
 
     /**
      * @param string|null $id
-     * @return \Closure
+     * @return \Closure|null
      */
-    private function getUserResolver(string $id = null): \Closure
+    private function getUserResolver(string $id = null)
     {
-        return function () use ($id) {
-            if (null === $id) {
-                return null;
-            }
+        if (null === $id) {
+            return null;
+        }
 
+        return function () use ($id) {
             return $this->userRepository->find($id);
         };
     }
