@@ -35,7 +35,7 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
     /**
      * @var ModelCollectionInterface
      */
-    private $comestibleWithinDays;
+    private $comestiblesWithinDay;
 
     /**
      * @param string|null    $id
@@ -104,7 +104,7 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
         $day->userId = $data['userId'];
         $day->date = $data['date'];
         $day->weight = $data['weight'];
-        $day->comestibleWithinDays = $data['comestibleWithinDays'];
+        $day->comestiblesWithinDay = $data['comestiblesWithinDay'];
 
         return $day;
     }
@@ -121,7 +121,7 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
             'userId' => $this->userId,
             'date' => $this->date,
             'weight' => $this->weight,
-            'comestibleWithinDays' => $this->comestibleWithinDays
+            'comestiblesWithinDay' => $this->comestiblesWithinDay
         ];
     }
 
@@ -137,7 +137,7 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
             'user' => null !== $this->userId ? $this->getUser()->jsonSerialize() : null,
             'date' => $this->date,
             'weight' => $this->weight,
-            'comestibleWithinDays' => $this->comestibleWithinDays->jsonSerialize()
+            'comestiblesWithinDay' => $this->comestiblesWithinDay->jsonSerialize()
         ];
     }
 

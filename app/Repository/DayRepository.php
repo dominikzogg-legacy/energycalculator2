@@ -64,7 +64,7 @@ final class DayRepository extends AbstractDoctrineRepository
     protected function fromRow(array $row): ModelInterface
     {
         $row['user'] = $this->resolver->getFindResolver($this->userRepository, $row['userId']);
-        $row['comestibleWithinDays'] = $this->resolver->getLazyPersistedModelCollection(
+        $row['comestiblesWithinDay'] = $this->resolver->getLazyPersistedModelCollection(
             $this->comestibleWithinDayRepository, ['dayId' => $row['id']]
         );
 

@@ -37,7 +37,6 @@ use Energycalculator\Repository\UserRepository;
 use Energycalculator\Service\RedirectForPath;
 use Energycalculator\Service\TemplateData;
 use Energycalculator\Service\TwigRender;
-use Energycalculator\Twig\InflectExtension;
 use Energycalculator\Twig\NumericExtension;
 use Energycalculator\Twig\RouterExtension;
 
@@ -106,7 +105,6 @@ $container->extend('twig.namespaces', function (array $namespaces) use ($contain
 });
 
 $container->extend('twig.extensions', function (array $extensions) use ($container) {
-    $extensions[] = new InflectExtension();
     $extensions[] = new NumericExtension();
     $extensions[] = new RouterExtension($container['router']);
     $extensions[] = new TranslationTwigExtension($container['translator']);

@@ -31,8 +31,7 @@
                                                             {% for subSubKey, subSubValue in subValue %}
                                                                 {% if subSubValue is not iterable %}
                                                                     <tr>
-                                                                        {% set propertyKey = singularize(property) %}
-                                                                        <td> {{ (propertyKey~".label."~subSubKey)|translate(locale) }}</td>
+                                                                        <td> {{ (property~".label."~subSubKey)|translate(locale) }}</td>
                                                                         <td>{{ subSubValue }}</td>
                                                                     </tr>
                                                                 {% endif %}
