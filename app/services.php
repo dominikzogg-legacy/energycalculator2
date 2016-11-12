@@ -37,6 +37,8 @@ use Energycalculator\Repository\UserRepository;
 use Energycalculator\Service\RedirectForPath;
 use Energycalculator\Service\TemplateData;
 use Energycalculator\Service\TwigRender;
+use Energycalculator\Twig\InflectExtension;
+use Energycalculator\Twig\NumericExtension;
 use Energycalculator\Twig\RouterExtension;
 
 /* @var Container $container */
@@ -104,6 +106,8 @@ $container->extend('twig.namespaces', function (array $namespaces) use ($contain
 });
 
 $container->extend('twig.extensions', function (array $extensions) use ($container) {
+    $extensions[] = new InflectExtension();
+    $extensions[] = new NumericExtension();
     $extensions[] = new RouterExtension($container['router']);
     $extensions[] = new TranslationTwigExtension($container['translator']);
     if ($container['debug']) {
@@ -230,6 +234,7 @@ $container[ComestibleWithinDayRepository::class] = function () use ($container) 
 $container[DayRepository::class] = function () use ($container) {
     return new DayRepository(
         $container[Resolver::class],
+        $container[ComestibleWithinDayRepository::class],
         $container[UserRepository::class],
         $container['db'],
         new ModelCache(),

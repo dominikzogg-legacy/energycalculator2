@@ -10,6 +10,7 @@ use Energycalculator\Model\Traits\CloneWithModificationTrait;
 use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
 use Energycalculator\Model\Traits\OwnedByUserTrait;
+use Energycalculator\Repository\Collection\ModelCollectionInterface;
 use Ramsey\Uuid\Uuid;
 use Respect\Validation\Rules\FloatVal;
 use Respect\Validation\Validator as v;
@@ -30,6 +31,11 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
      * @var float|null
      */
     private $weight;
+
+    /**
+     * @var ModelCollectionInterface
+     */
+    private $comestibleWithinDays;
 
     /**
      * @param string|null    $id
@@ -98,6 +104,7 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
         $day->userId = $data['userId'];
         $day->date = $data['date'];
         $day->weight = $data['weight'];
+        $day->comestibleWithinDays = $data['comestibleWithinDays'];
 
         return $day;
     }
@@ -113,7 +120,8 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
             'updatedAt' => $this->updatedAt,
             'userId' => $this->userId,
             'date' => $this->date,
-            'weight' => $this->weight
+            'weight' => $this->weight,
+            'comestibleWithinDays' => $this->comestibleWithinDays
         ];
     }
 
@@ -129,6 +137,7 @@ final class Day implements \JsonSerializable, OwnedByUserModelInterface, Validat
             'user' => null !== $this->userId ? $this->getUser()->jsonSerialize() : null,
             'date' => $this->date,
             'weight' => $this->weight,
+            'comestibleWithinDays' => $this->comestibleWithinDays->jsonSerialize()
         ];
     }
 
