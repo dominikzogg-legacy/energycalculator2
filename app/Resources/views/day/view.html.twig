@@ -10,45 +10,57 @@
                         <td>{{ ("day.label."~property)|translate(locale) }}</td>
                         <td>
                             {% if value is iterable %}
-                                <table class="table table-condensed table-bordered table-striped">
-                                    {% for subKey, subValue in value %}
-                                        <tr>
-                                            {% if not is_numeric(subKey) %}
-                                                <td>{{ (property~".label."~subKey)|translate(locale) }}</td>
-                                            {% endif %}
-                                            <td>
-                                                {% if subValue is not iterable %}
-                                                    {{ subValue }}
-                                                {% else %}
-                                                    {% set subSubKeysAreNumeric = false %}
-                                                    {% for subSubKey, subSubValue in subValue %}
-                                                        {% if is_numeric(subSubKey) %}
-                                                            {% set subSubKeysAreNumeric = true %}
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                    {% if not subSubKeysAreNumeric %}
-                                                        <table class="table table-condensed table-bordered table-striped">
-                                                            {% for subSubKey, subSubValue in subValue %}
-                                                                {% if subSubValue is not iterable %}
-                                                                    <tr>
-                                                                        <td> {{ (property~".label."~subSubKey)|translate(locale) }}</td>
-                                                                        <td>{{ subSubValue }}</td>
-                                                                    </tr>
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                        </table>
+                                {% set subValueIsIteratable = false %}
+                                {% for subKey, subValue in value %}
+                                    {% if subValue is iterable %}
+                                        {% set subValueIsIteratable = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if subValueIsIteratable %}
+                                    <table class="table table-condensed table-bordered table-striped">
+                                        {% for subKey, subValue in value %}
+                                            <tr>
+                                                {% if not is_numeric(subKey) %}
+                                                    <td>{{ (property~".label."~subKey)|translate(locale) }}</td>
+                                                {% endif %}
+                                                <td>
+                                                    {% if subValue is not iterable %}
+                                                        {{ subValue }}
                                                     {% else %}
+                                                        {% set subSubKeysAreNumeric = false %}
                                                         {% for subSubKey, subSubValue in subValue %}
-                                                            {% if subSubValue is not iterable %}
-                                                                {{ subSubValue }}<br>
+                                                            {% if is_numeric(subSubKey) %}
+                                                                {% set subSubKeysAreNumeric = true %}
                                                             {% endif %}
                                                         {% endfor %}
+                                                        {% if not subSubKeysAreNumeric %}
+                                                            <table class="table table-condensed table-bordered table-striped">
+                                                                {% for subSubKey, subSubValue in subValue %}
+                                                                    {% if subSubValue is not iterable %}
+                                                                        <tr>
+                                                                            <td> {{ (property~".label."~subSubKey)|translate(locale) }}</td>
+                                                                            <td>{{ subSubValue }}</td>
+                                                                        </tr>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </table>
+                                                        {% else %}
+                                                            {% for subSubKey, subSubValue in subValue %}
+                                                                {% if subSubValue is not iterable %}
+                                                                    {{ subSubValue }}<br>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endif %}
                                                     {% endif %}
-                                                {% endif %}
-                                            </td>
-                                        </tr>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                {% else %}
+                                    {% for subKey, subValue in value %}
+                                        {{ subValue }}<br>
                                     {% endfor %}
-                                </table>
+                                {% endif %}
                             {% else %}
                                 {{ value }}
                             {% endif %}
