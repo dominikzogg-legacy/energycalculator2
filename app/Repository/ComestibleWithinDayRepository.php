@@ -23,8 +23,14 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
     private $comestibleRepository;
 
     /**
+     * @var DayRepository
+     */
+    private $dayRepository;
+
+    /**
      * @param ResolverInterface $resolver
      * @param ComestibleRepository $comestibleRepository
+     * @param DayRepository $dayRepository
      * @param Connection $connection
      * @param ModelCacheInterface|null $cache
      * @param LoggerInterface|null $logger
@@ -32,12 +38,14 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
     public function __construct(
         ResolverInterface $resolver,
         ComestibleRepository $comestibleRepository,
+        DayRepository $dayRepository,
         Connection $connection,
         ModelCacheInterface $cache = null,
         LoggerInterface $logger = null
     ) {
         $this->resolver = $resolver;
         $this->comestibleRepository = $comestibleRepository;
+        $this->dayRepository = $dayRepository;
 
         parent::__construct($connection, $cache, $logger);
     }
@@ -57,6 +65,7 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
     protected function fromRow(array $row): ModelInterface
     {
         $row['comestible'] = $this->resolver->find($this->comestibleRepository, $row['comestibleId']);
+        $row['day'] = $this->resolver->find($this->dayRepository, $row['dayId']);
 
         return parent::fromRow($row);
     }
