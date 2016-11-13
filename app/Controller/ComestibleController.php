@@ -171,7 +171,7 @@ final class ComestibleController
             ;
 
             if ([] === $errorMessages = $this->validator->validateModel($comestible)) {
-                $this->comestibleRepository->insert($comestible);
+                $this->comestibleRepository->persist($comestible);
                 $this->session->addFlash(
                     $request,
                     new FlashMessage(FlashMessage::TYPE_SUCCESS, 'comestible.flash.create.success')
@@ -235,7 +235,7 @@ final class ComestibleController
             if ([] === $errorMessages = $this->validator->validateModel($comestible)) {
                 $comestible = $comestible->withUpdatedAt(new \DateTime());
 
-                $this->comestibleRepository->update($comestible);
+                $this->comestibleRepository->persist($comestible);
                 $this->session->addFlash(
                     $request,
                     new FlashMessage(FlashMessage::TYPE_SUCCESS, 'comestible.flash.edit.success')

@@ -119,7 +119,7 @@ final class UserController
             throw HttpException::create($request, $response, 403, 'user.error.permissiondenied');
         }
 
-        $users = $this->userRepository->findBy();
+        $users = $this->userRepository->findBy([]);
 
         return $this->twig->render($response, '@Energycalculator/user/list.html.twig',
             $this->templateData->aggregate($request, [
@@ -189,7 +189,7 @@ final class UserController
             }
 
             if ([] === $errorMessages = $this->validator->validateModel($user)) {
-                $this->userRepository->insert($user);
+                $this->userRepository->persist($user);
                 $this->session->addFlash(
                     $request,
                     new FlashMessage(FlashMessage::TYPE_SUCCESS, 'user.flash.create.success')
@@ -258,7 +258,7 @@ final class UserController
             if ([] === $errorMessages = $this->validator->validateModel($user)) {
                 $user = $user->withUpdatedAt(new \DateTime());
 
-                $this->userRepository->update($user);
+                $this->userRepository->persist($user);
                 $this->session->addFlash(
                     $request,
                     new FlashMessage(FlashMessage::TYPE_SUCCESS, 'user.flash.edit.success')

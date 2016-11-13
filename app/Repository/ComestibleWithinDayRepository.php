@@ -2,9 +2,10 @@
 
 namespace Energycalculator\Repository;
 
-use Chubbyphp\Model\AbstractDoctrineRepository;
 use Chubbyphp\Model\Cache\ModelCacheInterface;
+use Chubbyphp\Model\Doctrine\DBAL\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
+use Chubbyphp\Model\ResolverInterface;
 use Doctrine\DBAL\Connection;
 use Energycalculator\Model\ComestibleWithinDay;
 use Psr\Log\LoggerInterface;
@@ -12,7 +13,7 @@ use Psr\Log\LoggerInterface;
 final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
 {
     /**
-     * @var Resolver
+     * @var ResolverInterface
      */
     private $resolver;
 
@@ -22,14 +23,14 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
     private $comestibleRepository;
 
     /**
-     * @param Resolver $resolver
+     * @param ResolverInterface $resolver
      * @param ComestibleRepository $comestibleRepository
      * @param Connection $connection
      * @param ModelCacheInterface|null $cache
      * @param LoggerInterface|null $logger
      */
     public function __construct(
-        Resolver $resolver,
+        ResolverInterface $resolver,
         ComestibleRepository $comestibleRepository,
         Connection $connection,
         ModelCacheInterface $cache = null,
@@ -55,7 +56,7 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
      */
     protected function fromRow(array $row): ModelInterface
     {
-        $row['comestible'] = $this->resolver->getFindResolver($this->comestibleRepository, $row['comestibleId']);
+        $row['comestible'] = $this->resolver->findResolver($this->comestibleRepository, $row['comestibleId']);
 
         return parent::fromRow($row);
     }

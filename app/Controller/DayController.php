@@ -168,7 +168,7 @@ final class DayController
             ;
 
             if ([] === $errorMessages = $this->validator->validateModel($day)) {
-                $this->dayRepository->insert($day);
+                $this->dayRepository->persist($day);
                 $this->session->addFlash(
                     $request,
                     new FlashMessage(FlashMessage::TYPE_SUCCESS, 'day.flash.create.success')
@@ -227,8 +227,7 @@ final class DayController
 
             if ([] === $errorMessages = $this->validator->validateModel($day)) {
                 $day = $day->withUpdatedAt(new \DateTime());
-
-                $this->dayRepository->update($day);
+                $this->dayRepository->persist($day);
                 $this->session->addFlash(
                     $request,
                     new FlashMessage(FlashMessage::TYPE_SUCCESS, 'day.flash.edit.success')

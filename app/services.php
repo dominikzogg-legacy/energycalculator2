@@ -3,6 +3,7 @@
 use Chubbyphp\Csrf\CsrfProvider;
 use Chubbyphp\ErrorHandler\SimpleErrorHandlerProvider;
 use Chubbyphp\Model\Cache\ModelCache;
+use Chubbyphp\Model\Resolver;
 use Chubbyphp\Security\Authentication\AuthenticationProvider;
 use Chubbyphp\Security\Authentication\FormAuthentication;
 use Chubbyphp\Security\Authorization\AuthorizationProvider;
@@ -32,7 +33,6 @@ use Energycalculator\Provider\TwigProvider;
 use Energycalculator\Repository\DayRepository;
 use Energycalculator\Repository\ComestibleRepository;
 use Energycalculator\Repository\ComestibleWithinDayRepository;
-use Energycalculator\Repository\Resolver;
 use Energycalculator\Repository\UserRepository;
 use Energycalculator\Service\RedirectForPath;
 use Energycalculator\Service\TemplateData;

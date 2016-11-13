@@ -12,7 +12,7 @@ use Energycalculator\Model\Traits\IdTrait;
 use Ramsey\Uuid\Uuid;
 use Respect\Validation\Validator as v;
 
-final class User implements \JsonSerializable, UserPasswordInterface, ValidatableModelInterface
+final class User implements UserPasswordInterface, ValidatableModelInterface
 {
     use CloneWithModificationTrait;
     use CreatedAndUpdatedAtTrait;

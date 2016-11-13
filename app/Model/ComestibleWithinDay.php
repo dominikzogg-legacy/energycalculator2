@@ -11,7 +11,7 @@ use Energycalculator\Model\Traits\IdTrait;
 use Ramsey\Uuid\Uuid;
 use Respect\Validation\Validator as v;
 
-final class ComestibleWithinDay implements \JsonSerializable, ValidatableModelInterface
+final class ComestibleWithinDay implements ValidatableModelInterface
 {
     use CloneWithModificationTrait;
     use CreatedAndUpdatedAtTrait;

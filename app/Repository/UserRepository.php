@@ -2,7 +2,7 @@
 
 namespace Energycalculator\Repository;
 
-use Chubbyphp\Model\AbstractDoctrineRepository;
+use Chubbyphp\Model\Doctrine\DBAL\AbstractDoctrineRepository;
 use Energycalculator\Model\User;
 
 final class UserRepository extends AbstractDoctrineRepository

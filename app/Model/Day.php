@@ -2,6 +2,7 @@
 
 namespace Energycalculator\Model;
 
+use Chubbyphp\Model\Collection\ModelCollectionInterface;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
 use Chubbyphp\Validation\Rules\UniqueModelRule;
@@ -10,12 +11,11 @@ use Energycalculator\Model\Traits\CloneWithModificationTrait;
 use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
 use Energycalculator\Model\Traits\OwnedByUserTrait;
-use Energycalculator\Repository\Collection\ModelCollectionInterface;
 use Ramsey\Uuid\Uuid;
 use Respect\Validation\Rules\FloatVal;
 use Respect\Validation\Validator as v;
 
-final class Day implements \JsonSerializable, OwnedByUserModelInterface, ValidatableModelInterface
+final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
 {
     use CloneWithModificationTrait;
     use CreatedAndUpdatedAtTrait;

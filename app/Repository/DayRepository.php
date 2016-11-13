@@ -2,9 +2,10 @@
 
 namespace Energycalculator\Repository;
 
-use Chubbyphp\Model\AbstractDoctrineRepository;
 use Chubbyphp\Model\Cache\ModelCacheInterface;
+use Chubbyphp\Model\Doctrine\DBAL\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
+use Chubbyphp\Model\ResolverInterface;
 use Doctrine\DBAL\Connection;
 use Energycalculator\Model\Day;
 use Psr\Log\LoggerInterface;
@@ -12,7 +13,7 @@ use Psr\Log\LoggerInterface;
 final class DayRepository extends AbstractDoctrineRepository
 {
     /**
-     * @var Resolver
+     * @var ResolverInterface
      */
     private $resolver;
 
@@ -27,7 +28,7 @@ final class DayRepository extends AbstractDoctrineRepository
     private $userRepository;
 
     /**
-     * @param Resolver $resolver
+     * @param ResolverInterface $resolver
      * @param ComestibleWithinDayRepository $comestibleWithinDayRepository
      * @param UserRepository $userRepository
      * @param Connection $connection
@@ -35,7 +36,7 @@ final class DayRepository extends AbstractDoctrineRepository
      * @param LoggerInterface|null $logger
      */
     public function __construct(
-        Resolver $resolver,
+        ResolverInterface $resolver,
         ComestibleWithinDayRepository $comestibleWithinDayRepository,
         UserRepository $userRepository,
         Connection $connection,
@@ -63,8 +64,8 @@ final class DayRepository extends AbstractDoctrineRepository
      */
     protected function fromRow(array $row): ModelInterface
     {
-        $row['user'] = $this->resolver->getFindResolver($this->userRepository, $row['userId']);
-        $row['comestiblesWithinDay'] = $this->resolver->getLazyPersistedModelCollection(
+        $row['user'] = $this->resolver->findResolver($this->userRepository, $row['userId']);
+        $row['comestiblesWithinDay'] = $this->resolver->findByCollection(
             $this->comestibleWithinDayRepository, ['dayId' => $row['id']]
         );
 

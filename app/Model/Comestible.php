@@ -14,7 +14,7 @@ use Ramsey\Uuid\Uuid;
 use Respect\Validation\Rules\FloatVal;
 use Respect\Validation\Validator as v;
 
-final class Comestible implements \JsonSerializable, OwnedByUserModelInterface, ValidatableModelInterface
+final class Comestible implements OwnedByUserModelInterface, ValidatableModelInterface
 {
     use CloneWithModificationTrait;
     use CreatedAndUpdatedAtTrait;
