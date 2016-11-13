@@ -56,7 +56,7 @@ final class ComestibleRepository extends AbstractDoctrineRepository
      */
     protected function fromRow(array $row): ModelInterface
     {
-        $row['user'] = $this->resolver->findResolver($this->userRepository, $row['userId']);
+        $row['user'] = $this->resolver->find($this->userRepository, $row['userId']);
 
         return parent::fromRow($row);
     }

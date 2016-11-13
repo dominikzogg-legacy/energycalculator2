@@ -284,7 +284,7 @@ final class ComestibleController
             throw HttpException::create($request, $response, 403, 'comestible.error.permissiondenied');
         }
 
-        $this->comestibleRepository->delete($comestible);
+        $this->comestibleRepository->remove($comestible);
 
         return $this->redirectForPath->get(
             $response, 302, 'comestible_list', ['locale' => $request->getAttribute('locale')]

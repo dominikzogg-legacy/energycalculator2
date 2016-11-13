@@ -56,7 +56,7 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
      */
     protected function fromRow(array $row): ModelInterface
     {
-        $row['comestible'] = $this->resolver->findResolver($this->comestibleRepository, $row['comestibleId']);
+        $row['comestible'] = $this->resolver->find($this->comestibleRepository, $row['comestibleId']);
 
         return parent::fromRow($row);
     }

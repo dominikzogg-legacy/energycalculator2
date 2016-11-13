@@ -313,7 +313,7 @@ final class UserController
             throw HttpException::create($request, $response, 403, 'user.error.cantdeleteyourself');
         }
 
-        $this->userRepository->delete($user);
+        $this->userRepository->remove($user);
 
         return $this->redirectForPath->get($response, 302, 'user_list', ['locale' => $request->getAttribute('locale')]);
     }

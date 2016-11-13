@@ -3,11 +3,13 @@
 namespace Energycalculator\Controller;
 
 use Chubbyphp\ErrorHandler\HttpException;
-use Chubbyphp\Model\RepositoryInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Validation\ValidatorInterface;
+use Energycalculator\Model\ComestibleWithinDay;
 use Energycalculator\Model\Day;
+use Energycalculator\Repository\ComestibleRepository;
+use Energycalculator\Repository\DayRepository;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Chubbyphp\Session\FlashMessage;
@@ -29,7 +31,12 @@ final class DayController
     private $authorization;
 
     /**
-     * @var RepositoryInterface
+     * @var ComestibleRepository
+     */
+    private $comestibleRepository;
+
+    /**
+     * @var DayRepository
      */
     private $dayRepository;
 
@@ -61,7 +68,8 @@ final class DayController
     /**
      * @param AuthenticationInterface $authentication
      * @param AuthorizationInterface $authorization
-     * @param RepositoryInterface $dayRepository
+     * @param ComestibleRepository $comestibleRepository
+     * @param DayRepository $dayRepository
      * @param RedirectForPath $redirectForPath
      * @param SessionInterface $session
      * @param TemplateData $templateData
@@ -71,7 +79,8 @@ final class DayController
     public function __construct(
         AuthenticationInterface $authentication,
         AuthorizationInterface $authorization,
-        RepositoryInterface $dayRepository,
+        ComestibleRepository $comestibleRepository,
+        DayRepository $dayRepository,
         RedirectForPath $redirectForPath,
         SessionInterface $session,
         TemplateData $templateData,
@@ -80,6 +89,7 @@ final class DayController
     ) {
         $this->authentication = $authentication;
         $this->authorization = $authorization;
+        $this->comestibleRepository = $comestibleRepository;
         $this->dayRepository = $dayRepository;
         $this->redirectForPath = $redirectForPath;
         $this->session = $session;
@@ -102,7 +112,7 @@ final class DayController
             throw HttpException::create($request, $response, 403, 'day.error.permissiondenied');
         }
 
-        $days = $this->dayRepository->findBy(['userId' => $authenticatedUser->getId()]);
+        $days = $this->dayRepository->findBy(['userId' => $authenticatedUser->getId()], ['date' => 'DESC']);
 
         return $this->twig->render($response, '@Energycalculator/day/list.html.twig',
             $this->templateData->aggregate($request, [
@@ -166,6 +176,10 @@ final class DayController
                 ->withDate(new \DateTime($data['date'] ?? 'now'))
                 ->withWeight($data['weight'] ? (float) $data['weight'] : null)
             ;
+
+            foreach ($this->comestibleRepository->findBy(['userId' => $authenticatedUser->getId()], ['name' => 'ASC']) as $comestible) {
+                $day->addComestibleWithinDay((new ComestibleWithinDay())->withAmount(5)->withComestible($comestible));
+            }
 
             if ([] === $errorMessages = $this->validator->validateModel($day)) {
                 $this->dayRepository->persist($day);
@@ -276,7 +290,7 @@ final class DayController
             throw HttpException::create($request, $response, 403, 'day.error.permissiondenied');
         }
 
-        $this->dayRepository->delete($day);
+        $this->dayRepository->remove($day);
 
         return $this->redirectForPath->get(
             $response, 302, 'day_list', ['locale' => $request->getAttribute('locale')]

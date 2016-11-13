@@ -3,6 +3,7 @@
 namespace Energycalculator\Repository;
 
 use Chubbyphp\Model\Cache\ModelCacheInterface;
+use Chubbyphp\Model\Collection\ModelCollectionInterface;
 use Chubbyphp\Model\Doctrine\DBAL\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\ResolverInterface;
@@ -64,12 +65,50 @@ final class DayRepository extends AbstractDoctrineRepository
      */
     protected function fromRow(array $row): ModelInterface
     {
-        $row['user'] = $this->resolver->findResolver($this->userRepository, $row['userId']);
-        $row['comestiblesWithinDay'] = $this->resolver->findByCollection(
-            $this->comestibleWithinDayRepository, ['dayId' => $row['id']]
+        $row['user'] = $this->resolver->find($this->userRepository, $row['userId']);
+        $row['comestiblesWithinDay'] = $this->resolver->findBy(
+            $this->comestibleWithinDayRepository, ['dayId' => $row['id']], ['createdAt' => 'ASC']
         );
 
         return parent::fromRow($row);
+    }
+
+    /**
+     * @param ModelInterface $model
+     */
+    public function persist(ModelInterface $model)
+    {
+        parent::persist($model);
+
+        $row = $model->toRow();
+
+        /** @var ModelCollectionInterface $comestiblesWithinDay */
+        $comestiblesWithinDay = $row['comestiblesWithinDay'];
+
+        foreach ($comestiblesWithinDay->toPersist() as $comestibleWithinDay) {
+            $this->comestibleWithinDayRepository->persist($comestibleWithinDay);
+        }
+
+        foreach ($comestiblesWithinDay->toRemove() as $comestibleWithinDay) {
+            $this->comestibleWithinDayRepository->remove($comestibleWithinDay);
+        }
+    }
+
+    /**
+     * @param ModelInterface $model
+     */
+    public function remove(ModelInterface $model)
+    {
+        $row = $model->toRow();
+
+        /** @var ModelCollectionInterface $comestiblesWithinDay */
+        $comestiblesWithinDay = $row['comestiblesWithinDay'];
+
+        foreach ($comestiblesWithinDay as $comestibleWithinDay) {
+            $this->comestibleWithinDayRepository->remove($comestibleWithinDay);
+        }
+
+        parent::remove($model);
     }
 
     /**

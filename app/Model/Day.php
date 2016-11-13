@@ -2,6 +2,7 @@
 
 namespace Energycalculator\Model;
 
+use Chubbyphp\Model\Collection\ModelCollection;
 use Chubbyphp\Model\Collection\ModelCollectionInterface;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
@@ -38,13 +39,14 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
     private $comestiblesWithinDay;
 
     /**
-     * @param string|null    $id
+     * @param string|null $id
      * @param \DateTime|null $createdAt
      */
     public function __construct(string $id = null, \DateTime $createdAt = null)
     {
-        $this->id = $id ?? (string) Uuid::uuid4();
+        $this->id = $id ?? (string)Uuid::uuid4();
         $this->setCreatedAt($createdAt ?? new \DateTime());
+        $this->comestiblesWithinDay = new ModelCollection();
     }
 
     /**
@@ -88,6 +90,58 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
     public function getWeight(): float
     {
         return $this->weight;
+    }
+
+    /**
+     * @param ComestibleWithinDay $comestibleWithinDay
+     * @return Day
+     */
+    public function addComestibleWithinDay(ComestibleWithinDay $comestibleWithinDay): Day
+    {
+        $this->comestiblesWithinDay->add($comestibleWithinDay);
+
+        return $this;
+    }
+
+    /**
+     * @param ComestibleWithinDay $comestibleWithinDay
+     * @return Day
+     */
+    public function removeComestibleWithinDay(ComestibleWithinDay $comestibleWithinDay): Day
+    {
+        $this->comestiblesWithinDay->remove($comestibleWithinDay);
+
+        return $this;
+    }
+
+    /**
+     * @param array $comestiblesWithinDay
+     * @return Day
+     */
+    public function setComestiblesWithinDay(array $comestiblesWithinDay): Day
+    {
+        foreach ($this->comestiblesWithinDay as $comestibleWithinDay) {
+            $this->removeComestibleWithinDay($comestibleWithinDay);
+        }
+
+        foreach ($comestiblesWithinDay as $comestibleWithinDay) {
+            $this->addComestibleWithinDay($comestibleWithinDay);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return ComestibleWithinDay[]|array
+     */
+    public function getComestiblesWithinDay(): array
+    {
+        $comestiblesWithinDay = [];
+        foreach ($this->comestiblesWithinDay as $comestibleWithinDay) {
+            $comestiblesWithinDay[] = $comestibleWithinDay;
+        }
+
+        return $comestiblesWithinDay;
     }
 
     /**
