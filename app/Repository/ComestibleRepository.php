@@ -56,7 +56,9 @@ final class ComestibleRepository extends AbstractDoctrineRepository
      */
     public function create(): Comestible
     {
-        return new Comestible((string) Uuid::uuid4(), new \DateTime());
+        $modelClass = $this->getModelClass();
+
+        return new $modelClass((string) Uuid::uuid4(), new \DateTime());
     }
 
     /**

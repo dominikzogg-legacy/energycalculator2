@@ -58,7 +58,9 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
      */
     public function create(string $dayId): ComestibleWithinDay
     {
-        return new ComestibleWithinDay((string) Uuid::uuid4(), new \DateTime(), $dayId);
+        $modelClass = $this->getModelClass();
+
+        return new $modelClass((string) Uuid::uuid4(), new \DateTime(), $dayId);
     }
 
     /**

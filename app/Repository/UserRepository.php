@@ -21,7 +21,9 @@ final class UserRepository extends AbstractDoctrineRepository
      */
     public function create(): User
     {
-        return new User((string) Uuid::uuid4(), new \DateTime());
+        $modelClass = $this->getModelClass();
+
+        return new $modelClass((string) Uuid::uuid4(), new \DateTime());
     }
 
     /**
