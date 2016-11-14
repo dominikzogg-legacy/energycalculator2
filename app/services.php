@@ -176,6 +176,7 @@ $container[DayController::class] = function () use ($container) {
         $container['security.authentication'],
         $container['security.authorization'],
         $container[ComestibleRepository::class],
+        $container[ComestibleWithinDayRepository::class],
         $container[DayRepository::class],
         $container[RedirectForPath::class],
         $container['session'],

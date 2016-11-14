@@ -10,6 +10,7 @@ use Chubbyphp\Security\Authentication\PasswordManagerInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Security\Authorization\RoleHierarchyResolverInterface;
 use Chubbyphp\Validation\ValidatorInterface;
+use Energycalculator\Repository\UserRepository;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Energycalculator\Model\User;
@@ -62,7 +63,7 @@ final class UserController
     private $twig;
 
     /**
-     * @var RepositoryInterface
+     * @var UserRepository
      */
     private $userRepository;
 
@@ -80,7 +81,7 @@ final class UserController
      * @param SessionInterface               $session
      * @param TemplateData                   $templateData
      * @param TwigRender                     $twig
-     * @param RepositoryInterface            $userRepository
+     * @param UserRepository            $userRepository
      * @param ValidatorInterface             $validator
      */
     public function __construct(
@@ -92,7 +93,7 @@ final class UserController
         SessionInterface $session,
         TemplateData $templateData,
         TwigRender $twig,
-        RepositoryInterface $userRepository,
+        UserRepository $userRepository,
         ValidatorInterface $validator
     ) {
         $this->authentication = $authentication;
@@ -172,7 +173,7 @@ final class UserController
 
         $possibleRoles = $this->roleHierarchyResolver->resolve(['ADMIN']);
 
-        $user = new User();
+        $user = $this->userRepository->create();
 
         if ('POST' === $request->getMethod()) {
             $data = $request->getParsedBody();

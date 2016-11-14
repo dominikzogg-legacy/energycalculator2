@@ -3,13 +3,15 @@
 namespace Energycalculator\Repository;
 
 use Chubbyphp\Model\Cache\ModelCacheInterface;
-use Chubbyphp\Model\Collection\ModelCollectionInterface;
+use Chubbyphp\Model\Collection\LazyModelCollection;
+use Chubbyphp\Model\Collection\ModelCollection;
 use Chubbyphp\Model\Doctrine\DBAL\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\ResolverInterface;
 use Doctrine\DBAL\Connection;
 use Energycalculator\Model\Day;
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 
 final class DayRepository extends AbstractDoctrineRepository
 {
@@ -60,55 +62,32 @@ final class DayRepository extends AbstractDoctrineRepository
     }
 
     /**
+     * @return Day
+     */
+    public function create(): Day
+    {
+        return new Day(
+            (string) Uuid::uuid4(),
+            new \DateTime(),
+            new \DateTime(),
+            new ModelCollection($this->comestibleWithinDayRepository)
+        );
+    }
+
+    /**
      * @param array $row
      * @return ModelInterface
      */
     protected function fromRow(array $row): ModelInterface
     {
         $row['user'] = $this->resolver->find($this->userRepository, $row['userId']);
-        $row['comestiblesWithinDay'] = $this->resolver->findBy(
-            $this->comestibleWithinDayRepository, ['dayId' => $row['id']], ['createdAt' => 'ASC']
-        );
+        $row['comestiblesWithinDay'] = new LazyModelCollection(
+            $this->comestibleWithinDayRepository,
+            ['dayId' => $row['id']],
+            ['createdAt' => 'ASC'])
+        ;
 
         return parent::fromRow($row);
-    }
-
-    /**
-     * @param ModelInterface $model
-     */
-    public function persist(ModelInterface $model)
-    {
-        parent::persist($model);
-
-        $row = $model->toRow();
-
-        /** @var ModelCollectionInterface $comestiblesWithinDay */
-        $comestiblesWithinDay = $row['comestiblesWithinDay'];
-
-        foreach ($comestiblesWithinDay->toPersist() as $comestibleWithinDay) {
-            $this->comestibleWithinDayRepository->persist($comestibleWithinDay);
-        }
-
-        foreach ($comestiblesWithinDay->toRemove() as $comestibleWithinDay) {
-            $this->comestibleWithinDayRepository->remove($comestibleWithinDay);
-        }
-    }
-
-    /**
-     * @param ModelInterface $model
-     */
-    public function remove(ModelInterface $model)
-    {
-        $row = $model->toRow();
-
-        /** @var ModelCollectionInterface $comestiblesWithinDay */
-        $comestiblesWithinDay = $row['comestiblesWithinDay'];
-
-        foreach ($comestiblesWithinDay as $comestibleWithinDay) {
-            $this->comestibleWithinDayRepository->remove($comestibleWithinDay);
-        }
-
-        parent::remove($model);
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace Energycalculator\Model;
 
-use Chubbyphp\Model\Collection\ModelCollection;
 use Chubbyphp\Model\Collection\ModelCollectionInterface;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
@@ -12,7 +11,6 @@ use Energycalculator\Model\Traits\CloneWithModificationTrait;
 use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
 use Energycalculator\Model\Traits\OwnedByUserTrait;
-use Ramsey\Uuid\Uuid;
 use Respect\Validation\Rules\FloatVal;
 use Respect\Validation\Validator as v;
 
@@ -39,14 +37,20 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
     private $comestiblesWithinDay;
 
     /**
-     * @param string|null $id
-     * @param \DateTime|null $createdAt
+     * @param string $id
+     * @param \DateTime $createdAt
+     * @param ModelCollectionInterface $comestiblesWithinDay
      */
-    public function __construct(string $id = null, \DateTime $createdAt = null)
-    {
-        $this->id = $id ?? (string)Uuid::uuid4();
-        $this->setCreatedAt($createdAt ?? new \DateTime());
-        $this->comestiblesWithinDay = new ModelCollection();
+    public function __construct(
+        string $id,
+        \DateTime $createdAt,
+        \DateTime $date,
+        ModelCollectionInterface $comestiblesWithinDay
+    ) {
+        $this->id = $id;
+        $this->setCreatedAt($createdAt);
+        $this->date = $date->format('Y-m-d');
+        $this->comestiblesWithinDay = $comestiblesWithinDay;
     }
 
     /**
@@ -93,40 +97,12 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
     }
 
     /**
-     * @param ComestibleWithinDay $comestibleWithinDay
-     * @return Day
-     */
-    public function addComestibleWithinDay(ComestibleWithinDay $comestibleWithinDay): Day
-    {
-        $this->comestiblesWithinDay->add($comestibleWithinDay);
-
-        return $this;
-    }
-
-    /**
-     * @param ComestibleWithinDay $comestibleWithinDay
-     * @return Day
-     */
-    public function removeComestibleWithinDay(ComestibleWithinDay $comestibleWithinDay): Day
-    {
-        $this->comestiblesWithinDay->remove($comestibleWithinDay);
-
-        return $this;
-    }
-
-    /**
      * @param array $comestiblesWithinDay
      * @return Day
      */
     public function setComestiblesWithinDay(array $comestiblesWithinDay): Day
     {
-        foreach ($this->comestiblesWithinDay as $comestibleWithinDay) {
-            $this->removeComestibleWithinDay($comestibleWithinDay);
-        }
-
-        foreach ($comestiblesWithinDay as $comestibleWithinDay) {
-            $this->addComestibleWithinDay($comestibleWithinDay);
-        }
+        $this->comestiblesWithinDay->set($comestiblesWithinDay);
 
         return $this;
     }
@@ -151,14 +127,17 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
      */
     public static function fromRow(array $data): ModelInterface
     {
-        $day = new self($data['id'], new \DateTime($data['createdAt']));
+        $day = new self(
+            $data['id'],
+            new \DateTime($data['createdAt']),
+            new \DateTime($data['date']),
+            $data['comestiblesWithinDay']
+        );
 
         $day->updatedAt = $data['updatedAt'];
         $day->user = $data['user'];
         $day->userId = $data['userId'];
-        $day->date = $data['date'];
         $day->weight = $data['weight'];
-        $day->comestiblesWithinDay = $data['comestiblesWithinDay'];
 
         return $day;
     }

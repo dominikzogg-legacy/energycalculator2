@@ -9,6 +9,7 @@ use Chubbyphp\Validation\ValidatorInterface;
 use Energycalculator\Model\ComestibleWithinDay;
 use Energycalculator\Model\Day;
 use Energycalculator\Repository\ComestibleRepository;
+use Energycalculator\Repository\ComestibleWithinDayRepository;
 use Energycalculator\Repository\DayRepository;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -34,6 +35,11 @@ final class DayController
      * @var ComestibleRepository
      */
     private $comestibleRepository;
+
+    /**
+     * @var ComestibleWithinDayRepository
+     */
+    private $comestibleWithinDayRepository;
 
     /**
      * @var DayRepository
@@ -69,6 +75,7 @@ final class DayController
      * @param AuthenticationInterface $authentication
      * @param AuthorizationInterface $authorization
      * @param ComestibleRepository $comestibleRepository
+     * @param ComestibleWithinDayRepository $comestibleWithinDayRepository
      * @param DayRepository $dayRepository
      * @param RedirectForPath $redirectForPath
      * @param SessionInterface $session
@@ -80,6 +87,7 @@ final class DayController
         AuthenticationInterface $authentication,
         AuthorizationInterface $authorization,
         ComestibleRepository $comestibleRepository,
+        ComestibleWithinDayRepository $comestibleWithinDayRepository,
         DayRepository $dayRepository,
         RedirectForPath $redirectForPath,
         SessionInterface $session,
@@ -90,6 +98,7 @@ final class DayController
         $this->authentication = $authentication;
         $this->authorization = $authorization;
         $this->comestibleRepository = $comestibleRepository;
+        $this->comestibleWithinDayRepository  = $comestibleWithinDayRepository;
         $this->dayRepository = $dayRepository;
         $this->redirectForPath = $redirectForPath;
         $this->session = $session;
@@ -165,8 +174,7 @@ final class DayController
             throw HttpException::create($request, $response, 403, 'day.error.permissiondenied');
         }
 
-        $day = new Day();
-        $day = $day->withDate(new \DateTime());
+        $day = $this->dayRepository->create();
 
         if ('POST' === $request->getMethod()) {
             $data = $request->getParsedBody();
@@ -177,9 +185,13 @@ final class DayController
                 ->withWeight($data['weight'] ? (float) $data['weight'] : null)
             ;
 
+            $comestiblesWithinDay = [];
+
             foreach ($this->comestibleRepository->findBy(['userId' => $authenticatedUser->getId()], ['name' => 'ASC']) as $comestible) {
-                $day->addComestibleWithinDay((new ComestibleWithinDay($day->getId()))->withAmount(5)->withComestible($comestible));
+                $comestiblesWithinDay[] = $this->comestibleWithinDayRepository->create($day->getId())->withAmount(5)->withComestible($comestible);
             }
+
+            $day->setComestiblesWithinDay($comestiblesWithinDay);
 
             if ([] === $errorMessages = $this->validator->validateModel($day)) {
                 $this->dayRepository->persist($day);

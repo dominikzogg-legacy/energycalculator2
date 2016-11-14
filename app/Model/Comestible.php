@@ -10,7 +10,6 @@ use Energycalculator\Model\Traits\CloneWithModificationTrait;
 use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
 use Energycalculator\Model\Traits\OwnedByUserTrait;
-use Ramsey\Uuid\Uuid;
 use Respect\Validation\Rules\FloatVal;
 use Respect\Validation\Validator as v;
 
@@ -52,13 +51,13 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
     private $defaultValue;
 
     /**
-     * @param string|null    $id
-     * @param \DateTime|null $createdAt
+     * @param string $id
+     * @param \DateTime $createdAt
      */
-    public function __construct(string $id = null, \DateTime $createdAt = null)
+    public function __construct(string $id, \DateTime $createdAt)
     {
-        $this->id = $id ?? (string) Uuid::uuid4();
-        $this->setCreatedAt($createdAt ?? new \DateTime());
+        $this->id = $id;
+        $this->setCreatedAt($createdAt);
     }
 
     /**

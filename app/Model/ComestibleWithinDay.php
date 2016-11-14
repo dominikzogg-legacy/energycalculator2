@@ -8,7 +8,6 @@ use Chubbyphp\Validation\ValidatableModelInterface;
 use Energycalculator\Model\Traits\CloneWithModificationTrait;
 use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
-use Ramsey\Uuid\Uuid;
 use Respect\Validation\Validator as v;
 
 final class ComestibleWithinDay implements ValidatableModelInterface
@@ -38,15 +37,15 @@ final class ComestibleWithinDay implements ValidatableModelInterface
     private $amount = 0;
 
     /**
+     * @param string $id
+     * @param \DateTime $createdAt
      * @param string $dayId
-     * @param string|null    $id
-     * @param \DateTime|null $createdAt
      */
-    public function __construct(string $dayId, string $id = null, \DateTime $createdAt = null)
+    public function __construct(string $id, \DateTime $createdAt, string $dayId)
     {
+        $this->id = $id;
+        $this->setCreatedAt($createdAt);
         $this->dayId = $dayId;
-        $this->id = $id ?? (string) Uuid::uuid4();
-        $this->setCreatedAt($createdAt ?? new \DateTime());
     }
 
     /**
@@ -104,7 +103,7 @@ final class ComestibleWithinDay implements ValidatableModelInterface
      */
     public static function fromRow(array $data): ModelInterface
     {
-        $comestibleWithinDay = new self($data['dayId'], $data['id'], new \DateTime($data['createdAt']));
+        $comestibleWithinDay = new self($data['id'], new \DateTime($data['createdAt']), $data['dayId']);
 
         $comestibleWithinDay->updatedAt = $data['updatedAt'];
         $comestibleWithinDay->comestible = $data['comestible'];

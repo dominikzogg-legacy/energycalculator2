@@ -9,6 +9,7 @@ use Chubbyphp\Model\ResolverInterface;
 use Doctrine\DBAL\Connection;
 use Energycalculator\Model\Comestible;
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 
 final class ComestibleRepository extends AbstractDoctrineRepository
 {
@@ -48,6 +49,14 @@ final class ComestibleRepository extends AbstractDoctrineRepository
     public function getModelClass(): string
     {
         return Comestible::class;
+    }
+
+    /**
+     * @return Comestible
+     */
+    public function create(): Comestible
+    {
+        return new Comestible((string) Uuid::uuid4(), new \DateTime());
     }
 
     /**

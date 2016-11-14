@@ -7,8 +7,10 @@ use Chubbyphp\Model\Doctrine\DBAL\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\ResolverInterface;
 use Doctrine\DBAL\Connection;
+use Energycalculator\Model\Comestible;
 use Energycalculator\Model\ComestibleWithinDay;
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 
 final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
 {
@@ -48,6 +50,15 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
     public function getModelClass(): string
     {
         return ComestibleWithinDay::class;
+    }
+
+    /**
+     * @param string $dayId
+     * @return ComestibleWithinDay
+     */
+    public function create(string $dayId): ComestibleWithinDay
+    {
+        return new ComestibleWithinDay((string) Uuid::uuid4(), new \DateTime(), $dayId);
     }
 
     /**

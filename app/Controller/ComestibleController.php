@@ -8,6 +8,7 @@ use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Validation\ValidatorInterface;
 use Energycalculator\Model\Comestible;
+use Energycalculator\Repository\ComestibleRepository;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Chubbyphp\Session\FlashMessage;
@@ -29,7 +30,7 @@ final class ComestibleController
     private $authorization;
 
     /**
-     * @var RepositoryInterface
+     * @var ComestibleRepository
      */
     private $comestibleRepository;
 
@@ -61,7 +62,7 @@ final class ComestibleController
     /**
      * @param AuthenticationInterface $authentication
      * @param AuthorizationInterface $authorization
-     * @param RepositoryInterface $comestibleRepository
+     * @param ComestibleRepository $comestibleRepository
      * @param RedirectForPath $redirectForPath
      * @param SessionInterface $session
      * @param TemplateData $templateData
@@ -71,7 +72,7 @@ final class ComestibleController
     public function __construct(
         AuthenticationInterface $authentication,
         AuthorizationInterface $authorization,
-        RepositoryInterface $comestibleRepository,
+        ComestibleRepository $comestibleRepository,
         RedirectForPath $redirectForPath,
         SessionInterface $session,
         TemplateData $templateData,
@@ -155,7 +156,7 @@ final class ComestibleController
             throw HttpException::create($request, $response, 403, 'comestible.error.permissiondenied');
         }
 
-        $comestible = new Comestible();
+        $comestible = $this->comestibleRepository->create();
 
         if ('POST' === $request->getMethod()) {
             $data = $request->getParsedBody();
