@@ -20,14 +20,14 @@
             },
             minimumInputLength: 1,
             templateSelection: function formatRepoSelection (result) {
-                // if(result.default) {
-                //     var $formGroup = $selector.closest('div[id*="comestiblesWithinDay"]');
-                //     if($formGroup.length == 1) {
-                //         $formGroup.find('input[id*="amount"]').val(result.default);
-                //     }
-                // }
+                if(result.defaultValue) {
+                    var $formGroup = $selector.closest('div[class="form-groups"]');
+                    if($formGroup.length == 1) {
+                        $formGroup.find('input[id*="amount"]').val(result.defaultValue);
+                    }
+                }
 
-                return result.text;
+                return result.name;
             }
         });
     };
