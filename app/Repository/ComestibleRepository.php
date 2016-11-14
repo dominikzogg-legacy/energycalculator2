@@ -8,7 +8,6 @@ use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\ResolverInterface;
 use Doctrine\DBAL\Connection;
 use Energycalculator\Model\Comestible;
-use Energycalculator\Model\User;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
