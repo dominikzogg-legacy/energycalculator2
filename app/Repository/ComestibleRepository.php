@@ -80,7 +80,7 @@ final class ComestibleRepository extends AbstractDoctrineRepository
     public function findRowsByNameLike(string $userId, string $name): array
     {
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('id,name,defaultValue')->from($this->getTable());
+        $qb->select('id,name AS text,defaultValue AS amount')->from($this->getTable());
 
         $qb->andWhere($qb->expr()->eq('userId', ':userId'));
         $qb->setParameter('userId', $userId);

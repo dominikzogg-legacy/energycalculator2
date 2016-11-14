@@ -20,14 +20,14 @@
             },
             minimumInputLength: 1,
             templateSelection: function formatRepoSelection (result) {
-                if(result.defaultValue) {
+                if(result.amount) {
                     var $formGroup = $selector.closest('div[class="form-groups"]');
                     if($formGroup.length == 1) {
-                        $formGroup.find('input[id*="amount"]').val(result.defaultValue);
+                        $formGroup.find('input[id*="amount"]').val(result.amount);
                     }
                 }
 
-                return result.name;
+                return result.text;
             }
         });
     };
