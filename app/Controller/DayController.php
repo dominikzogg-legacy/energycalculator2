@@ -178,7 +178,7 @@ final class DayController
             ;
 
             foreach ($this->comestibleRepository->findBy(['userId' => $authenticatedUser->getId()], ['name' => 'ASC']) as $comestible) {
-                $day->addComestibleWithinDay((new ComestibleWithinDay())->withAmount(5)->withComestible($comestible));
+                $day->addComestibleWithinDay((new ComestibleWithinDay($day->getId()))->withAmount(5)->withComestible($comestible));
             }
 
             if ([] === $errorMessages = $this->validator->validateModel($day)) {

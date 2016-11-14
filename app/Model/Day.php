@@ -98,7 +98,6 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
      */
     public function addComestibleWithinDay(ComestibleWithinDay $comestibleWithinDay): Day
     {
-        $comestibleWithinDay = $comestibleWithinDay->withDay($this);
         $this->comestiblesWithinDay->add($comestibleWithinDay);
 
         return $this;
@@ -110,7 +109,6 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
      */
     public function removeComestibleWithinDay(ComestibleWithinDay $comestibleWithinDay): Day
     {
-        $comestibleWithinDay = $comestibleWithinDay->withDay($this);
         $this->comestiblesWithinDay->remove($comestibleWithinDay);
 
         return $this;

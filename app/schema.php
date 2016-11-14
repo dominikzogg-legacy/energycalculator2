@@ -42,15 +42,15 @@ $days->setPrimaryKey(['id']);
 $days->addUniqueIndex(['userId', 'date']);
 $days->addForeignKeyConstraint($users, ['userId'], ['id'], ['onDelete' => 'CASCADE']);
 
-$comestiblesWithinDay = $schema->createTable('comestible_within_days');
-$comestiblesWithinDay->addColumn('id', 'guid');
-$comestiblesWithinDay->addColumn('createdAt', 'datetime');
-$comestiblesWithinDay->addColumn('updatedAt', 'datetime', ['notnull' => false]);
-$comestiblesWithinDay->addColumn('dayId', 'string');
-$comestiblesWithinDay->addColumn('comestibleId', 'string');
-$comestiblesWithinDay->addColumn('amount', 'decimal', ['precision' => 7, 'scale' => 1]);
-$comestiblesWithinDay->setPrimaryKey(['id']);
-$comestiblesWithinDay->addForeignKeyConstraint($days, ['dayId'], ['id'], ['onDelete' => 'CASCADE']);
-$comestiblesWithinDay->addForeignKeyConstraint($comestibles, ['comestibleId'], ['id'], ['onDelete' => 'CASCADE']);
+$comestiblesWithinDays = $schema->createTable('comestibles_within_days');
+$comestiblesWithinDays->addColumn('id', 'guid');
+$comestiblesWithinDays->addColumn('createdAt', 'datetime');
+$comestiblesWithinDays->addColumn('updatedAt', 'datetime', ['notnull' => false]);
+$comestiblesWithinDays->addColumn('dayId', 'string');
+$comestiblesWithinDays->addColumn('comestibleId', 'string');
+$comestiblesWithinDays->addColumn('amount', 'decimal', ['precision' => 7, 'scale' => 1]);
+$comestiblesWithinDays->setPrimaryKey(['id']);
+$comestiblesWithinDays->addForeignKeyConstraint($days, ['dayId'], ['id'], ['onDelete' => 'CASCADE']);
+$comestiblesWithinDays->addForeignKeyConstraint($comestibles, ['comestibleId'], ['id'], ['onDelete' => 'CASCADE']);
 
 return $schema;

@@ -28,11 +28,6 @@ final class ComestibleWithinDay implements ValidatableModelInterface
     private $comestibleId;
 
     /**
-     * @var Day|\Closure|null
-     */
-    private $day;
-
-    /**
      * @var string
      */
     private $dayId;
@@ -43,11 +38,13 @@ final class ComestibleWithinDay implements ValidatableModelInterface
     private $amount = 0;
 
     /**
+     * @param string $dayId
      * @param string|null    $id
      * @param \DateTime|null $createdAt
      */
-    public function __construct(string $id = null, \DateTime $createdAt = null)
+    public function __construct(string $dayId, string $id = null, \DateTime $createdAt = null)
     {
+        $this->dayId = $dayId;
         $this->id = $id ?? (string) Uuid::uuid4();
         $this->setCreatedAt($createdAt ?? new \DateTime());
     }
@@ -61,7 +58,7 @@ final class ComestibleWithinDay implements ValidatableModelInterface
     {
         $comestibleWithinDay = $this->cloneWithModification(__METHOD__, $comestible->getId(), $this->comestibleId);
         $comestibleWithinDay->comestible = $comestible;
-        $comestibleWithinDay->comestibleId = $comestibleWithinDay->getId();
+        $comestibleWithinDay->comestibleId = $comestible->getId();
 
         return $comestibleWithinDay;
     }
@@ -77,33 +74,6 @@ final class ComestibleWithinDay implements ValidatableModelInterface
         }
 
         return $this->comestible;
-    }
-
-    /**
-     * @param Day $day
-     *
-     * @return ComestibleWithinDay
-     */
-    public function withDay(Day $day): ComestibleWithinDay
-    {
-        $comestibleWithinDay = $this->cloneWithModification(__METHOD__, $day->getId(), $this->dayId);
-        $comestibleWithinDay->day = $day;
-        $comestibleWithinDay->dayId = $day->getId();
-
-        return $comestibleWithinDay;
-    }
-
-    /**
-     * @return Day|null
-     */
-    public function getDay()
-    {
-        if ($this->day instanceof \Closure) {
-            $day = $this->day;
-            $this->day = $day();
-        }
-
-        return $this->day;
     }
 
     /**
@@ -134,13 +104,11 @@ final class ComestibleWithinDay implements ValidatableModelInterface
      */
     public static function fromRow(array $data): ModelInterface
     {
-        $comestibleWithinDay = new self($data['id'], new \DateTime($data['createdAt']));
+        $comestibleWithinDay = new self($data['dayId'], $data['id'], new \DateTime($data['createdAt']));
 
         $comestibleWithinDay->updatedAt = $data['updatedAt'];
         $comestibleWithinDay->comestible = $data['comestible'];
         $comestibleWithinDay->comestibleId = $data['comestibleId'];
-        $comestibleWithinDay->day = $data['day'];
-        $comestibleWithinDay->dayId = $data['dayId'];
         $comestibleWithinDay->amount = $data['amount'];
 
         return $comestibleWithinDay;
@@ -170,7 +138,7 @@ final class ComestibleWithinDay implements ValidatableModelInterface
             'id' => $this->id,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
-            'user' => null !== $this->comestibleId ? $this->getComestible()->jsonSerialize(): null,
+            'comestible' => null !== $this->comestibleId ? $this->getComestible()->jsonSerialize(): null,
             'amount' => $this->amount,
         ];
     }

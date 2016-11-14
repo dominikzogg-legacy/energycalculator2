@@ -224,7 +224,6 @@ $container[ComestibleWithinDayRepository::class] = function () use ($container) 
     return new ComestibleWithinDayRepository(
         $container[Resolver::class],
         $container[ComestibleRepository::class],
-        $container[DayRepository::class],
         $container['db'],
         new ModelCache(),
         $container['logger']
