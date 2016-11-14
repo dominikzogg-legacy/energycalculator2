@@ -23,6 +23,7 @@ $app->group('/{locale:'.implode('|', $container['locales']).'}', function () use
         $app->map(['GET', 'POST'], '/{id}/edit', ComestibleController::class.':edit')->setName('comestible_edit');
         $app->get('/{id}/view', ComestibleController::class.':view')->setName('comestible_view');
         $app->post('/{id}/delete', ComestibleController::class.':delete')->setName('comestible_delete');
+        $app->get('/findbynamelike', ComestibleController::class.':findByNameLike')->setName('comestible_findbynamelike');
     })->add($container['security.authentication.middleware']);
 
     $app->group('/days', function () use ($app, $container) {

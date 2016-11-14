@@ -8,6 +8,7 @@ use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\ResolverInterface;
 use Doctrine\DBAL\Connection;
 use Energycalculator\Model\Comestible;
+use Energycalculator\Model\User;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
@@ -70,6 +71,27 @@ final class ComestibleRepository extends AbstractDoctrineRepository
         $row['user'] = $this->resolver->find($this->userRepository, $row['userId']);
 
         return parent::fromRow($row);
+    }
+
+    /**
+     * @param string $userId
+     * @param string $name
+     * @return array
+     */
+    public function findRowsByNameLike(string $userId, string $name): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('id,name,defaultValue')->from($this->getTable());
+
+        $qb->andWhere($qb->expr()->eq('userId', ':userId'));
+        $qb->setParameter('userId', $userId);
+
+        $qb->andWhere($qb->expr()->like('name', ':name'));
+        $qb->setParameter('name', '%' . $name . '%');
+
+        $qb->addOrderBy('name', 'ASC');
+
+        return $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**

@@ -291,4 +291,32 @@ final class ComestibleController
             $response, 302, 'comestible_list', ['locale' => $request->getAttribute('locale')]
         );
     }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     *
+     * @throws HttpException
+     */
+    public function findByNameLike(Request $request, Response $response)
+    {
+        $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
+
+        if (!$this->authorization->isGranted($authenticatedUser, 'COMESTIBLE_LIST')) {
+            throw HttpException::create($request, $response, 403, 'comestible.error.permissiondenied');
+        }
+
+        $queryParams = $request->getQueryParams();
+
+        $rows = $this->comestibleRepository->findRowsByNameLike(
+            $authenticatedUser->getId(),
+            $queryParams['name'] ?? ''
+        );
+
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode($rows));
+
+        return $response;
+    }
 }
