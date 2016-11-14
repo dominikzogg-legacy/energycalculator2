@@ -311,7 +311,7 @@ final class ComestibleController
 
         $rows = $this->comestibleRepository->findRowsByNameLike(
             $authenticatedUser->getId(),
-            $queryParams['name'] ?? ''
+            $queryParams['q'] ?? ''
         );
 
         $response = $response->withHeader('Content-Type', 'application/json');

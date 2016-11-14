@@ -11,6 +11,50 @@
             <form action="{{ path_for('day_create', {'locale': locale}) }}" method="post" class="form-horizontal">
                 {{ forms.renderInputDate(day, 'date', 'day.label.date', errorMessages, locale) }}
                 {{ forms.renderInputText(day, 'weight', 'day.label.weight', errorMessages, locale) }}
+
+                <div class="form-group">
+                    <label class="control-label col-lg-2 required">Konsum</label>
+                    <div class="col-lg-10">
+                        <div id="day_edit_comestiblesWithinDay">
+                            <ul class="bc-collection list-unstyled">
+                                <li>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div id="day_edit_comestiblesWithinDay_0">
+                                                <div class="form-group">
+                                                    <label class="control-label col-lg-2" for="day_edit_comestiblesWithinDay_0_comestible">Nahrungsmittel</label>
+                                                    <div class="col-lg-10">
+                                                        <select
+                                                                id="day_edit_comestiblesWithinDay_0_comestible"
+                                                                name="day_edit[comestiblesWithinDay][0][comestible]"
+                                                                data-ajax="1"
+                                                                placeholder="Bitte wählen Sie ein Nahrungsmittel"
+                                                                class="form-control select2-hidden-accessible"
+                                                                data-select2-rendering="1"
+                                                                data-route="{{ path_for('comestible_findbynamelike', {'locale': locale}) }}"
+                                                                data-placeholder="Bitte wählen Sie ein Nahrungsmittel"
+                                                                tabindex="-1" aria-hidden="true">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-lg-2 required" for="day_edit_comestiblesWithinDay_0_amount">Menge in g/ml</label>
+                                                    <div class="col-lg-10">
+                                                        <input id="day_edit_comestiblesWithinDay_0_amount" name="day_edit[comestiblesWithinDay][0][amount]" required="required" class="form-control" value="250" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-lg-offset-2">
+                                            <a href="#" class="btn btn-danger btn-small" data-removefield="collection" data-field="day_edit_comestiblesWithinDay_0">Nahrungsmittel entfernen</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <a href="#" class="btn btn-primary btn-small" data-addfield="collection" data-collection="day_edit_comestiblesWithinDay" data-prototype="__name__">Nahrungsmittel hinzufügen</a>
+                        </div>
+                    </div>
+                </div>
                 <input type="hidden" name="csrf" value="{{ csrf }}">
                 <div class="form-group">
                     <div class="col-lg-offset-2 col-lg-10">
