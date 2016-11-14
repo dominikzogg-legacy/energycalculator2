@@ -2,6 +2,8 @@
 
 {% import "@Energycalculator/_form.html.twig" as forms %}
 
+{% block title %}{{ parent() }} - {{ "day.title.edit"|translate(locale) }}{% endblock %}
+
 {% block container %}
     <div class="row">
         <div class="col-xs-12">
