@@ -189,7 +189,7 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
     public function getPropertyValidators(): array
     {
         return [
-            'user' => v::notEmpty(),
+            'userId' => v::notBlank(),
             'date' => v::date(),
             'weight' => v::optional(new FloatVal()),
         ];

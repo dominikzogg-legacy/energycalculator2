@@ -157,7 +157,7 @@ final class ComestibleWithinDay implements ValidatableModelInterface
     public function getPropertyValidators(): array
     {
         return [
-            'comestibleId' => v::notEmpty(),
+            'comestibleId' => v::notBlank(),
             'amount' => v::floatVal(),
         ];
     }

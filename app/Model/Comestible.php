@@ -261,7 +261,7 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
     public function getPropertyValidators(): array
     {
         return [
-            'userId' => v::notEmpty(),
+            'userId' => v::notBlank(),
             'name' => v::notBlank(),
             'calorie' => v::floatVal(),
             'protein' => v::floatVal(),
