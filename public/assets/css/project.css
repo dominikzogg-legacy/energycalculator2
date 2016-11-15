@@ -11,6 +11,10 @@ h1 {
     margin-bottom: 20px;
 }
 
+.bc-collection > li {
+    margin-bottom: 10px;
+}
+
 .button-bar {
     margin-bottom: 20px;
 }
