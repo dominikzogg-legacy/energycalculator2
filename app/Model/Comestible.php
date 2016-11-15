@@ -217,6 +217,7 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
             'id' => $this->id,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
+            'user' => null !== $this->userId ? $this->getUser() : null,
             'userId' => $this->userId,
             'name' => $this->name,
             'calorie' => $this->calorie,
@@ -236,7 +237,7 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
             'id' => $this->id,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
-            'user' => null !== $this->userId ? $this->getUser()->jsonSerialize(): null,
+            'user' => null !== $this->userId ? $this->getUser()->jsonSerialize() : null,
             'name' => $this->name,
             'calorie' => $this->calorie,
             'protein' => $this->protein,
@@ -260,7 +261,7 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
     public function getPropertyValidators(): array
     {
         return [
-            'user' => v::notEmpty(),
+            'userId' => v::notEmpty(),
             'name' => v::notBlank(),
             'calorie' => v::floatVal(),
             'protein' => v::floatVal(),

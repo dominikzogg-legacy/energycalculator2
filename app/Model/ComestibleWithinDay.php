@@ -122,6 +122,7 @@ final class ComestibleWithinDay implements ValidatableModelInterface
             'id' => $this->id,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
+            'comestible' => null !== $this->comestibleId ? $this->getComestible() : null,
             'comestibleId' => $this->comestibleId,
             'dayId' => $this->dayId,
             'amount' => $this->amount,
@@ -137,7 +138,7 @@ final class ComestibleWithinDay implements ValidatableModelInterface
             'id' => $this->id,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
-            'comestible' => null !== $this->comestibleId ? $this->getComestible()->jsonSerialize(): null,
+            'comestible' => null !== $this->comestibleId ? $this->getComestible()->jsonSerialize() : null,
             'amount' => $this->amount,
         ];
     }
@@ -156,7 +157,7 @@ final class ComestibleWithinDay implements ValidatableModelInterface
     public function getPropertyValidators(): array
     {
         return [
-            'comestible' => v::notEmpty(),
+            'comestibleId' => v::notEmpty(),
             'amount' => v::floatVal(),
         ];
     }
