@@ -5,6 +5,7 @@ namespace Energycalculator\Repository;
 use Chubbyphp\Model\Cache\ModelCacheInterface;
 use Chubbyphp\Model\Collection\LazyModelCollection;
 use Chubbyphp\Model\Collection\ModelCollection;
+use Chubbyphp\Model\Collection\ModelCollectionInterface;
 use Chubbyphp\Model\Doctrine\DBAL\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\ResolverInterface;
@@ -72,7 +73,7 @@ final class DayRepository extends AbstractDoctrineRepository
             (string) Uuid::uuid4(),
             new \DateTime(),
             new \DateTime(),
-            new ModelCollection($this->comestibleWithinDayRepository)
+            new ModelCollection()
         );
     }
 
@@ -83,13 +84,32 @@ final class DayRepository extends AbstractDoctrineRepository
     protected function fromRow(array $row): ModelInterface
     {
         $row['user'] = $this->resolver->find($this->userRepository, $row['userId']);
-        $row['comestiblesWithinDay'] = new LazyModelCollection(
-            $this->comestibleWithinDayRepository,
-            ['dayId' => $row['id']],
-            ['createdAt' => 'ASC'])
-        ;
+        $row['comestiblesWithinDay'] = new LazyModelCollection($this->resolver->findBy(
+            $this->comestibleWithinDayRepository, ['dayId' => $row['id']], ['createdAt' => 'ASC']
+        ));
 
         return parent::fromRow($row);
+    }
+
+    /**
+     * @param ModelInterface $model
+     */
+    public function persist(ModelInterface $model)
+    {
+        parent::persist($model);
+
+        $row = $model->toRow();
+
+        /** @var ModelCollectionInterface $comestiblesWithinDay */
+        $comestiblesWithinDay = $row['comestiblesWithinDay'];
+
+        foreach ($comestiblesWithinDay->toPersist() as $comestibleWithinDay) {
+            $this->comestibleWithinDayRepository->persist($comestibleWithinDay);
+        }
+
+        foreach ($comestiblesWithinDay->toRemove() as $comestibleWithinDay) {
+            $this->comestibleWithinDayRepository->remove($comestibleWithinDay);
+        }
     }
 
     /**
