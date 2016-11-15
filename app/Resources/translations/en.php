@@ -45,6 +45,7 @@ return [
     'day.flash.edit.success' => 'Day successfully updated.',
     'day.label.actions' => 'Actions',
     'day.label.comestiblesWithinDay' => 'Comestibles',
+    'day.label.comestiblesWithinDay.amount' => 'Amount',
     'day.label.createdAt' => 'Created at',
     'day.label.date' => 'Date',
     'day.label.id' => 'Id',

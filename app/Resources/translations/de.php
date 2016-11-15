@@ -45,6 +45,7 @@ return [
     'day.flash.edit.success' => 'Tag erfolgreich aktualisiert.',
     'day.label.actions' => 'Aktionen',
     'day.label.comestiblesWithinDay' => 'Nahrungsmittel',
+    'day.label.comestiblesWithinDay.amount' => 'Menge',
     'day.label.date' => 'Datum',
     'day.label.createdAt' => 'Erfasst am',
     'day.label.weight' => 'Gewicht',
