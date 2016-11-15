@@ -176,6 +176,14 @@ final class DayController
 
         $day = $this->dayRepository->create();
 
+        $comestiblesWithinDay = [];
+
+        foreach ($this->comestibleRepository->findBy(['userId' => $authenticatedUser->getId()], ['name' => 'ASC']) as $comestible) {
+            $comestiblesWithinDay[] = $this->comestibleWithinDayRepository->create($day->getId())->withAmount(5)->withComestible($comestible);
+        }
+
+        $day->setComestiblesWithinDay($comestiblesWithinDay);
+
         if ('POST' === $request->getMethod()) {
             $data = $request->getParsedBody();
 
@@ -184,14 +192,6 @@ final class DayController
                 ->withDate(new \DateTime($data['date'] ?? 'now'))
                 ->withWeight($data['weight'] ? (float) $data['weight'] : null)
             ;
-
-            $comestiblesWithinDay = [];
-
-            foreach ($this->comestibleRepository->findBy(['userId' => $authenticatedUser->getId()], ['name' => 'ASC']) as $comestible) {
-                $comestiblesWithinDay[] = $this->comestibleWithinDayRepository->create($day->getId())->withAmount(5)->withComestible($comestible);
-            }
-
-            $day->setComestiblesWithinDay($comestiblesWithinDay);
 
             if ([] === $errorMessages = $this->validator->validateModel($day)) {
                 $this->dayRepository->persist($day);

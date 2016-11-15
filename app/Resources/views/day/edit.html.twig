@@ -11,6 +11,9 @@
             <form action="{{ path_for('day_edit', {'locale': locale, 'id': day.id}) }}" method="post" class="form-horizontal">
                 {{ forms.renderInputDate(day, 'date', 'day.label.date', errorMessages, locale) }}
                 {{ forms.renderInputText(day, 'weight', 'day.label.weight', errorMessages, locale) }}
+                {{ forms.renderCollection(day, 'comestiblesWithinDay', 'day.label.comestiblesWithinDay', locale, [
+                {'macro': 'renderInputText', 'arguments': ['amount', 'day.label.comestiblesWithinDay.amount', errorMessages, locale]}
+                ]) }}
                 <input type="hidden" name="csrf" value="{{ csrf }}">
                 <div class="form-group">
                     <div class="col-lg-offset-2 col-lg-10">

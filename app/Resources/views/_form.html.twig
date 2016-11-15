@@ -75,3 +75,32 @@
         </div>
     </div>
 {% endmacro %}
+
+{% macro renderCollection(model, property, propertyLabel, locale, fields) %}
+    <div class="form-group">
+        <label class="control-label col-lg-2" for="{{ property }}">{{ propertyLabel|translate(locale) }}</label>
+        <div class="col-lg-10">
+            <div id="{{ property }}" data-prototype="&lt;li&gt;test&lt;/li&gt;" data-prototype-name="__name__">
+                <ul class="bc-collection list-unstyled">
+                    {% for key, value in model[property] %}
+                        <li>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div id="{{ property }}_{{ key }}" class="form-groups">
+                                        {% for field in fields %}
+                                            {{ attribute(_self, field.macro, [value]|merge(field.arguments)) }}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-lg-offset-2">
+                                    <a href="#" class="btn btn-danger btn-small" data-removefield="collection" data-field="{{ property }}_{{ key }}">--replace--</a>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <a href="#" class="btn btn-primary btn-small" data-addfield="collection" data-collection="{{ property }}" data-prototype-name="__name__">--replace--</a>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
