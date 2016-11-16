@@ -2,47 +2,14 @@
 
 namespace Energycalculator\Repository;
 
-use Chubbyphp\Model\Cache\ModelCacheInterface;
 use Chubbyphp\Model\Doctrine\DBAL\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
-use Chubbyphp\Model\ResolverInterface;
-use Doctrine\DBAL\Connection;
 use Energycalculator\Model\Comestible;
-use Psr\Log\LoggerInterface;
+use Energycalculator\Model\User;
 use Ramsey\Uuid\Uuid;
 
 final class ComestibleRepository extends AbstractDoctrineRepository
 {
-    /**
-     * @var ResolverInterface
-     */
-    private $resolver;
-
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
-     * @param ResolverInterface $resolver
-     * @param UserRepository $userRepository
-     * @param Connection $connection
-     * @param ModelCacheInterface|null $cache
-     * @param LoggerInterface|null $logger
-     */
-    public function __construct(
-        ResolverInterface $resolver,
-        UserRepository $userRepository,
-        Connection $connection,
-        ModelCacheInterface $cache = null,
-        LoggerInterface $logger = null
-    ) {
-        $this->resolver = $resolver;
-        $this->userRepository = $userRepository;
-
-        parent::__construct($connection, $cache, $logger);
-    }
-
     /**
      * @return string
      */
@@ -67,7 +34,7 @@ final class ComestibleRepository extends AbstractDoctrineRepository
      */
     protected function fromPersistence(array $row): ModelInterface
     {
-        $row['user'] = $this->resolver->find($this->userRepository, $row['userId']);
+        $row['user'] = $this->resolver->find(User::class, $row['userId']);
 
         return parent::fromPersistence($row);
     }

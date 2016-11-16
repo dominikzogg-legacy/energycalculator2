@@ -2,58 +2,17 @@
 
 namespace Energycalculator\Repository;
 
-use Chubbyphp\Model\Cache\ModelCacheInterface;
 use Chubbyphp\Model\Collection\LazyModelCollection;
 use Chubbyphp\Model\Collection\ModelCollection;
-use Chubbyphp\Model\Collection\ModelCollectionInterface;
 use Chubbyphp\Model\Doctrine\DBAL\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
-use Chubbyphp\Model\ResolverInterface;
-use Doctrine\DBAL\Connection;
+use Energycalculator\Model\ComestibleWithinDay;
 use Energycalculator\Model\Day;
-use Psr\Log\LoggerInterface;
+use Energycalculator\Model\User;
 use Ramsey\Uuid\Uuid;
 
 final class DayRepository extends AbstractDoctrineRepository
 {
-    /**
-     * @var ResolverInterface
-     */
-    private $resolver;
-
-    /**
-     * @var ComestibleWithinDayRepository
-     */
-    private $comestibleWithinDayRepository;
-
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
-     * @param ResolverInterface $resolver
-     * @param ComestibleWithinDayRepository $comestibleWithinDayRepository
-     * @param UserRepository $userRepository
-     * @param Connection $connection
-     * @param ModelCacheInterface|null $cache
-     * @param LoggerInterface|null $logger
-     */
-    public function __construct(
-        ResolverInterface $resolver,
-        ComestibleWithinDayRepository $comestibleWithinDayRepository,
-        UserRepository $userRepository,
-        Connection $connection,
-        ModelCacheInterface $cache = null,
-        LoggerInterface $logger = null
-    ) {
-        $this->resolver = $resolver;
-        $this->comestibleWithinDayRepository = $comestibleWithinDayRepository;
-        $this->userRepository = $userRepository;
-
-        parent::__construct($connection, $cache, $logger);
-    }
-
     /**
      * @return string
      */
@@ -83,33 +42,12 @@ final class DayRepository extends AbstractDoctrineRepository
      */
     protected function fromPersistence(array $row): ModelInterface
     {
-        $row['user'] = $this->resolver->find($this->userRepository, $row['userId']);
+        $row['user'] = $this->resolver->find(User::class, $row['userId']);
         $row['comestiblesWithinDay'] = new LazyModelCollection($this->resolver->findBy(
-            $this->comestibleWithinDayRepository, ['dayId' => $row['id']], ['createdAt' => 'ASC']
+            ComestibleWithinDay::class, ['dayId' => $row['id']], ['createdAt' => 'ASC']
         ));
 
         return parent::fromPersistence($row);
-    }
-
-    /**
-     * @param ModelInterface $model
-     */
-    public function persist(ModelInterface $model)
-    {
-        parent::persist($model);
-
-        $row = $model->toPersistence();
-
-        /** @var ModelCollectionInterface $comestiblesWithinDay */
-        $comestiblesWithinDay = $row['comestiblesWithinDay'];
-
-        foreach ($comestiblesWithinDay->toPersist() as $comestibleWithinDay) {
-            $this->comestibleWithinDayRepository->persist($comestibleWithinDay);
-        }
-
-        foreach ($comestiblesWithinDay->toRemove() as $comestibleWithinDay) {
-            $this->comestibleWithinDayRepository->remove($comestibleWithinDay);
-        }
     }
 
     /**

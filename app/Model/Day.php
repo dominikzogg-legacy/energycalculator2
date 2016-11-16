@@ -112,12 +112,7 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
      */
     public function getComestiblesWithinDay(): array
     {
-        $comestiblesWithinDay = [];
-        foreach ($this->comestiblesWithinDay as $comestibleWithinDay) {
-            $comestiblesWithinDay[] = $comestibleWithinDay;
-        }
-
-        return $comestiblesWithinDay;
+        return $this->comestiblesWithinDay->get();
     }
 
     /**
