@@ -101,7 +101,7 @@ final class ComestibleWithinDay implements ValidatableModelInterface
      *
      * @return Comestible|ModelInterface
      */
-    public static function fromRow(array $data): ModelInterface
+    public static function fromPersistence(array $data): ModelInterface
     {
         $comestibleWithinDay = new self($data['id'], new \DateTime($data['createdAt']), $data['dayId']);
 
@@ -116,7 +116,7 @@ final class ComestibleWithinDay implements ValidatableModelInterface
     /**
      * @return array
      */
-    public function toRow(): array
+    public function toPersistence(): array
     {
         return [
             'id' => $this->id,

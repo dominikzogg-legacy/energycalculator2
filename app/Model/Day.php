@@ -125,7 +125,7 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
      *
      * @return Day|ModelInterface
      */
-    public static function fromRow(array $data): ModelInterface
+    public static function fromPersistence(array $data): ModelInterface
     {
         $day = new self(
             $data['id'],
@@ -145,7 +145,7 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
     /**
      * @return array
      */
-    public function toRow(): array
+    public function toPersistence(): array
     {
         return [
             'id' => $this->id,

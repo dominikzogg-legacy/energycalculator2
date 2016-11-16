@@ -124,7 +124,7 @@ final class User implements UserPasswordInterface, ValidatableModelInterface
      *
      * @return User|ModelInterface
      */
-    public static function fromRow(array $data): ModelInterface
+    public static function fromPersistence(array $data): ModelInterface
     {
         $user = new self($data['id'], new \DateTime($data['createdAt']));
 
@@ -140,7 +140,7 @@ final class User implements UserPasswordInterface, ValidatableModelInterface
     /**
      * @return array
      */
-    public function toRow(): array
+    public function toPersistence(): array
     {
         return [
             'id' => $this->id,

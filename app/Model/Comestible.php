@@ -191,7 +191,7 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
      *
      * @return Comestible|ModelInterface
      */
-    public static function fromRow(array $data): ModelInterface
+    public static function fromPersistence(array $data): ModelInterface
     {
         $comestible = new self($data['id'], new \DateTime($data['createdAt']));
 
@@ -211,7 +211,7 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
     /**
      * @return array
      */
-    public function toRow(): array
+    public function toPersistence(): array
     {
         return [
             'id' => $this->id,

@@ -81,14 +81,14 @@ final class DayRepository extends AbstractDoctrineRepository
      * @param array $row
      * @return ModelInterface
      */
-    protected function fromRow(array $row): ModelInterface
+    protected function fromPersistence(array $row): ModelInterface
     {
         $row['user'] = $this->resolver->find($this->userRepository, $row['userId']);
         $row['comestiblesWithinDay'] = new LazyModelCollection($this->resolver->findBy(
             $this->comestibleWithinDayRepository, ['dayId' => $row['id']], ['createdAt' => 'ASC']
         ));
 
-        return parent::fromRow($row);
+        return parent::fromPersistence($row);
     }
 
     /**
@@ -98,7 +98,7 @@ final class DayRepository extends AbstractDoctrineRepository
     {
         parent::persist($model);
 
-        $row = $model->toRow();
+        $row = $model->toPersistence();
 
         /** @var ModelCollectionInterface $comestiblesWithinDay */
         $comestiblesWithinDay = $row['comestiblesWithinDay'];
