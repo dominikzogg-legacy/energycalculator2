@@ -217,7 +217,6 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
             'id' => $this->id,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
-            'user' => null !== $this->userId ? $this->getUser() : null,
             'userId' => $this->userId,
             'name' => $this->name,
             'calorie' => $this->calorie,

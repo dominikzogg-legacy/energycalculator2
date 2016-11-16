@@ -122,7 +122,6 @@ final class ComestibleWithinDay implements ValidatableModelInterface
             'id' => $this->id,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
-            'comestible' => null !== $this->comestibleId ? $this->getComestible() : null,
             'comestibleId' => $this->comestibleId,
             'dayId' => $this->dayId,
             'amount' => $this->amount,

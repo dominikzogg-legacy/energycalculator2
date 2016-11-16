@@ -151,7 +151,6 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
             'id' => $this->id,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
-            'user' => null !== $this->userId ? $this->getUser() : null,
             'userId' => $this->userId,
             'date' => $this->date,
             'weight' => $this->weight,
