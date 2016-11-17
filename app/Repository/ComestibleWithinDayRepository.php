@@ -35,7 +35,7 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
      */
     protected function fromPersistence(array $row): ModelInterface
     {
-        $row['comestible'] = $this->resolver->find(Comestible::class, $row['comestibleId']);
+        $row['comestible'] = $this->resolver->lazyFind(Comestible::class, $row['comestibleId']);
 
         return parent::fromPersistence($row);
     }

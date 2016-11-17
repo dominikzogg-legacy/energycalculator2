@@ -42,8 +42,8 @@ final class DayRepository extends AbstractDoctrineRepository
      */
     protected function fromPersistence(array $row): ModelInterface
     {
-        $row['user'] = $this->resolver->find(User::class, $row['userId']);
-        $row['comestiblesWithinDay'] = new LazyModelCollection($this->resolver->findBy(
+        $row['user'] = $this->resolver->lazyFind(User::class, $row['userId']);
+        $row['comestiblesWithinDay'] = new LazyModelCollection($this->resolver->lazyFindBy(
             ComestibleWithinDay::class, ['dayId' => $row['id']], ['createdAt' => 'ASC']
         ));
 

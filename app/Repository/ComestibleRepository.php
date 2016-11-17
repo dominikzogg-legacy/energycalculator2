@@ -34,7 +34,7 @@ final class ComestibleRepository extends AbstractDoctrineRepository
      */
     protected function fromPersistence(array $row): ModelInterface
     {
-        $row['user'] = $this->resolver->find(User::class, $row['userId']);
+        $row['user'] = $this->resolver->lazyFind(User::class, $row['userId']);
 
         return parent::fromPersistence($row);
     }
