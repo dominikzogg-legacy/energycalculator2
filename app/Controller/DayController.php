@@ -179,7 +179,7 @@ final class DayController
         $comestiblesWithinDay = [];
 
         foreach ($this->comestibleRepository->findBy(['userId' => $authenticatedUser->getId()], ['name' => 'ASC']) as $comestible) {
-            $comestiblesWithinDay[] = $this->comestibleWithinDayRepository->create($day->getId())->withAmount(5)->withComestible($comestible);
+            $comestiblesWithinDay[] = $this->comestibleWithinDayRepository->create($day->getId())->withAmount(100)->withComestible($comestible);
         }
 
         $day->setComestiblesWithinDay($comestiblesWithinDay);
