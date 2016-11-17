@@ -116,6 +116,57 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
     }
 
     /**
+     * @return float
+     */
+    public function getCalorie()
+    {
+        $calorie = 0;
+        foreach ($this->getComestiblesWithinDay() as $comestiblesWithinDay) {
+            $calorie += $comestiblesWithinDay->getCalorie();
+        }
+        return $calorie;
+    }
+
+    /**
+     * @return float
+     */
+    public function getProtein()
+    {
+        $protein = 0;
+        foreach ($this->getComestiblesWithinDay() as $comestiblesWithinDay) {
+            $protein += $comestiblesWithinDay->getProtein();
+        }
+
+        return $protein;
+    }
+
+    /**
+     * @return float
+     */
+    public function getCarbohydrate()
+    {
+        $carbohydrate = 0;
+        foreach ($this->getComestiblesWithinDay() as $comestiblesWithinDay) {
+            $carbohydrate += $comestiblesWithinDay->getCarbohydrate();
+        }
+
+        return $carbohydrate;
+    }
+
+    /**
+     * @return float
+     */
+    public function getFat()
+    {
+        $fat = 0;
+        foreach ($this->getComestiblesWithinDay() as $comestiblesWithinDay) {
+            $fat += $comestiblesWithinDay->getFat();
+        }
+
+        return $fat;
+    }
+
+    /**
      * @param array $data
      *
      * @return Day|ModelInterface
@@ -165,6 +216,10 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
             'user' => null !== $this->userId ? $this->getUser()->jsonSerialize() : null,
             'date' => $this->date,
             'weight' => $this->weight,
+            'calorie' => $this->getCalorie(),
+            'protein' => $this->getProtein(),
+            'carbohydrate' => $this->getCarbohydrate(),
+            'fat' => $this->getFat(),
             'comestiblesWithinDay' => $this->comestiblesWithinDay->jsonSerialize()
         ];
     }

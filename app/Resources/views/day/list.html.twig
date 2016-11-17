@@ -18,6 +18,10 @@
                         <th>{{ "day.label.id"|translate(locale) }}</th>
                         <th>{{ "day.label.date"|translate(locale) }}</th>
                         <th>{{ "day.label.weight"|translate(locale) }}</th>
+                        <th>{{ "day.label.calorie"|translate(locale) }}</th>
+                        <th>{{ "day.label.protein"|translate(locale) }}</th>
+                        <th>{{ "day.label.carbohydrate"|translate(locale) }}</th>
+                        <th>{{ "day.label.fat"|translate(locale) }}</th>
                         <th>{{ "day.label.actions"|translate(locale) }}</th>
                     </tr>
                 </thead>
@@ -27,6 +31,10 @@
                             <td>{{ day.id }}</td>
                             <td>{{ day.date }}</td>
                             <td>{{ day.weight }}</td>
+                            <td>{{ day.calorie }}</td>
+                            <td>{{ day.protein }}</td>
+                            <td>{{ day.carbohydrate }}</td>
+                            <td>{{ day.fat }}</td>
                             <td>
                                 <a href="{{ path_for('day_edit', {'locale': locale, 'id': day.id}) }}" type="button" class="btn btn-default btn-sm" title="{{ "day.action.edit"|translate(locale) }}">
                                     <i class="glyphicon glyphicon-pencil"></i>

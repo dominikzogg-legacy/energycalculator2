@@ -17,6 +17,11 @@ final class ComestibleWithinDay implements ValidatableModelInterface
     use IdTrait;
 
     /**
+     * @var string
+     */
+    private $dayId;
+
+    /**
      * @var Comestible|\Closure|null
      */
     private $comestible;
@@ -25,11 +30,6 @@ final class ComestibleWithinDay implements ValidatableModelInterface
      * @var string
      */
     private $comestibleId;
-
-    /**
-     * @var string
-     */
-    private $dayId;
 
     /**
      * @var float
@@ -73,6 +73,66 @@ final class ComestibleWithinDay implements ValidatableModelInterface
         }
 
         return $this->comestible;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        if (null === $this->getComestible()) {
+            return '___NO_COMESTIBLE___';
+        }
+
+        return $this->getComestible()->getName();
+    }
+
+    /**
+     * @return float
+     */
+    public function getCalorie()
+    {
+        if (null === $this->getComestible()) {
+            return 0;
+        }
+
+        return $this->getComestible()->getCalorie() * $this->getAmount() / 100;
+    }
+
+    /**
+     * @return float
+     */
+    public function getProtein()
+    {
+        if (null === $this->getComestible()) {
+            return 0;
+        }
+
+        return $this->getComestible()->getProtein() * $this->getAmount() / 100;
+    }
+
+    /**
+     * @return float
+     */
+    public function getCarbohydrate()
+    {
+        if (null === $this->getComestible()) {
+            return 0;
+        }
+
+        return $this->getComestible()->getCarbohydrate() * $this->getAmount() / 100;
+    }
+
+    /**
+     * @return float
+     */
+    public function getFat()
+    {
+        if (null === $this->getComestible()) {
+            return 0;
+        }
+
+        return $this->getComestible()->getFat() * $this->getAmount() / 100;
     }
 
     /**
@@ -138,6 +198,11 @@ final class ComestibleWithinDay implements ValidatableModelInterface
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
             'comestible' => null !== $this->comestibleId ? $this->getComestible()->jsonSerialize() : null,
+            'name' => $this->getName(),
+            'calorie' => $this->getCalorie(),
+            'protein' => $this->getProtein(),
+            'carbohydrate' => $this->getCarbohydrate(),
+            'fat' => $this->getFat(),
             'amount' => $this->amount,
         ];
     }

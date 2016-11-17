@@ -17,6 +17,10 @@
                     <tr>
                         <th>{{ "comestible.label.id"|translate(locale) }}</th>
                         <th>{{ "comestible.label.name"|translate(locale) }}</th>
+                        <th>{{ "comestible.label.calorie"|translate(locale) }}</th>
+                        <th>{{ "comestible.label.protein"|translate(locale) }}</th>
+                        <th>{{ "comestible.label.carbohydrate"|translate(locale) }}</th>
+                        <th>{{ "comestible.label.fat"|translate(locale) }}</th>
                         <th>{{ "comestible.label.actions"|translate(locale) }}</th>
                     </tr>
                 </thead>
@@ -25,6 +29,10 @@
                         <tr>
                             <td>{{ comestible.id }}</td>
                             <td>{{ comestible.name }}</td>
+                            <td>{{ comestible.calorie }}</td>
+                            <td>{{ comestible.protein }}</td>
+                            <td>{{ comestible.carbohydrate }}</td>
+                            <td>{{ comestible.fat }}</td>
                             <td>
                                 <a href="{{ path_for('comestible_edit', {'locale': locale, 'id': comestible.id}) }}" type="button" class="btn btn-default btn-sm" title="{{ "comestible.action.edit"|translate(locale) }}">
                                     <i class="glyphicon glyphicon-pencil"></i>
