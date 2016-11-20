@@ -9,12 +9,12 @@
         <div class="col-xs-12">
             <h1>{{ "comestible.title.create"|translate(locale) }}</h1>
             <form action="{{ path_for('comestible_create', {'locale': locale}) }}" method="post" class="form-horizontal">
-                {{ forms.renderInputText(comestible, 'name', 'comestible.label.name', errorMessages, locale) }}
-                {{ forms.renderInputText(comestible, 'calorie', 'comestible.label.calorie', errorMessages, locale) }}
-                {{ forms.renderInputText(comestible, 'protein', 'comestible.label.protein', errorMessages, locale) }}
-                {{ forms.renderInputText(comestible, 'carbohydrate', 'comestible.label.carbohydrate', errorMessages, locale) }}
-                {{ forms.renderInputText(comestible, 'fat', 'comestible.label.fat', errorMessages, locale) }}
-                {{ forms.renderInputText(comestible, 'defaultValue', 'comestible.label.defaultValue', errorMessages, locale) }}
+                {{ forms.renderInputText({'model': comestible, 'property': 'name', 'label': 'comestible.label.name', 'errorMessages': errorMessages, 'locale': locale}) }}
+                {{ forms.renderInputText({'model': comestible, 'property': 'calorie', 'label': 'comestible.label.calorie', 'errorMessages': errorMessages, 'locale': locale}) }}
+                {{ forms.renderInputText({'model': comestible, 'property': 'protein', 'label': 'comestible.label.protein', 'errorMessages': errorMessages, 'locale': locale}) }}
+                {{ forms.renderInputText({'model': comestible, 'property': 'carbohydrate', 'label': 'comestible.label.carbohydrate', 'errorMessages': errorMessages, 'locale': locale}) }}
+                {{ forms.renderInputText({'model': comestible, 'property': 'fat', 'label': 'comestible.label.fat', 'errorMessages': errorMessages, 'locale': locale}) }}
+                {{ forms.renderInputText({'model': comestible, 'property': 'defaultValue', 'label': 'comestible.label.defaultValue', 'errorMessages': errorMessages, 'locale': locale}) }}
                 <input type="hidden" name="csrf" value="{{ csrf }}">
                 <div class="form-group">
                     <div class="col-lg-offset-2 col-lg-10">

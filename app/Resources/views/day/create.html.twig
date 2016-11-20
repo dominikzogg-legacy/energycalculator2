@@ -9,12 +9,12 @@
         <div class="col-xs-12">
             <h1>{{ "day.title.create"|translate(locale) }}</h1>
             <form action="{{ path_for('day_create', {'locale': locale}) }}" method="post" class="form-horizontal">
-                {{ forms.renderInputDate(day, 'date', 'day.label.date', errorMessages, locale) }}
-                {{ forms.renderInputText(day, 'weight', 'day.label.weight', errorMessages, locale) }}
-                {{ forms.renderCollection(day, 'comestiblesWithinDay', 'day.label.comestiblesWithinDay', locale, [
-                    {'macro': 'renderAjaxSelect', 'arguments': ['comestible', 'day.label.comestiblesWithinDay.comestible', path_for('comestible_findbynamelike', {'locale': locale}), 'name', errorMessages, locale]},
-                    {'macro': 'renderInputText', 'arguments': ['amount', 'day.label.comestiblesWithinDay.amount', errorMessages, locale]}
-                ]) }}
+                {{ forms.renderInputDate({'model': day, 'property': 'date', 'label': 'day.label.date', 'errorMessages': errorMessages, 'locale': locale}) }}
+                {{ forms.renderInputText({'model': day, 'property': 'weight', 'label': 'day.label.weight', 'errorMessages': errorMessages, 'locale': locale}) }}
+                {{ forms.renderCollection({'model': day, 'property': 'comestiblesWithinDay', 'label': 'day.label.comestiblesWithinDay', 'errorMessages': errorMessages, 'locale': locale, 'fields': [
+                    {'macro': 'renderAjaxSelect','parameters': {'property': 'comestible','label': 'day.label.comestiblesWithinDay.comestible','route': path_for('comestible_findbynamelike', {'locale': locale})}},
+                    {'macro': 'renderInputText','parameters': {'property': 'amount','label': 'day.label.comestiblesWithinDay.amount'}}
+                ]}) }}
                 <input type="hidden" name="csrf" value="{{ csrf }}">
                 <div class="form-group">
                     <div class="col-lg-offset-2 col-lg-10">
