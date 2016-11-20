@@ -1,6 +1,6 @@
-{% macro renderInputText(model, property, propertyLabel, errorMessages, locale) %}
+{% macro renderInputText(model, property, label, errorMessages, locale) %}
     <div class="form-group{% if errorMessages[property] is defined %} has-error{% endif %}">
-        <label class="control-label col-lg-2" for="{{ property }}">{{ propertyLabel|translate(locale) }}</label>
+        <label class="control-label col-lg-2" for="{{ property }}">{{ label|translate(locale) }}</label>
         <div class="col-lg-10">
             <input type="text" id="{{ property }}" name="{{ property }}" value="{{ model[property] }}" class="form-control">
             {% if errorMessages[property] is defined %}
@@ -12,9 +12,9 @@
     </div>
 {% endmacro %}
 
-{% macro renderInputDate(model, property, propertyLabel, errorMessages, locale) %}
+{% macro renderInputDate(model, property, label, errorMessages, locale) %}
     <div class="form-group{% if errorMessages[property] is defined %} has-error{% endif %}">
-        <label class="control-label col-lg-2" for="{{ property }}">{{ propertyLabel|translate(locale) }}</label>
+        <label class="control-label col-lg-2" for="{{ property }}">{{ label|translate(locale) }}</label>
         <div class="col-lg-10">
             <input type="text" id="{{ property }}" name="{{ property }}" value="{{ model[property] }}" data-provide="datepicker" data-date-format="yyyy-mm-dd" class="form-control">
             {% if errorMessages[property] is defined %}
@@ -26,9 +26,9 @@
     </div>
 {% endmacro %}
 
-{% macro renderInputPassword(model, property, propertyLabel, errorMessages, locale) %}
+{% macro renderInputPassword(model, property, label, errorMessages, locale) %}
     <div class="form-group{% if errorMessages[property] is defined %} has-error{% endif %}">
-        <label class="control-label col-lg-2" for="{{ property }}">{{ propertyLabel|translate(locale) }}</label>
+        <label class="control-label col-lg-2" for="{{ property }}">{{ label|translate(locale) }}</label>
         <div class="col-lg-10">
             <input type="password" id="{{ property }}" name="{{ property }}" class="form-control">
             {% if errorMessages[property] is defined %}
@@ -40,13 +40,13 @@
     </div>
 {% endmacro %}
 
-{% macro renderSelect(model, property, propertyLabel, options, errorMessages, locale) %}
+{% macro renderSelect(model, property, label, options, errorMessages, locale) %}
     <div class="form-group{% if errorMessages[property] is defined %} has-error{% endif %}">
-        <label class="control-label col-lg-2" for="{{ property }}">{{ propertyLabel|translate(locale) }}</label>
+        <label class="control-label col-lg-2" for="{{ property }}">{{ label|translate(locale) }}</label>
         <div class="col-lg-10">
-            <select id="{{ property }}" name="{{ property }}" class="form-control" data-placeholder="{{ (propertyLabel~'._placeholder')|translate(locale) }}" placeholder="{{ (propertyLabel~'._placeholder')|translate(locale) }}">
+            <select id="{{ property }}" name="{{ property }}" class="form-control" data-placeholder="{{ (label~'._placeholder')|translate(locale) }}" placeholder="{{ (label~'._placeholder')|translate(locale) }}">
                 {% for labelKey, value in options %}
-                    <option value="{{ value }}"{% if value == model[property] %} selected="selected"{% endif %}>{{ (propertyLabel~"."~labelKey)|translate(locale) }}</option>
+                    <option value="{{ value }}"{% if value == model[property] %} selected="selected"{% endif %}>{{ (label~"."~labelKey)|translate(locale) }}</option>
                 {% endfor %}
             </select>
             {% if errorMessages[property] is defined %}
@@ -58,11 +58,11 @@
     </div>
 {% endmacro %}
 
-{% macro renderAjaxSelect(model, property, propertyLabel, route, nameField, errorMessages, locale) %}
+{% macro renderAjaxSelect(model, property, label, route, nameField, errorMessages, locale) %}
     <div class="form-group{% if errorMessages[property] is defined %} has-error{% endif %}">
-        <label class="control-label col-lg-2" for="{{ property }}">{{ propertyLabel|translate(locale) }}</label>
+        <label class="control-label col-lg-2" for="{{ property }}">{{ label|translate(locale) }}</label>
         <div class="col-lg-10">
-            <select id="{{ property }}" name="{{ property }}" class="form-control" data-ajax="1" data-select2-rendering="1" data-route="{{ route }}" data-choice-label="{{ nameField }}" data-placeholder="{{ (propertyLabel~'._placeholder')|translate(locale) }}" placeholder="{{ (propertyLabel~'._placeholder')|translate(locale) }}">
+            <select id="{{ property }}" name="{{ property }}" class="form-control" data-ajax="1" data-select2-rendering="1" data-route="{{ route }}" data-choice-label="{{ nameField }}" data-placeholder="{{ (label~'._placeholder')|translate(locale) }}" placeholder="{{ (label~'._placeholder')|translate(locale) }}">
                 {% if model[property] %}
                     <option value="{{ model[property].id }}" selected="selected">{{ model[property][nameField] }}</option>
                 {% endif %}
@@ -76,13 +76,13 @@
     </div>
 {% endmacro %}
 
-{% macro renderSelectMultiple(model, property, propertyLabel, options, errorMessages, locale) %}
+{% macro renderSelectMultiple(model, property, label, options, errorMessages, locale) %}
     <div class="form-group{% if errorMessages[property] is defined %} has-error{% endif %}">
-        <label class="control-label col-lg-2" for="{{ property }}">{{ propertyLabel|translate(locale) }}</label>
+        <label class="control-label col-lg-2" for="{{ property }}">{{ label|translate(locale) }}</label>
         <div class="col-lg-10">
-            <select id="{{ property }}" name="{{ property }}[]" multiple="multiple" class="form-control" data-placeholder="{{ (propertyLabel~'._placeholder')|translate(locale) }}" placeholder="{{ (propertyLabel~'._placeholder')|translate(locale) }}">
+            <select id="{{ property }}" name="{{ property }}[]" multiple="multiple" class="form-control" data-placeholder="{{ (label~'._placeholder')|translate(locale) }}" placeholder="{{ (label~'._placeholder')|translate(locale) }}">
                 {% for labelKey, value in options %}
-                    <option value="{{ value }}"{% if value in model[property] %} selected="selected"{% endif %}>{{ (propertyLabel~"."~labelKey)|translate(locale) }}</option>
+                    <option value="{{ value }}"{% if value in model[property] %} selected="selected"{% endif %}>{{ (label~"."~labelKey)|translate(locale) }}</option>
                 {% endfor %}
             </select>
             {% if errorMessages[property] is defined %}
@@ -94,25 +94,25 @@
     </div>
 {% endmacro %}
 
-{% macro renderCollection(model, property, propertyLabel, locale, fields) %}
+{% macro renderCollection(model, property, label, locale, fields) %}
     <div class="form-group">
-        <label class="control-label col-lg-2" for="{{ property }}">{{ propertyLabel|translate(locale) }}</label>
+        <label class="control-label col-lg-2" for="{{ property }}">{{ label|translate(locale) }}</label>
         <div class="col-lg-10">
-            <div id="{{ property }}" data-prototype="{{ _self.renderCollectionRow(property, propertyLabel, locale, '__name__', value, fields)|escape('html') }}">
+            <div id="{{ property }}" data-prototype="{{ _self.renderCollectionRow(property, label, locale, '__name__', value, fields)|escape('html') }}">
                 <ul class="bc-collection list-unstyled">
                     {% for key, value in model[property] %}
                         <li>
-                            {{ _self.renderCollectionRow(property, propertyLabel, locale, key, value, fields) }}
+                            {{ _self.renderCollectionRow(property, label, locale, key, value, fields) }}
                         </li>
                     {% endfor %}
                 </ul>
-                <a href="#" class="btn btn-primary btn-small" data-addfield="collection" data-collection="{{ property }}" data-prototype-name="__name__">{{ (propertyLabel~'._add')|translate(locale) }}</a>
+                <a href="#" class="btn btn-primary btn-small" data-addfield="collection" data-collection="{{ property }}" data-prototype-name="__name__">{{ (label~'._add')|translate(locale) }}</a>
             </div>
         </div>
     </div>
 {% endmacro %}
 
-{% macro renderCollectionRow(property, propertyLabel, locale, key, value, fields) %}
+{% macro renderCollectionRow(property, label, locale, key, value, fields) %}
     <div class="row">
         <div class="col-xs-12">
             <div id="{{ property }}_{{ key }}" class="form-groups">
@@ -122,7 +122,7 @@
             </div>
         </div>
         <div class="col-xs-12 col-lg-offset-2">
-            <a href="#" class="btn btn-danger btn-small" data-removefield="collection" data-field="{{ property }}_{{ key }}">{{ (propertyLabel~'._remove')|translate(locale) }}</a>
+            <a href="#" class="btn btn-danger btn-small" data-removefield="collection" data-field="{{ property }}_{{ key }}">{{ (label~'._remove')|translate(locale) }}</a>
         </div>
     </div>
 {% endmacro %}
