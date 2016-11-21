@@ -18,6 +18,7 @@ use Chubbyphp\Session\SessionInterface;
 use Energycalculator\Service\RedirectForPath;
 use Energycalculator\Service\TemplateData;
 use Energycalculator\Service\TwigRender;
+use Ramsey\Uuid\Uuid;
 
 final class DayController
 {
@@ -176,14 +177,6 @@ final class DayController
 
         $day = $this->dayRepository->create();
 
-        $comestiblesWithinDay = [];
-
-        foreach ($this->comestibleRepository->findBy(['userId' => $authenticatedUser->getId()], ['name' => 'ASC']) as $comestible) {
-            $comestiblesWithinDay[] = $this->comestibleWithinDayRepository->create($day->getId())->withAmount(100)->withComestible($comestible);
-        }
-
-        $day->setComestiblesWithinDay($comestiblesWithinDay);
-
         if ('POST' === $request->getMethod()) {
             $data = $request->getParsedBody();
 
@@ -192,6 +185,29 @@ final class DayController
                 ->withDate(new \DateTime($data['date'] ?? 'now'))
                 ->withWeight($data['weight'] ? (float) $data['weight'] : null)
             ;
+
+            $comestiblesWithinDay = $day->getComestiblesWithinDay();
+            $toSetComestiblesWithinDay = [];
+            foreach ($data['comestiblesWithinDay'] as $i => $comestibleWithinDayRow) {
+                if (isset($comestiblesWithinDay[$i])) {
+                    $comestibleWithinDay = $comestiblesWithinDay[$i];
+                    $comestibleWithinDay = $comestibleWithinDay->withUpdatedAt(new \DateTime());
+                } else {
+                    $comestibleWithinDay = $this->comestibleWithinDayRepository->create($day->getId());
+                }
+
+                $comestibleWithinDay = $comestibleWithinDay->withComestible(
+                    $this->comestibleRepository->findOneBy([
+                        'id' => $comestibleWithinDayRow['comestible'],
+                        'userId' => $authenticatedUser->getId()
+                    ])
+                );
+
+                $comestibleWithinDay = $comestibleWithinDay->withAmount($comestibleWithinDayRow['amount']);
+                $toSetComestiblesWithinDay[$i] = $comestibleWithinDay;
+            }
+
+            $day->setComestiblesWithinDay($toSetComestiblesWithinDay);
 
             if ([] === $errorMessages = $this->validator->validateModel($day)) {
                 $this->dayRepository->persist($day);
@@ -251,6 +267,29 @@ final class DayController
                 ->withWeight($data['weight'] ? (float) $data['weight'] : null)
             ;
 
+            $comestiblesWithinDay = $day->getComestiblesWithinDay();
+            $toSetComestiblesWithinDay = [];
+            foreach ($data['comestiblesWithinDay'] as $i => $comestibleWithinDayRow) {
+                if (isset($comestiblesWithinDay[$i])) {
+                    $comestibleWithinDay = $comestiblesWithinDay[$i];
+                    $comestibleWithinDay = $comestibleWithinDay->withUpdatedAt(new \DateTime());
+                } else {
+                    $comestibleWithinDay = $this->comestibleWithinDayRepository->create($day->getId());
+                }
+
+                $comestibleWithinDay = $comestibleWithinDay->withComestible(
+                    $this->comestibleRepository->findOneBy([
+                        'id' => $comestibleWithinDayRow['comestible'],
+                        'userId' => $authenticatedUser->getId()
+                    ])
+                );
+
+                $comestibleWithinDay = $comestibleWithinDay->withAmount($comestibleWithinDayRow['amount']);
+                $toSetComestiblesWithinDay[$i] = $comestibleWithinDay;
+            }
+
+            $day->setComestiblesWithinDay($toSetComestiblesWithinDay);
+
             if ([] === $errorMessages = $this->validator->validateModel($day)) {
                 $day = $day->withUpdatedAt(new \DateTime());
                 $this->dayRepository->persist($day);
@@ -277,6 +316,20 @@ final class DayController
                 'day' => prepareForView($day)
             ])
         );
+    }
+
+    /**
+     * @param ComestibleWithinDay[]|array $comestiblesWithinDay
+     * @return array
+     */
+    private function getComestibleWithinDayByIds(array $comestiblesWithinDay): array
+    {
+        $comestiblesWithinDayIds = [];
+        foreach ($comestiblesWithinDay as $comestibleWithinDay) {
+            $comestiblesWithinDayIds[] = $comestibleWithinDay->getId();
+        }
+
+        return $comestiblesWithinDayIds;
     }
 
     /**
