@@ -5,6 +5,7 @@ namespace Energycalculator\Controller;
 use Chubbyphp\ErrorHandler\HttpException;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
+use Chubbyphp\Security\UserInterface;
 use Chubbyphp\Validation\ValidatorInterface;
 use Energycalculator\Model\ComestibleWithinDay;
 use Energycalculator\Model\Day;
@@ -184,30 +185,8 @@ final class DayController
                 ->withUser($authenticatedUser)
                 ->withDate(new \DateTime($data['date'] ?? 'now'))
                 ->withWeight($data['weight'] ? (float) $data['weight'] : null)
+                ->setComestiblesWithinDay($this->getComestiblesWithinDay($day, $data, $authenticatedUser))
             ;
-
-            $comestiblesWithinDay = $day->getComestiblesWithinDay();
-            $toSetComestiblesWithinDay = [];
-            foreach ($data['comestiblesWithinDay'] as $i => $comestibleWithinDayRow) {
-                if (isset($comestiblesWithinDay[$i])) {
-                    $comestibleWithinDay = $comestiblesWithinDay[$i];
-                    $comestibleWithinDay = $comestibleWithinDay->withUpdatedAt(new \DateTime());
-                } else {
-                    $comestibleWithinDay = $this->comestibleWithinDayRepository->create($day->getId());
-                }
-
-                $comestibleWithinDay = $comestibleWithinDay->withComestible(
-                    $this->comestibleRepository->findOneBy([
-                        'id' => $comestibleWithinDayRow['comestible'],
-                        'userId' => $authenticatedUser->getId()
-                    ])
-                );
-
-                $comestibleWithinDay = $comestibleWithinDay->withAmount($comestibleWithinDayRow['amount']);
-                $toSetComestiblesWithinDay[$i] = $comestibleWithinDay;
-            }
-
-            $day->setComestiblesWithinDay($toSetComestiblesWithinDay);
 
             if ([] === $errorMessages = $this->validator->validateModel($day)) {
                 $this->dayRepository->persist($day);
@@ -265,30 +244,8 @@ final class DayController
             $day = $day
                 ->withDate(new \DateTime($data['date'] ?? 'now'))
                 ->withWeight($data['weight'] ? (float) $data['weight'] : null)
+                ->setComestiblesWithinDay($this->getComestiblesWithinDay($day, $data, $authenticatedUser))
             ;
-
-            $comestiblesWithinDay = $day->getComestiblesWithinDay();
-            $toSetComestiblesWithinDay = [];
-            foreach ($data['comestiblesWithinDay'] as $i => $comestibleWithinDayRow) {
-                if (isset($comestiblesWithinDay[$i])) {
-                    $comestibleWithinDay = $comestiblesWithinDay[$i];
-                    $comestibleWithinDay = $comestibleWithinDay->withUpdatedAt(new \DateTime());
-                } else {
-                    $comestibleWithinDay = $this->comestibleWithinDayRepository->create($day->getId());
-                }
-
-                $comestibleWithinDay = $comestibleWithinDay->withComestible(
-                    $this->comestibleRepository->findOneBy([
-                        'id' => $comestibleWithinDayRow['comestible'],
-                        'userId' => $authenticatedUser->getId()
-                    ])
-                );
-
-                $comestibleWithinDay = $comestibleWithinDay->withAmount($comestibleWithinDayRow['amount']);
-                $toSetComestiblesWithinDay[$i] = $comestibleWithinDay;
-            }
-
-            $day->setComestiblesWithinDay($toSetComestiblesWithinDay);
 
             if ([] === $errorMessages = $this->validator->validateModel($day)) {
                 $day = $day->withUpdatedAt(new \DateTime());
@@ -319,17 +276,35 @@ final class DayController
     }
 
     /**
-     * @param ComestibleWithinDay[]|array $comestiblesWithinDay
+     * @param Day $day
+     * @param array $data
+     * @param UserInterface $authenticatedUser
      * @return array
      */
-    private function getComestibleWithinDayByIds(array $comestiblesWithinDay): array
+    private function getComestiblesWithinDay(Day $day, array $data, UserInterface $authenticatedUser)
     {
-        $comestiblesWithinDayIds = [];
-        foreach ($comestiblesWithinDay as $comestibleWithinDay) {
-            $comestiblesWithinDayIds[] = $comestibleWithinDay->getId();
+        $comestiblesWithinDay = $day->getComestiblesWithinDay();
+        $updatedComestiblesWithinDay = [];
+        foreach ($data['comestiblesWithinDay'] as $i => $comestibleWithinDayRow) {
+            if (isset($comestiblesWithinDay[$i])) {
+                $comestibleWithinDay = $comestiblesWithinDay[$i];
+                $comestibleWithinDay = $comestibleWithinDay->withUpdatedAt(new \DateTime());
+            } else {
+                $comestibleWithinDay = $this->comestibleWithinDayRepository->create($day->getId());
+            }
+
+            $comestibleWithinDay = $comestibleWithinDay->withComestible(
+                $this->comestibleRepository->findOneBy([
+                    'id' => $comestibleWithinDayRow['comestible'],
+                    'userId' => $authenticatedUser->getId()
+                ])
+            );
+
+            $comestibleWithinDay = $comestibleWithinDay->withAmount($comestibleWithinDayRow['amount']);
+            $updatedComestiblesWithinDay[$i] = $comestibleWithinDay;
         }
 
-        return $comestiblesWithinDayIds;
+        return $updatedComestiblesWithinDay;
     }
 
     /**
