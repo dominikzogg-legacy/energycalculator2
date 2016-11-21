@@ -206,12 +206,15 @@
                     {{ attribute(
                         _self,
                         field.macro,
-                        field.parameters|merge({
-                            'id': (id~'_'~(field.parameters.id|default(field.parameters.property))),
-                            'name': (name~'['~(field.parameters.name|default(field.parameters.property))~']'),
-                            'errorMessages': errorMessages[field.parameters.property]|default([]),
-                            'locale': locale
-                        })
+                        [
+                            field.parameters|merge({
+                                'model': model,
+                                'id': (id~'_'~(field.parameters.id|default(field.parameters.property))),
+                                'name': (name~'['~(field.parameters.name|default(field.parameters.property))~']'),
+                                'errorMessages': errorMessages[field.parameters.property]|default([]),
+                                'locale': locale
+                            })
+                        ]
                     ) }}
                 {% endfor %}
             </div>
