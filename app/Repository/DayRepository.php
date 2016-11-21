@@ -4,7 +4,7 @@ namespace Energycalculator\Repository;
 
 use Chubbyphp\Model\Collection\LazyModelCollection;
 use Chubbyphp\Model\Collection\ModelCollection;
-use Chubbyphp\Model\Doctrine\DBAL\AbstractDoctrineRepository;
+use Chubbyphp\Model\Doctrine\DBAL\Repository\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
 use Energycalculator\Model\ComestibleWithinDay;
 use Energycalculator\Model\Day;

@@ -2,7 +2,7 @@
 
 namespace Energycalculator\Repository;
 
-use Chubbyphp\Model\Doctrine\DBAL\AbstractDoctrineRepository;
+use Chubbyphp\Model\Doctrine\DBAL\Repository\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Model\User;

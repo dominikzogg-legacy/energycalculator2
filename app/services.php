@@ -3,6 +3,9 @@
 use Chubbyphp\Csrf\CsrfProvider;
 use Chubbyphp\ErrorHandler\SimpleErrorHandlerProvider;
 use Chubbyphp\Model\Cache\ModelCache;
+use Chubbyphp\Model\Doctrine\DBAL\Command\CreateDatabaseCommand;
+use Chubbyphp\Model\Doctrine\DBAL\Command\RunSqlCommand;
+use Chubbyphp\Model\Doctrine\DBAL\Command\SchemaUpdateCommand;
 use Chubbyphp\Model\Resolver;
 use Chubbyphp\Security\Authentication\AuthenticationProvider;
 use Chubbyphp\Security\Authentication\FormAuthentication;
@@ -14,14 +17,7 @@ use Chubbyphp\Translation\TranslationProvider;
 use Chubbyphp\Translation\TranslationTwigExtension;
 use Chubbyphp\Validation\Requirements\Repository;
 use Chubbyphp\Validation\ValidationProvider;
-use Negotiation\LanguageNegotiator;
-use Silex\Provider\DoctrineServiceProvider;
-use Silex\Provider\MonologServiceProvider;
-use Slim\Container;
-use Energycalculator\Command\CreateDatabaseCommand;
 use Energycalculator\Command\CreateUserCommand;
-use Energycalculator\Command\RunSqlCommand;
-use Energycalculator\Command\SchemaUpdateCommand;
 use Energycalculator\Controller\AuthController;
 use Energycalculator\Controller\ComestibleController;
 use Energycalculator\Controller\DayController;
@@ -43,6 +39,10 @@ use Energycalculator\Service\TemplateData;
 use Energycalculator\Service\TwigRender;
 use Energycalculator\Twig\NumericExtension;
 use Energycalculator\Twig\RouterExtension;
+use Negotiation\LanguageNegotiator;
+use Silex\Provider\DoctrineServiceProvider;
+use Silex\Provider\MonologServiceProvider;
+use Slim\Container;
 
 /* @var Container $container */
 $container->register(new AuthenticationProvider());
