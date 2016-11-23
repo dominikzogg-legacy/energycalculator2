@@ -9,8 +9,8 @@ $container['cacheDir'] = __DIR__.'/../var/cache';
 $container['configDir'] = __DIR__.'/../config';
 $container['logDir'] = __DIR__.'/../var/log';
 $container['publicDir'] = __DIR__.'/../public';
-$container['translationDir'] = __DIR__.'/../translations';
-$container['viewDir'] = __DIR__.'/../views';
+$container['translationDir'] = __DIR__.'/../translation';
+$container['viewDir'] = __DIR__.'/../view';
 
 require_once __DIR__.'/functions.php';
 
