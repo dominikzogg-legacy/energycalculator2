@@ -1,17 +1,38 @@
 <?php
 
 use Chubbyphp\Lazy\LazyCommand;
-use Slim\Container;
-use Energycalculator\Command\CreateDatabaseCommand;
+use Chubbyphp\Model\Doctrine\DBAL\Command\CreateDatabaseCommand;
+use Chubbyphp\Model\Doctrine\DBAL\Command\RunSqlCommand;
+use Chubbyphp\Model\Doctrine\DBAL\Command\SchemaUpdateCommand;
 use Energycalculator\Command\CreateUserCommand;
-use Energycalculator\Command\RunSqlCommand;
-use Energycalculator\Command\SchemaUpdateCommand;
 use Energycalculator\Provider\ConsoleProvider;
+use Energycalculator\Repository\UserRepository;
+use Slim\Container;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /* @var Container $container */
 $container->register(new ConsoleProvider());
+
+$container[CreateDatabaseCommand::class] = function () use ($container) {
+    return new CreateDatabaseCommand($container['db']);
+};
+
+$container[CreateUserCommand::class] = function () use ($container) {
+    return new CreateUserCommand(
+        $container['security.authentication.passwordmanager'],
+        $container[UserRepository::class],
+        $container['validator']
+    );
+};
+
+$container[RunSqlCommand::class] = function () use ($container) {
+    return new RunSqlCommand($container['db']);
+};
+
+$container[SchemaUpdateCommand::class] = function () use ($container) {
+    return new SchemaUpdateCommand($container['db'], $container['appDir'].'/schema.php');
+};
 
 /* @var Container $container */
 $container->extend('console.commands', function (array $commands) use ($container) {

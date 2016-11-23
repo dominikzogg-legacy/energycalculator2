@@ -3,9 +3,6 @@
 use Chubbyphp\Csrf\CsrfProvider;
 use Chubbyphp\ErrorHandler\SimpleErrorHandlerProvider;
 use Chubbyphp\Model\Cache\ModelCache;
-use Chubbyphp\Model\Doctrine\DBAL\Command\CreateDatabaseCommand;
-use Chubbyphp\Model\Doctrine\DBAL\Command\RunSqlCommand;
-use Chubbyphp\Model\Doctrine\DBAL\Command\SchemaUpdateCommand;
 use Chubbyphp\Model\Resolver;
 use Chubbyphp\Security\Authentication\AuthenticationProvider;
 use Chubbyphp\Security\Authentication\FormAuthentication;
@@ -17,14 +14,7 @@ use Chubbyphp\Translation\TranslationProvider;
 use Chubbyphp\Translation\TranslationTwigExtension;
 use Chubbyphp\Validation\Requirements\Repository;
 use Chubbyphp\Validation\ValidationProvider;
-use Energycalculator\Command\CreateUserCommand;
-use Energycalculator\Controller\AuthController;
-use Energycalculator\Controller\ComestibleController;
-use Energycalculator\Controller\DayController;
-use Energycalculator\Controller\HomeController;
-use Energycalculator\Controller\UserController;
 use Energycalculator\ErrorHandler\HtmlErrorResponseProvider;
-use Energycalculator\Middleware\LocaleMiddleware;
 use Energycalculator\Provider\TwigProvider;
 use Energycalculator\Repository\DayRepository;
 use Energycalculator\Repository\ComestibleRepository;
@@ -117,105 +107,23 @@ $container->extend('twig.extensions', function (array $extensions) use ($contain
 
 $container->extend('validator.helpers', function (array $helpers) use ($container) {
     $helpers[] = $container[Repository::class.'Comestible'];
+    $helpers[] = $container[Repository::class.'ComestibleWithinDay'];
     $helpers[] = $container[Repository::class.'Day'];
     $helpers[] = $container[Repository::class.'User'];
 
     return $helpers;
 });
 
-// commands
-$container[CreateDatabaseCommand::class] = function () use ($container) {
-    return new CreateDatabaseCommand($container['db']);
-};
-
-$container[CreateUserCommand::class] = function () use ($container) {
-    return new CreateUserCommand(
-        $container['security.authentication.passwordmanager'],
-        $container[UserRepository::class],
-        $container['validator']
-    );
-};
-
-$container[RunSqlCommand::class] = function () use ($container) {
-    return new RunSqlCommand($container['db']);
-};
-
-$container[SchemaUpdateCommand::class] = function () use ($container) {
-    return new SchemaUpdateCommand($container['db'], $container['appDir'].'/schema.php');
-};
-
-// controllers
-$container[AuthController::class] = function () use ($container) {
-    return new AuthController(
-        $container[FormAuthentication::class], // need cause login/logout
-        $container[RedirectForPath::class],
-        $container['session']
-    );
-};
-
-
-$container[HomeController::class] = function () use ($container) {
-    return new HomeController($container[TemplateData::class], $container[TwigRender::class]);
-};
-
-$container[ComestibleController::class] = function () use ($container) {
-    return new ComestibleController(
-        $container['security.authentication'],
-        $container['security.authorization'],
-        $container[ComestibleRepository::class],
-        $container[RedirectForPath::class],
-        $container['session'],
-        $container[TemplateData::class],
-        $container[TwigRender::class],
-        $container['validator']
-    );
-};
-
-$container[DayController::class] = function () use ($container) {
-    return new DayController(
-        $container['security.authentication'],
-        $container['security.authorization'],
-        $container[ComestibleRepository::class],
-        $container[ComestibleWithinDayRepository::class],
-        $container[DayRepository::class],
-        $container[RedirectForPath::class],
-        $container['session'],
-        $container[TemplateData::class],
-        $container[TwigRender::class],
-        $container['validator']
-    );
-};
-
-$container[UserController::class] = function () use ($container) {
-    return new UserController(
-        $container['security.authentication'],
-        $container['security.authorization'],
-        $container['security.authentication.passwordmanager'],
-        $container[RedirectForPath::class],
-        $container['security.authorization.rolehierarchyresolver'],
-        $container['session'],
-        $container[TemplateData::class],
-        $container[TwigRender::class],
-        $container[UserRepository::class],
-        $container['validator']
-    );
-};
-
-// middlewares
-$container[LocaleMiddleware::class] = function () use ($container) {
-    return new LocaleMiddleware(
-        $container[LanguageNegotiator::class],
-        $container['localeFallback'],
-        $container['locales']
-    );
-};
-
 // repositories
+$container[ModelCache::class] = function () {
+    return new ModelCache();
+};
+
 $container[ComestibleRepository::class] = function () use ($container) {
     return new ComestibleRepository(
         $container['db'],
         $container[Resolver::class],
-        new ModelCache(),
+        $container[ModelCache::class],
         $container['logger']
     );
 };
@@ -224,7 +132,7 @@ $container[ComestibleWithinDayRepository::class] = function () use ($container) 
     return new ComestibleWithinDayRepository(
         $container['db'],
         $container[Resolver::class],
-        new ModelCache(),
+        $container[ModelCache::class],
         $container['logger']
     );
 };
@@ -233,7 +141,7 @@ $container[DayRepository::class] = function () use ($container) {
     return new DayRepository(
         $container['db'],
         $container[Resolver::class],
-        new ModelCache(),
+        $container[ModelCache::class],
         $container['logger']
     );
 };
@@ -242,7 +150,7 @@ $container[UserRepository::class] = function () use ($container) {
     return new UserRepository(
         $container['db'],
         $container[Resolver::class],
-        new ModelCache(),
+        $container[ModelCache::class],
         $container['logger']
     );
 };
@@ -284,6 +192,10 @@ $container[RedirectForPath::class] = function () use ($container) {
 
 $container[Repository::class.'Comestible'] = function () use ($container) {
     return new Repository($container[ComestibleRepository::class]);
+};
+
+$container[Repository::class.'ComestibleWithinDay'] = function () use ($container) {
+    return new Repository($container[ComestibleWithinDayRepository::class]);
 };
 
 $container[Repository::class.'Day'] = function () use ($container) {

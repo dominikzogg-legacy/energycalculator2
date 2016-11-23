@@ -1,15 +1,79 @@
 <?php
 
-use Slim\App;
-use Slim\Container;
+use Chubbyphp\Security\Authentication\FormAuthentication;
 use Energycalculator\Controller\AuthController;
 use Energycalculator\Controller\ComestibleController;
 use Energycalculator\Controller\DayController;
 use Energycalculator\Controller\HomeController;
 use Energycalculator\Controller\UserController;
+use Energycalculator\Repository\ComestibleRepository;
+use Energycalculator\Repository\ComestibleWithinDayRepository;
+use Energycalculator\Repository\DayRepository;
+use Energycalculator\Repository\UserRepository;
+use Energycalculator\Service\RedirectForPath;
+use Energycalculator\Service\TemplateData;
+use Energycalculator\Service\TwigRender;
+use Slim\App;
+use Slim\Container;
 
 /* @var App $app */
 /* @var Container $container */
+
+$container[AuthController::class] = function () use ($container) {
+    return new AuthController(
+        $container[FormAuthentication::class], // need cause login/logout
+        $container[RedirectForPath::class],
+        $container['session']
+    );
+};
+
+
+$container[HomeController::class] = function () use ($container) {
+    return new HomeController($container[TemplateData::class], $container[TwigRender::class]);
+};
+
+$container[ComestibleController::class] = function () use ($container) {
+    return new ComestibleController(
+        $container['security.authentication'],
+        $container['security.authorization'],
+        $container[ComestibleRepository::class],
+        $container[RedirectForPath::class],
+        $container['session'],
+        $container[TemplateData::class],
+        $container[TwigRender::class],
+        $container['validator']
+    );
+};
+
+$container[DayController::class] = function () use ($container) {
+    return new DayController(
+        $container['security.authentication'],
+        $container['security.authorization'],
+        $container[ComestibleRepository::class],
+        $container[ComestibleWithinDayRepository::class],
+        $container[DayRepository::class],
+        $container[RedirectForPath::class],
+        $container['session'],
+        $container[TemplateData::class],
+        $container[TwigRender::class],
+        $container['validator']
+    );
+};
+
+$container[UserController::class] = function () use ($container) {
+    return new UserController(
+        $container['security.authentication'],
+        $container['security.authorization'],
+        $container['security.authentication.passwordmanager'],
+        $container[RedirectForPath::class],
+        $container['security.authorization.rolehierarchyresolver'],
+        $container['session'],
+        $container[TemplateData::class],
+        $container[TwigRender::class],
+        $container[UserRepository::class],
+        $container['validator']
+    );
+};
 
 $app->group('/{locale:'.implode('|', $container['locales']).'}', function () use ($app, $container) {
     $app->get('', HomeController::class.':home')->setName('home');

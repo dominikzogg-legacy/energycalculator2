@@ -39,6 +39,6 @@ if ($container['debug']) {
 $app = new App($container);
 
 require_once $container['appDir'].'/middlewares.php';
-require_once $container['appDir'].'/routes.php';
+require_once $container['appDir'].'/controllers.php';
 
 return $app;
