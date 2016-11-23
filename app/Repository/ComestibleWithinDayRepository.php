@@ -4,7 +4,6 @@ namespace Energycalculator\Repository;
 
 use Chubbyphp\Model\Doctrine\DBAL\Repository\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
-use Energycalculator\Model\Comestible;
 use Energycalculator\Model\ComestibleWithinDay;
 use Ramsey\Uuid\Uuid;
 
@@ -35,7 +34,7 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
      */
     protected function fromPersistence(array $row): ModelInterface
     {
-        $row['comestible'] = $this->resolver->lazyFind(Comestible::class, $row['comestibleId']);
+        $row['comestible'] = $this->resolver->lazyFind(ComestibleRepository::getModelClass(), $row['comestibleId']);
 
         return parent::fromPersistence($row);
     }
