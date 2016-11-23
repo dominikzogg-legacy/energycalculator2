@@ -81,15 +81,14 @@ $container->extend('security.authorization.rolehierarchy', function (array $role
 });
 
 $container->extend('translator.providers', function (array $providers) use ($container) {
-    $translationDir = $container['appDir'].'/../translations';
-    $providers[] = new LocaleTranslationProvider('de', require $translationDir.'/de.php');
-    $providers[] = new LocaleTranslationProvider('en', require $translationDir.'/en.php');
+    $providers[] = new LocaleTranslationProvider('de', require $container['translationDir'].'/de.php');
+    $providers[] = new LocaleTranslationProvider('en', require $container['translationDir'].'/en.php');
 
     return $providers;
 });
 
 $container->extend('twig.namespaces', function (array $namespaces) use ($container) {
-    $namespaces['Energycalculator'] = $container['appDir'].'/../views';
+    $namespaces['Energycalculator'] = $container['viewDir'];
 
     return $namespaces;
 });

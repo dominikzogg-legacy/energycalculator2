@@ -31,7 +31,7 @@ $container[RunSqlCommand::class] = function () use ($container) {
 };
 
 $container[SchemaUpdateCommand::class] = function () use ($container) {
-    return new SchemaUpdateCommand($container['db'], $container['appDir'].'/schema.php');
+    return new SchemaUpdateCommand($container['db'], __DIR__.'/schema.php');
 };
 
 /* @var Container $container */
