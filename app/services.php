@@ -25,10 +25,6 @@ use Energycalculator\Controller\HomeController;
 use Energycalculator\Controller\UserController;
 use Energycalculator\ErrorHandler\HtmlErrorResponseProvider;
 use Energycalculator\Middleware\LocaleMiddleware;
-use Energycalculator\Model\Day;
-use Energycalculator\Model\Comestible;
-use Energycalculator\Model\ComestibleWithinDay;
-use Energycalculator\Model\User;
 use Energycalculator\Provider\TwigProvider;
 use Energycalculator\Repository\DayRepository;
 use Energycalculator\Repository\ComestibleRepository;
@@ -135,7 +131,7 @@ $container[CreateDatabaseCommand::class] = function () use ($container) {
 $container[CreateUserCommand::class] = function () use ($container) {
     return new CreateUserCommand(
         $container['security.authentication.passwordmanager'],
-        $container[User::class],
+        $container[UserRepository::class],
         $container['validator']
     );
 };
@@ -166,7 +162,7 @@ $container[ComestibleController::class] = function () use ($container) {
     return new ComestibleController(
         $container['security.authentication'],
         $container['security.authorization'],
-        $container[Comestible::class],
+        $container[ComestibleRepository::class],
         $container[RedirectForPath::class],
         $container['session'],
         $container[TemplateData::class],
@@ -179,9 +175,9 @@ $container[DayController::class] = function () use ($container) {
     return new DayController(
         $container['security.authentication'],
         $container['security.authorization'],
-        $container[Comestible::class],
-        $container[ComestibleWithinDay::class],
-        $container[Day::class],
+        $container[ComestibleRepository::class],
+        $container[ComestibleWithinDayRepository::class],
+        $container[DayRepository::class],
         $container[RedirectForPath::class],
         $container['session'],
         $container[TemplateData::class],
@@ -200,7 +196,7 @@ $container[UserController::class] = function () use ($container) {
         $container['session'],
         $container[TemplateData::class],
         $container[TwigRender::class],
-        $container[User::class],
+        $container[UserRepository::class],
         $container['validator']
     );
 };
@@ -215,7 +211,7 @@ $container[LocaleMiddleware::class] = function () use ($container) {
 };
 
 // repositories
-$container[Comestible::class] = function () use ($container) {
+$container[ComestibleRepository::class] = function () use ($container) {
     return new ComestibleRepository(
         $container['db'],
         $container[Resolver::class],
@@ -224,7 +220,7 @@ $container[Comestible::class] = function () use ($container) {
     );
 };
 
-$container[ComestibleWithinDay::class] = function () use ($container) {
+$container[ComestibleWithinDayRepository::class] = function () use ($container) {
     return new ComestibleWithinDayRepository(
         $container['db'],
         $container[Resolver::class],
@@ -233,7 +229,7 @@ $container[ComestibleWithinDay::class] = function () use ($container) {
     );
 };
 
-$container[Day::class] = function () use ($container) {
+$container[DayRepository::class] = function () use ($container) {
     return new DayRepository(
         $container['db'],
         $container[Resolver::class],
@@ -242,7 +238,7 @@ $container[Day::class] = function () use ($container) {
     );
 };
 
-$container[User::class] = function () use ($container) {
+$container[UserRepository::class] = function () use ($container) {
     return new UserRepository(
         $container['db'],
         $container[Resolver::class],
@@ -252,7 +248,12 @@ $container[User::class] = function () use ($container) {
 };
 
 $container[Resolver::class] = function () use ($container) {
-    return new Resolver($container);
+    return new Resolver($container, [
+        ComestibleRepository::getModelClass() => ComestibleRepository::class,
+        ComestibleWithinDayRepository::getModelClass() => ComestibleWithinDayRepository::class,
+        DayRepository::getModelClass() => DayRepository::class,
+        UserRepository::getModelClass() => UserRepository::class,
+    ]);
 };
 
 // services
@@ -260,7 +261,7 @@ $container[FormAuthentication::class] = function ($container) {
     return new FormAuthentication(
         $container['security.authentication.passwordmanager'],
         $container['session'],
-        $container[User::class],
+        $container[UserRepository::class],
         $container['logger']
     );
 };
@@ -282,15 +283,15 @@ $container[RedirectForPath::class] = function () use ($container) {
 };
 
 $container[Repository::class.'Comestible'] = function () use ($container) {
-    return new Repository($container[Comestible::class]);
+    return new Repository($container[ComestibleRepository::class]);
 };
 
 $container[Repository::class.'Day'] = function () use ($container) {
-    return new Repository($container[Day::class]);
+    return new Repository($container[DayRepository::class]);
 };
 
 $container[Repository::class.'User'] = function () use ($container) {
-    return new Repository($container[User::class]);
+    return new Repository($container[UserRepository::class]);
 };
 
 $container[RoleAuthorization::class] = function ($container) {

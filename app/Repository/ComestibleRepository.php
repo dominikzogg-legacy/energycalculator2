@@ -13,7 +13,7 @@ final class ComestibleRepository extends AbstractDoctrineRepository
     /**
      * @return string
      */
-    public function getModelClass(): string
+    public static function getModelClass(): string
     {
         return Comestible::class;
     }

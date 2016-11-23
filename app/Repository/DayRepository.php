@@ -16,7 +16,7 @@ final class DayRepository extends AbstractDoctrineRepository
     /**
      * @return string
      */
-    public function getModelClass(): string
+    public static function getModelClass(): string
     {
         return Day::class;
     }

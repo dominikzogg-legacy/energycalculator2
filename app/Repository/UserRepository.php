@@ -11,7 +11,7 @@ final class UserRepository extends AbstractDoctrineRepository
     /**
      * @return string
      */
-    public function getModelClass(): string
+    public static function getModelClass(): string
     {
         return User::class;
     }
