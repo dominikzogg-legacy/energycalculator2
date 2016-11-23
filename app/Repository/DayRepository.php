@@ -26,7 +26,7 @@ final class DayRepository extends AbstractDoctrineRepository
      */
     public function create(): Day
     {
-        $modelClass = $this->getModelClass();
+        $modelClass = self::getModelClass();
 
         return new $modelClass(
             (string) Uuid::uuid4(),
