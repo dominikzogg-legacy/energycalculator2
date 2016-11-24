@@ -102,7 +102,7 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
      */
     public function setComestiblesWithinDay(array $comestiblesWithinDay): Day
     {
-        $this->comestiblesWithinDay->set($comestiblesWithinDay);
+        $this->comestiblesWithinDay->setModels($comestiblesWithinDay);
 
         return $this;
     }
@@ -112,7 +112,7 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
      */
     public function getComestiblesWithinDay(): array
     {
-        return array_values($this->comestiblesWithinDay->get());
+        return array_values($this->comestiblesWithinDay->getModels());
     }
 
     /**
