@@ -5,26 +5,25 @@ namespace Energycalculator\Repository;
 use Chubbyphp\Model\Doctrine\DBAL\Repository\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
 use Energycalculator\Model\Comestible;
+use Energycalculator\Model\User;
 use Ramsey\Uuid\Uuid;
 
 final class ComestibleRepository extends AbstractDoctrineRepository
 {
     /**
-     * @return string
+     * @param string $modelClass
+     * @return bool
      */
-    public static function getModelClass(): string
+    public function isResponsible(string $modelClass): bool
     {
-        return Comestible::class;
+        return $modelClass === Comestible::class;
     }
-
     /**
      * @return Comestible
      */
     public function create(): Comestible
     {
-        $modelClass = self::getModelClass();
-
-        return new $modelClass((string) Uuid::uuid4(), new \DateTime());
+        return new Comestible((string) Uuid::uuid4(), new \DateTime());
     }
 
     /**
@@ -33,9 +32,9 @@ final class ComestibleRepository extends AbstractDoctrineRepository
      */
     protected function fromPersistence(array $row): ModelInterface
     {
-        $row['user'] = $this->resolver->lazyFind(UserRepository::getModelClass(), $row['userId']);
+        $row['user'] = $this->resolver->lazyFind(User::class, $row['userId']);
 
-        return parent::fromPersistence($row);
+        return Comestible::fromPersistence($row);
     }
 
     /**

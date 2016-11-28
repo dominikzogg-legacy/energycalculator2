@@ -156,10 +156,10 @@ $container[UserRepository::class] = function () use ($container) {
 
 $container[Resolver::class] = function () use ($container) {
     return new Resolver($container, [
-        ComestibleRepository::getModelClass() => ComestibleRepository::class,
-        ComestibleWithinDayRepository::getModelClass() => ComestibleWithinDayRepository::class,
-        DayRepository::getModelClass() => DayRepository::class,
-        UserRepository::getModelClass() => UserRepository::class,
+        ComestibleRepository::class,
+        ComestibleWithinDayRepository::class,
+        DayRepository::class,
+        UserRepository::class,
     ]);
 };
 

@@ -3,17 +3,19 @@
 namespace Energycalculator\Repository;
 
 use Chubbyphp\Model\Doctrine\DBAL\Repository\AbstractDoctrineRepository;
+use Chubbyphp\Model\ModelInterface;
 use Energycalculator\Model\User;
 use Ramsey\Uuid\Uuid;
 
 final class UserRepository extends AbstractDoctrineRepository
 {
     /**
-     * @return string
+     * @param string $modelClass
+     * @return bool
      */
-    public static function getModelClass(): string
+    public function isResponsible(string $modelClass): bool
     {
-        return User::class;
+        return $modelClass === User::class;
     }
 
     /**
@@ -21,9 +23,16 @@ final class UserRepository extends AbstractDoctrineRepository
      */
     public function create(): User
     {
-        $modelClass = self::getModelClass();
+        return new User((string) Uuid::uuid4(), new \DateTime());
+    }
 
-        return new $modelClass((string) Uuid::uuid4(), new \DateTime());
+    /**
+     * @param array $row
+     * @return ModelInterface
+     */
+    protected function fromPersistence(array $row): ModelInterface
+    {
+        return User::fromPersistence($row);
     }
 
     /**

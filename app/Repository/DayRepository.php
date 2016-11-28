@@ -6,17 +6,20 @@ use Chubbyphp\Model\Collection\LazyModelCollection;
 use Chubbyphp\Model\Collection\ModelCollection;
 use Chubbyphp\Model\Doctrine\DBAL\Repository\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
+use Energycalculator\Model\ComestibleWithinDay;
 use Energycalculator\Model\Day;
+use Energycalculator\Model\User;
 use Ramsey\Uuid\Uuid;
 
 final class DayRepository extends AbstractDoctrineRepository
 {
     /**
-     * @return string
+     * @param string $modelClass
+     * @return bool
      */
-    public static function getModelClass(): string
+    public function isResponsible(string $modelClass): bool
     {
-        return Day::class;
+        return $modelClass === Day::class;
     }
 
     /**
@@ -24,9 +27,7 @@ final class DayRepository extends AbstractDoctrineRepository
      */
     public function create(): Day
     {
-        $modelClass = self::getModelClass();
-
-        return new $modelClass(
+        return new Day(
             (string) Uuid::uuid4(),
             new \DateTime(),
             new \DateTime(),
@@ -40,12 +41,12 @@ final class DayRepository extends AbstractDoctrineRepository
      */
     protected function fromPersistence(array $row): ModelInterface
     {
-        $row['user'] = $this->resolver->lazyFind(UserRepository::getModelClass(), $row['userId']);
+        $row['user'] = $this->resolver->lazyFind(User::class, $row['userId']);
         $row['comestiblesWithinDay'] = new LazyModelCollection($this->resolver->lazyFindBy(
-            ComestibleWithinDayRepository::getModelClass(), ['dayId' => $row['id']], ['createdAt' => 'ASC']
+            ComestibleWithinDay::class, ['dayId' => $row['id']], ['createdAt' => 'ASC']
         ));
 
-        return parent::fromPersistence($row);
+        return Day::fromPersistence($row);
     }
 
     /**
