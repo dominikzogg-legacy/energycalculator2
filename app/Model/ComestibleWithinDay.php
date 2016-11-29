@@ -37,9 +37,9 @@ final class ComestibleWithinDay implements ValidatableModelInterface
     private $amount = 0;
 
     /**
-     * @param string $id
+     * @param string    $id
      * @param \DateTime $createdAt
-     * @param string $dayId
+     * @param string    $dayId
      */
     public function __construct(string $id, \DateTime $createdAt, string $dayId)
     {

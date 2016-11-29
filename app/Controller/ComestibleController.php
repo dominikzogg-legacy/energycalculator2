@@ -3,7 +3,6 @@
 namespace Energycalculator\Controller;
 
 use Chubbyphp\ErrorHandler\HttpException;
-use Chubbyphp\Model\RepositoryInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Validation\ValidatorInterface;
@@ -61,13 +60,13 @@ final class ComestibleController
 
     /**
      * @param AuthenticationInterface $authentication
-     * @param AuthorizationInterface $authorization
-     * @param ComestibleRepository $comestibleRepository
-     * @param RedirectForPath $redirectForPath
-     * @param SessionInterface $session
-     * @param TemplateData $templateData
-     * @param TwigRender $twig
-     * @param ValidatorInterface $validator
+     * @param AuthorizationInterface  $authorization
+     * @param ComestibleRepository    $comestibleRepository
+     * @param RedirectForPath         $redirectForPath
+     * @param SessionInterface        $session
+     * @param TemplateData            $templateData
+     * @param TwigRender              $twig
+     * @param ValidatorInterface      $validator
      */
     public function __construct(
         AuthenticationInterface $authentication,
@@ -257,7 +256,7 @@ final class ComestibleController
         return $this->twig->render($response, '@Energycalculator/comestible/edit.html.twig',
             $this->templateData->aggregate($request, [
                 'errorMessages' => $errorMessages ?? [],
-                'comestible' => prepareForView($comestible)
+                'comestible' => prepareForView($comestible),
             ])
         );
     }
@@ -293,8 +292,9 @@ final class ComestibleController
     }
 
     /**
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
+     *
      * @return Response
      *
      * @throws HttpException

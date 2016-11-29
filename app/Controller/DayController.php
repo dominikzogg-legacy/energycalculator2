@@ -7,7 +7,6 @@ use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Security\UserInterface;
 use Chubbyphp\Validation\ValidatorInterface;
-use Energycalculator\Model\ComestibleWithinDay;
 use Energycalculator\Model\Day;
 use Energycalculator\Repository\ComestibleRepository;
 use Energycalculator\Repository\ComestibleWithinDayRepository;
@@ -19,7 +18,6 @@ use Chubbyphp\Session\SessionInterface;
 use Energycalculator\Service\RedirectForPath;
 use Energycalculator\Service\TemplateData;
 use Energycalculator\Service\TwigRender;
-use Ramsey\Uuid\Uuid;
 
 final class DayController
 {
@@ -74,16 +72,16 @@ final class DayController
     private $validator;
 
     /**
-     * @param AuthenticationInterface $authentication
-     * @param AuthorizationInterface $authorization
-     * @param ComestibleRepository $comestibleRepository
+     * @param AuthenticationInterface       $authentication
+     * @param AuthorizationInterface        $authorization
+     * @param ComestibleRepository          $comestibleRepository
      * @param ComestibleWithinDayRepository $comestibleWithinDayRepository
-     * @param DayRepository $dayRepository
-     * @param RedirectForPath $redirectForPath
-     * @param SessionInterface $session
-     * @param TemplateData $templateData
-     * @param TwigRender $twig
-     * @param ValidatorInterface $validator
+     * @param DayRepository                 $dayRepository
+     * @param RedirectForPath               $redirectForPath
+     * @param SessionInterface              $session
+     * @param TemplateData                  $templateData
+     * @param TwigRender                    $twig
+     * @param ValidatorInterface            $validator
      */
     public function __construct(
         AuthenticationInterface $authentication,
@@ -100,7 +98,7 @@ final class DayController
         $this->authentication = $authentication;
         $this->authorization = $authorization;
         $this->comestibleRepository = $comestibleRepository;
-        $this->comestibleWithinDayRepository  = $comestibleWithinDayRepository;
+        $this->comestibleWithinDayRepository = $comestibleWithinDayRepository;
         $this->dayRepository = $dayRepository;
         $this->redirectForPath = $redirectForPath;
         $this->session = $session;
@@ -270,15 +268,16 @@ final class DayController
         return $this->twig->render($response, '@Energycalculator/day/edit.html.twig',
             $this->templateData->aggregate($request, [
                 'errorMessages' => $errorMessages ?? [],
-                'day' => prepareForView($day)
+                'day' => prepareForView($day),
             ])
         );
     }
 
     /**
-     * @param Day $day
-     * @param array $data
+     * @param Day           $day
+     * @param array         $data
      * @param UserInterface $authenticatedUser
+     *
      * @return array
      */
     private function getComestiblesWithinDay(Day $day, array $data, UserInterface $authenticatedUser)
@@ -296,7 +295,7 @@ final class DayController
             $comestibleWithinDay = $comestibleWithinDay->withComestible(
                 $this->comestibleRepository->findOneBy([
                     'id' => $comestibleWithinDayRow['comestible'],
-                    'userId' => $authenticatedUser->getId()
+                    'userId' => $authenticatedUser->getId(),
                 ])
             );
 

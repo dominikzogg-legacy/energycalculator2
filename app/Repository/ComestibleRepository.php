@@ -12,6 +12,7 @@ final class ComestibleRepository extends AbstractDoctrineRepository
 {
     /**
      * @param string $modelClass
+     *
      * @return bool
      */
     public function isResponsible(string $modelClass): bool
@@ -28,6 +29,7 @@ final class ComestibleRepository extends AbstractDoctrineRepository
 
     /**
      * @param array $row
+     *
      * @return ModelInterface
      */
     protected function fromPersistence(array $row): ModelInterface
@@ -40,6 +42,7 @@ final class ComestibleRepository extends AbstractDoctrineRepository
     /**
      * @param string $userId
      * @param string $name
+     *
      * @return array
      */
     public function findRowsByNameLike(string $userId, string $name): array
@@ -51,7 +54,7 @@ final class ComestibleRepository extends AbstractDoctrineRepository
         $qb->setParameter('userId', $userId);
 
         $qb->andWhere($qb->expr()->like('name', ':name'));
-        $qb->setParameter('name', '%' . $name . '%');
+        $qb->setParameter('name', '%'.$name.'%');
 
         $qb->addOrderBy('name', 'ASC');
 

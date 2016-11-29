@@ -51,7 +51,7 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
     private $defaultValue;
 
     /**
-     * @param string $id
+     * @param string    $id
      * @param \DateTime $createdAt
      */
     public function __construct(string $id, \DateTime $createdAt)

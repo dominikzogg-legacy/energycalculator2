@@ -27,7 +27,7 @@ $container['dbs.config'] = function ($container) use ($container) {
 };
 
 $container->extend('logger', function (LoggerInterface $logger) use ($container) {
-    return new class([ $logger, new Logger($container [ Profiler :: class ]) ]) extends AbstractLogger {
+    return new class([$logger, new Logger($container[Profiler::class])]) extends AbstractLogger {
         /**
          * @var LoggerInterface[]
          */

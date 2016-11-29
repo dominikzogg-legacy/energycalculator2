@@ -37,8 +37,8 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
     private $comestiblesWithinDay;
 
     /**
-     * @param string $id
-     * @param \DateTime $createdAt
+     * @param string                   $id
+     * @param \DateTime                $createdAt
      * @param ModelCollectionInterface $comestiblesWithinDay
      */
     public function __construct(
@@ -98,6 +98,7 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
 
     /**
      * @param array $comestiblesWithinDay
+     *
      * @return Day
      */
     public function setComestiblesWithinDay(array $comestiblesWithinDay): Day
@@ -124,6 +125,7 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
         foreach ($this->getComestiblesWithinDay() as $comestiblesWithinDay) {
             $calorie += $comestiblesWithinDay->getCalorie();
         }
+
         return $calorie;
     }
 
@@ -200,7 +202,7 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
             'userId' => $this->userId,
             'date' => $this->date,
             'weight' => $this->weight,
-            'comestiblesWithinDay' => $this->comestiblesWithinDay
+            'comestiblesWithinDay' => $this->comestiblesWithinDay,
         ];
     }
 
@@ -220,7 +222,7 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
             'protein' => $this->getProtein(),
             'carbohydrate' => $this->getCarbohydrate(),
             'fat' => $this->getFat(),
-            'comestiblesWithinDay' => $this->comestiblesWithinDay->jsonSerialize()
+            'comestiblesWithinDay' => $this->comestiblesWithinDay->jsonSerialize(),
         ];
     }
 

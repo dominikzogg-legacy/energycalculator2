@@ -3,7 +3,6 @@
 namespace Energycalculator\Controller;
 
 use Chubbyphp\ErrorHandler\HttpException;
-use Chubbyphp\Model\RepositoryInterface;
 use Chubbyphp\Security\Authentication\Exception\EmptyPasswordException;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authentication\PasswordManagerInterface;
@@ -81,7 +80,7 @@ final class UserController
      * @param SessionInterface               $session
      * @param TemplateData                   $templateData
      * @param TwigRender                     $twig
-     * @param UserRepository            $userRepository
+     * @param UserRepository                 $userRepository
      * @param ValidatorInterface             $validator
      */
     public function __construct(

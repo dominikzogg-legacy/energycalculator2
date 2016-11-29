@@ -38,7 +38,7 @@ final class User implements UserPasswordInterface, ValidatableModelInterface
     private $roles;
 
     /**
-     * @param string $id
+     * @param string    $id
      * @param \DateTime $createdAt
      */
     public function __construct(string $id, \DateTime $createdAt)

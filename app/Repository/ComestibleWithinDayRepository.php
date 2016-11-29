@@ -12,6 +12,7 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
 {
     /**
      * @param string $modelClass
+     *
      * @return bool
      */
     public function isResponsible(string $modelClass): bool
@@ -21,6 +22,7 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
 
     /**
      * @param string $dayId
+     *
      * @return ComestibleWithinDay
      */
     public function create(string $dayId): ComestibleWithinDay
@@ -30,6 +32,7 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
 
     /**
      * @param array $row
+     *
      * @return ModelInterface
      */
     protected function fromPersistence(array $row): ModelInterface

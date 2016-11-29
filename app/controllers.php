@@ -27,7 +27,6 @@ $container[AuthController::class] = function () use ($container) {
     );
 };
 
-
 $container[HomeController::class] = function () use ($container) {
     return new HomeController($container[TemplateData::class], $container[TwigRender::class]);
 };
