@@ -53,7 +53,7 @@ final class CreateUserCommand
         $password = $input->getArgument('password');
         $roles = $input->getArgument('roles');
 
-        $user = (new User())
+        $user = ($this->userRepository->create())
             ->withEmail($email)
             ->withPassword($this->passwordManager->hash($password))
             ->withRoles($roles)
@@ -70,7 +70,7 @@ final class CreateUserCommand
             return 1;
         }
 
-        $this->userRepository->insert($user);
+        $this->userRepository->persist($user);
 
         $output->writeln(
             sprintf(
