@@ -39,13 +39,13 @@ $container->extend('console.commands', function (array $commands) use ($containe
     $commands[] = new LazyCommand(
         $container,
         CreateDatabaseCommand::class,
-        'slim-skeleton:database:create'
+        'chubbyphp:model:dbal:database:create'
     );
 
     $commands[] = new LazyCommand(
         $container,
         RunSqlCommand::class,
-        'slim-skeleton:database:run:sql',
+        'chubbyphp:model:dbal:database:run:sql',
         [
             new InputArgument('sql', InputArgument::REQUIRED, 'The SQL statement to execute.'),
             new InputOption('depth', null, InputOption::VALUE_REQUIRED, 'Dumping depth of result set.', 7),
@@ -55,7 +55,7 @@ $container->extend('console.commands', function (array $commands) use ($containe
     $commands[] = new LazyCommand(
         $container,
         SchemaUpdateCommand::class,
-        'slim-skeleton:database:schema:update',
+        'chubbyphp:model:dbal:database:schema:update',
         [
             new InputOption('dump', null, InputOption::VALUE_NONE, 'Dumps the generated SQL statements'),
             new InputOption('force', 'f', InputOption::VALUE_NONE, 'Executes the generated SQL statements.'),
@@ -65,7 +65,7 @@ $container->extend('console.commands', function (array $commands) use ($containe
     $commands[] = new LazyCommand(
         $container,
         CreateUserCommand::class,
-        'slim-skeleton:user:create',
+        'energycalculator:user:create',
         [
             new InputArgument('email', InputArgument::REQUIRED, 'The email address of the user.'),
             new InputArgument('password', InputArgument::REQUIRED, 'The password of the user.'),
