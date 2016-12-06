@@ -2,7 +2,7 @@
 
 use Chubbyphp\Csrf\CsrfProvider;
 use Chubbyphp\ErrorHandler\SimpleErrorHandlerProvider;
-use Chubbyphp\Model\Cache\ModelCache;
+use Chubbyphp\Model\StorageCache\ArrayStorageCache;
 use Chubbyphp\Model\Resolver;
 use Chubbyphp\Security\Authentication\AuthenticationProvider;
 use Chubbyphp\Security\Authentication\FormAuthentication;
@@ -114,15 +114,15 @@ $container->extend('validator.helpers', function (array $helpers) use ($containe
 });
 
 // repositories
-$container[ModelCache::class] = function () {
-    return new ModelCache();
+$container[ArrayStorageCache::class] = function () {
+    return new ArrayStorageCache();
 };
 
 $container[ComestibleRepository::class] = function () use ($container) {
     return new ComestibleRepository(
         $container['db'],
         $container[Resolver::class],
-        $container[ModelCache::class],
+        $container[ArrayStorageCache::class],
         $container['logger']
     );
 };
@@ -131,7 +131,7 @@ $container[ComestibleWithinDayRepository::class] = function () use ($container) 
     return new ComestibleWithinDayRepository(
         $container['db'],
         $container[Resolver::class],
-        $container[ModelCache::class],
+        $container[ArrayStorageCache::class],
         $container['logger']
     );
 };
@@ -140,7 +140,7 @@ $container[DayRepository::class] = function () use ($container) {
     return new DayRepository(
         $container['db'],
         $container[Resolver::class],
-        $container[ModelCache::class],
+        $container[ArrayStorageCache::class],
         $container['logger']
     );
 };
@@ -149,7 +149,7 @@ $container[UserRepository::class] = function () use ($container) {
     return new UserRepository(
         $container['db'],
         $container[Resolver::class],
-        $container[ModelCache::class],
+        $container[ArrayStorageCache::class],
         $container['logger']
     );
 };
