@@ -33,6 +33,14 @@ class Psr7RequestDataCollector extends DataCollector implements Renderable
         $formatter = $this->getDataFormatter();
         $request = $this->request;
 
+        $headerData = [];
+        foreach (array_keys($request->getHeaders()) as $headerName) {
+            if (0 === stripos($headerName, 'Host')) {
+                continue;
+            }
+            $headerData[$headerName] = $request->getHeaderLine($headerName);
+        }
+
         $routeData = [];
         if (null !== $route = $request->getAttribute('route')) {
             $routeData['name'] = $route->getName();
@@ -44,7 +52,8 @@ class Psr7RequestDataCollector extends DataCollector implements Renderable
             'method' => $formatter->formatVar($request->getMethod()),
             'requestTarget' => $formatter->formatVar($request->getRequestTarget()),
             'protocolVersion' => $formatter->formatVar($request->getProtocolVersion()),
-            'headers' => $formatter->formatVar($request->getHeaders()),
+            'host' => $formatter->formatVar($request->getHeaderLine('Host')),
+            'headers' => $formatter->formatVar($headerData),
             'body' => $formatter->formatVar($request->getParsedBody()),
             'route' => $formatter->formatVar($routeData),
         ];
