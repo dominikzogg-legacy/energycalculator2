@@ -1,4 +1,7 @@
 (function($){
+    var selectSelector = 'select:not(.phpdebugbar-datasets-switcher):not([data-ajax])';
+    var ajaxSelectSelector = 'select[data-ajax]';
+
     var addAjaxSelect = function($selector){
         $selector.select2({
             multiple: $selector.attr('multiple'),
@@ -38,18 +41,18 @@
     };
     $(document).ready(function(){
         $('form').saxulumCollection('init', {});
-        $('select:not([data-ajax])').each(function(i, element){
+        $(selectSelector).each(function(i, element){
             addSelect($(element));
         });
-        $('select[data-ajax]').each(function(i, element){
+        $(ajaxSelectSelector).each(function(i, element){
             addAjaxSelect($(element));
         });
     });
     $(document).on('saxulum-collection.add', function(e, $element){
-        $('select:not([data-ajax])', $element).each(function(i, element){
+        $(selectSelector, $element).each(function(i, element){
             addSelect($(element));
         });
-        $('select[data-ajax]', $element).each(function(i, element){
+        $(ajaxSelectSelector, $element).each(function(i, element){
             addAjaxSelect($(element));
         });
     });
