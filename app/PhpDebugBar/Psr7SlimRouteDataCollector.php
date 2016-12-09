@@ -10,7 +10,7 @@ use Slim\Route;
 /**
  * Collects info about the current request
  */
-class Psr7RequestDataCollector extends DataCollector implements Renderable
+class Psr7SlimRouteDataCollector extends DataCollector implements Renderable
 {
     /**
      * @var Request
@@ -33,22 +33,18 @@ class Psr7RequestDataCollector extends DataCollector implements Renderable
         $formatter = $this->getDataFormatter();
         $request = $this->request;
 
-        $headerData = [];
-        foreach (array_keys($request->getHeaders()) as $headerName) {
-            if (0 === stripos($headerName, 'host') || 0 === stripos($headerName, 'http_cookie')) {
-                continue;
-            }
-            $headerData[$headerName] = $request->getHeaderLine($headerName);
+        if (null === $route = $request->getAttribute('route')) {
+            return [];
         }
 
+        $routeData['name'] = $route->getName();
+        $routeData['pattern'] = $route->getPattern();
+        $routeData['arguments'] = $route->getArguments();
+
         return [
-            'method' => $formatter->formatVar($request->getMethod()),
-            'requestTarget' => $formatter->formatVar($request->getRequestTarget()),
-            'protocolVersion' => $formatter->formatVar($request->getProtocolVersion()),
-            'host' => $formatter->formatVar($request->getHeaderLine('Host')),
-            'headers' => $formatter->formatVar($headerData),
-            'cookies' => $formatter->formatVar($request->getCookieParams()),
-            'body' => $formatter->formatVar($request->getParsedBody()),
+            'name' => $formatter->formatVar($route->getName()),
+            'pattern' => $formatter->formatVar($route->getPattern()),
+            'arguments' => $formatter->formatVar($route->getArguments()),
         ];
     }
 
@@ -57,7 +53,7 @@ class Psr7RequestDataCollector extends DataCollector implements Renderable
      */
     public function getName()
     {
-        return 'request';
+        return 'route';
     }
 
     /**
@@ -66,10 +62,10 @@ class Psr7RequestDataCollector extends DataCollector implements Renderable
     public function getWidgets()
     {
         return array(
-            "request" => array(
+            "route" => array(
                 "icon" => "tags",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
-                "map" => "request",
+                "map" => "route",
                 "default" => "{}"
             )
         );

@@ -36,7 +36,9 @@ class Psr7PhpDebugBarMiddleware extends PhpDebugBarMiddleware
      */
     public function __invoke(Request $request, Response $response, callable $next)
     {
+        $this->debugBar->addCollector(new Psr7SlimRouteDataCollector($request));
         $this->debugBar->addCollector(new Psr7RequestDataCollector($request));
+        $this->debugBar->addCollector(new Psr7ResponseDataCollector($response));
 
         return parent::__invoke($request, $response, $next);
     }
