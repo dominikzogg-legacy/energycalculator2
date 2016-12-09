@@ -2,6 +2,7 @@
 
 namespace Energycalculator\PhpDebugBar;
 
+use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DebugBar;
 use PhpMiddleware\PhpDebugBar\PhpDebugBarMiddleware;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -15,11 +16,17 @@ class Psr7PhpDebugBarMiddleware extends PhpDebugBarMiddleware
     protected $debugBar;
 
     /**
+     * @var DataCollectorInterface[]
+     */
+    protected $collectors;
+
+    /**
      * @param DebugBar $debugBar
      */
-    public function __construct(DebugBar $debugBar)
+    public function __construct(DebugBar $debugBar, array $collectors)
     {
         $this->debugBar = $debugBar;
+        $this->collectors = $collectors;
 
         $renderer = $debugBar->getJavascriptRenderer('/phpdebugbar');
         $renderer->setOpenHandlerUrl('/phpdebugbar-storage');
@@ -40,6 +47,11 @@ class Psr7PhpDebugBarMiddleware extends PhpDebugBarMiddleware
         $this->debugBar->addCollector(new Psr7RequestDataCollector($request));
         $this->debugBar->addCollector(new Psr7ResponseDataCollector($response));
 
+        foreach ($this->collectors as $collector) {
+            $this->debugBar->addCollector($collector);
+        }
+
         return parent::__invoke($request, $response, $next);
+
     }
 }
