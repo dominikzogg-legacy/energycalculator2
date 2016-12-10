@@ -26,9 +26,8 @@ final class TwigProvider implements ServiceProviderInterface
 
         $container['twig'] = function () use ($container) {
             $twig = new \Twig_Environment($container['twig.loader'], [
-                'cache' => $container['cacheDir'].'/twig',
-                'debug' => $container['debug'],
-                'auto_reload' => !$container['debug'] ? null : true,
+                'cache' => !$container['debug'] ? $container['cacheDir'].'/twig': null,
+                'debug' => $container['debug']
             ]);
 
             foreach ($container['twig.extensions'] as $extension) {
