@@ -2,45 +2,23 @@
 
 namespace Energycalculator\Model\Traits;
 
+use Chubbyphp\Model\ModelInterface;
+use Chubbyphp\Model\Reference\ModelReferenceInterface;
 use Energycalculator\Model\User;
 
 trait OwnedByUserTrait
 {
     /**
-     * @var User|\Closure|null
+     * @var ModelReferenceInterface
      */
     private $user;
 
     /**
-     * @var string
-     */
-    private $userId;
-
-    /**
-     * @param User $user
-     *
-     * @return self
-     */
-    public function withUser(User $user)
-    {
-        $model = $this->cloneWithModification(__METHOD__, $user->getId(), $this->userId);
-        $model->user = $user;
-        $model->userId = $user->getId();
-
-        return $model;
-    }
-
-    /**
-     * @return User|null
+     * @return User|ModelInterface|null
      */
     public function getUser()
     {
-        if ($this->user instanceof \Closure) {
-            $user = $this->user;
-            $this->user = $user();
-        }
-
-        return $this->user;
+        return $this->user->getModel();
     }
 
     /**
@@ -48,6 +26,6 @@ trait OwnedByUserTrait
      */
     public function getOwnedByUserId(): string
     {
-        return $this->userId;
+        return $this->user->getId();
     }
 }

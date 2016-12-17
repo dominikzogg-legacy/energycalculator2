@@ -3,7 +3,9 @@
 namespace Energycalculator\Model;
 
 use Chubbyphp\Model\ModelInterface;
+use Chubbyphp\Model\Reference\ModelReference;
 use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
+use Chubbyphp\Security\UserInterface;
 use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
 use Energycalculator\Model\Traits\CloneWithModificationTrait;
@@ -51,14 +53,23 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
     private $defaultValue;
 
     /**
-     * @param string    $id
+     * @param string $id
      * @param \DateTime $createdAt
+     * @param UserInterface $user
+     * @return Comestible
      */
-    public function __construct(string $id, \DateTime $createdAt)
+    public static function create(string $id, \DateTime $createdAt, UserInterface $user): Comestible
     {
-        $this->id = $id;
-        $this->setCreatedAt($createdAt);
+        $comestible = new self();
+
+        $comestible->id = $id;
+        $comestible->setCreatedAt($createdAt);
+        $comestible->user = new ModelReference($user);
+
+        return $comestible;
     }
+
+    private function __construct() {}
 
     /**
      * @param string $name
@@ -193,11 +204,12 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
      */
     public static function fromPersistence(array $data): ModelInterface
     {
-        $comestible = new self($data['id'], new \DateTime($data['createdAt']));
+        $comestible = new self();
 
+        $comestible->id = $data['id'];
+        $comestible->createdAt = $data['createdAt'];
         $comestible->updatedAt = $data['updatedAt'];
         $comestible->user = $data['user'];
-        $comestible->userId = $data['userId'];
         $comestible->name = $data['name'];
         $comestible->calorie = $data['calorie'];
         $comestible->protein = $data['protein'];
@@ -217,7 +229,7 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
             'id' => $this->id,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
-            'userId' => $this->userId,
+            'userId' => $this->user->getId(),
             'name' => $this->name,
             'calorie' => $this->calorie,
             'protein' => $this->protein,
@@ -236,7 +248,7 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
             'id' => $this->id,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
-            'user' => null !== $this->userId ? $this->getUser()->jsonSerialize() : null,
+            'user' => $this->user->jsonSerialize(),
             'name' => $this->name,
             'calorie' => $this->calorie,
             'protein' => $this->protein,
@@ -251,7 +263,7 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
      */
     public function getModelValidator()
     {
-        return v::create()->addRule(new UniqueModelRule(['userId', 'name']));
+        return v::create()->addRule(new UniqueModelRule(['user', 'name']));
     }
 
     /**
@@ -260,7 +272,7 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
     public function getPropertyValidators(): array
     {
         return [
-            'userId' => v::notBlank(),
+            'user' => v::notBlank(),
             'name' => v::notBlank(),
             'calorie' => v::floatVal(),
             'protein' => v::floatVal(),

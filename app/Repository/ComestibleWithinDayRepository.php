@@ -4,8 +4,10 @@ namespace Energycalculator\Repository;
 
 use Chubbyphp\Model\Doctrine\DBAL\Repository\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
+use Chubbyphp\Model\Reference\LazyModelReference;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Model\ComestibleWithinDay;
+use Energycalculator\Model\Day;
 use Ramsey\Uuid\Uuid;
 
 final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
@@ -22,12 +24,11 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
 
     /**
      * @param string $dayId
-     *
      * @return ComestibleWithinDay
      */
     public function create(string $dayId): ComestibleWithinDay
     {
-        return new ComestibleWithinDay((string) Uuid::uuid4(), new \DateTime(), $dayId);
+        return ComestibleWithinDay::create((string) Uuid::uuid4(), new \DateTime(), $dayId);
     }
 
     /**
@@ -37,7 +38,7 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
      */
     protected function fromPersistence(array $row): ModelInterface
     {
-        $row['comestible'] = $this->resolver->lazyFind(Comestible::class, $row['comestibleId']);
+        $row['comestible'] = new LazyModelReference($this->resolver->lazyFind(Comestible::class, $row['comestibleId']));
 
         return ComestibleWithinDay::fromPersistence($row);
     }

@@ -2,9 +2,12 @@
 
 namespace Energycalculator\Model;
 
+use Chubbyphp\Model\Collection\ModelCollection;
 use Chubbyphp\Model\Collection\ModelCollectionInterface;
 use Chubbyphp\Model\ModelInterface;
+use Chubbyphp\Model\Reference\ModelReference;
 use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
+use Chubbyphp\Security\UserInterface;
 use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
 use Energycalculator\Model\Traits\CloneWithModificationTrait;
@@ -37,21 +40,25 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
     private $comestiblesWithinDay;
 
     /**
-     * @param string                   $id
-     * @param \DateTime                $createdAt
-     * @param ModelCollectionInterface $comestiblesWithinDay
+     * @param string $id
+     * @param \DateTime $createdAt
+     * @param \DateTime $date
+     * @param UserInterface $user
+     * @return Day
      */
-    public function __construct(
-        string $id,
-        \DateTime $createdAt,
-        \DateTime $date,
-        ModelCollectionInterface $comestiblesWithinDay
-    ) {
-        $this->id = $id;
-        $this->setCreatedAt($createdAt);
-        $this->date = $date->format('Y-m-d');
-        $this->comestiblesWithinDay = $comestiblesWithinDay;
+    public static function create(string $id, \DateTime $createdAt, \DateTime $date, UserInterface $user): Day
+    {
+        $day = new self();
+        $day->id = $id;
+        $day->setCreatedAt($createdAt);
+        $day->date = $date->format('Y-m-d');
+        $day->user = new ModelReference($user);
+        $day->comestiblesWithinDay = new ModelCollection();
+
+        return $day;
     }
+
+    private function __construct() {}
 
     /**
      * @param \DateTime $date
@@ -175,17 +182,15 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
      */
     public static function fromPersistence(array $data): ModelInterface
     {
-        $day = new self(
-            $data['id'],
-            new \DateTime($data['createdAt']),
-            new \DateTime($data['date']),
-            $data['comestiblesWithinDay']
-        );
+        $day = new self();
 
+        $day->id = $data['id'];
+        $day->createdAt = $data['createdAt'];
         $day->updatedAt = $data['updatedAt'];
-        $day->user = $data['user'];
-        $day->userId = $data['userId'];
+        $day->date = $data['date'];
         $day->weight = $data['weight'];
+        $day->comestiblesWithinDay = $data['comestiblesWithinDay'];
+        $day->user = $data['user'];
 
         return $day;
     }
@@ -199,7 +204,7 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
             'id' => $this->id,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
-            'userId' => $this->userId,
+            'userId' => $this->user->getId(),
             'date' => $this->date,
             'weight' => $this->weight,
             'comestiblesWithinDay' => $this->comestiblesWithinDay,
@@ -215,7 +220,7 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
             'id' => $this->id,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
-            'user' => null !== $this->userId ? $this->getUser()->jsonSerialize() : null,
+            'user' => $this->user->jsonSerialize(),
             'date' => $this->date,
             'weight' => $this->weight,
             'calorie' => $this->getCalorie(),
@@ -231,7 +236,7 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
      */
     public function getModelValidator()
     {
-        return v::create()->addRule(new UniqueModelRule(['userId', 'date']));
+        return v::create()->addRule(new UniqueModelRule(['user', 'date']));
     }
 
     /**
@@ -240,7 +245,6 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
     public function getPropertyValidators(): array
     {
         return [
-            'userId' => v::notBlank(),
             'date' => v::date(),
             'weight' => v::optional(new FloatVal()),
         ];

@@ -155,13 +155,12 @@ final class ComestibleController
             throw HttpException::create($request, $response, 403, 'comestible.error.permissiondenied');
         }
 
-        $comestible = $this->comestibleRepository->create();
+        $comestible = $this->comestibleRepository->create($authenticatedUser);
 
         if ('POST' === $request->getMethod()) {
             $data = $request->getParsedBody();
 
             $comestible = $comestible
-                ->withUser($authenticatedUser)
                 ->withName($data['name'] ?? '')
                 ->withCalorie($data['calorie'] ?? 0)
                 ->withProtein($data['protein'] ?? 0)

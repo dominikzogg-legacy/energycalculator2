@@ -174,13 +174,12 @@ final class DayController
             throw HttpException::create($request, $response, 403, 'day.error.permissiondenied');
         }
 
-        $day = $this->dayRepository->create();
+        $day = $this->dayRepository->create($authenticatedUser);
 
         if ('POST' === $request->getMethod()) {
             $data = $request->getParsedBody();
 
             $day = $day
-                ->withUser($authenticatedUser)
                 ->withDate(new \DateTime($data['date'] ?? 'now'))
                 ->withWeight($data['weight'] ? (float) $data['weight'] : null)
                 ->setComestiblesWithinDay($this->getComestiblesWithinDay($day, $data, $authenticatedUser))

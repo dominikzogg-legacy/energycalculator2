@@ -6,6 +6,8 @@ use Chubbyphp\Model\Collection\LazyModelCollection;
 use Chubbyphp\Model\Collection\ModelCollection;
 use Chubbyphp\Model\Doctrine\DBAL\Repository\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
+use Chubbyphp\Model\Reference\LazyModelReference;
+use Chubbyphp\Security\UserInterface;
 use Energycalculator\Model\ComestibleWithinDay;
 use Energycalculator\Model\Day;
 use Energycalculator\Model\User;
@@ -24,16 +26,12 @@ final class DayRepository extends AbstractDoctrineRepository
     }
 
     /**
+     * @param UserInterface $user
      * @return Day
      */
-    public function create(): Day
+    public function create(UserInterface $user): Day
     {
-        return new Day(
-            (string) Uuid::uuid4(),
-            new \DateTime(),
-            new \DateTime(),
-            new ModelCollection()
-        );
+        return Day::create((string) Uuid::uuid4(), new \DateTime(), new \DateTime(), $user);
     }
 
     /**
@@ -43,7 +41,7 @@ final class DayRepository extends AbstractDoctrineRepository
      */
     protected function fromPersistence(array $row): ModelInterface
     {
-        $row['user'] = $this->resolver->lazyFind(User::class, $row['userId']);
+        $row['user'] = new LazyModelReference($this->resolver->lazyFind(User::class, $row['userId']));
         $row['comestiblesWithinDay'] = new LazyModelCollection($this->resolver->lazyFindBy(
             ComestibleWithinDay::class, ['dayId' => $row['id']], ['createdAt' => 'ASC']
         ));

@@ -4,6 +4,9 @@ namespace Energycalculator\Repository;
 
 use Chubbyphp\Model\Doctrine\DBAL\Repository\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
+use Chubbyphp\Model\Reference\LazyModelReference;
+use Chubbyphp\Model\Reference\ModelReference;
+use Chubbyphp\Security\UserInterface;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Model\User;
 use Ramsey\Uuid\Uuid;
@@ -19,12 +22,14 @@ final class ComestibleRepository extends AbstractDoctrineRepository
     {
         return $modelClass === Comestible::class;
     }
+
     /**
+     * @param UserInterface $user
      * @return Comestible
      */
-    public function create(): Comestible
+    public function create(UserInterface $user): Comestible
     {
-        return new Comestible((string) Uuid::uuid4(), new \DateTime());
+        return Comestible::create((string) Uuid::uuid4(), new \DateTime(), $user);
     }
 
     /**
@@ -34,7 +39,7 @@ final class ComestibleRepository extends AbstractDoctrineRepository
      */
     protected function fromPersistence(array $row): ModelInterface
     {
-        $row['user'] = $this->resolver->lazyFind(User::class, $row['userId']);
+        $row['user'] = new LazyModelReference($this->resolver->lazyFind(User::class, $row['userId']));
 
         return Comestible::fromPersistence($row);
     }

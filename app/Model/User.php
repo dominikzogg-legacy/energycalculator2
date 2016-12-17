@@ -38,14 +38,20 @@ final class User implements UserPasswordInterface, ValidatableModelInterface
     private $roles;
 
     /**
-     * @param string    $id
+     * @param string $id
      * @param \DateTime $createdAt
+     * @return User
      */
-    public function __construct(string $id, \DateTime $createdAt)
+    public static function create(string $id, \DateTime $createdAt): User
     {
-        $this->id = $id;
-        $this->setCreatedAt($createdAt);
+        $user = new self();
+        $user->id = $id;
+        $user->setCreatedAt($createdAt);
+
+        return $user;
     }
+
+    private function __construct() {}
 
     /**
      * @return string
@@ -126,8 +132,10 @@ final class User implements UserPasswordInterface, ValidatableModelInterface
      */
     public static function fromPersistence(array $data): ModelInterface
     {
-        $user = new self($data['id'], new \DateTime($data['createdAt']));
+        $user = new self();
 
+        $user->id = $data['id'];
+        $user->createdAt = $data['createdAt'];
         $user->updatedAt = $data['updatedAt'];
         $user->username = $data['username'];
         $user->email = $data['email'];
