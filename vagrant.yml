@@ -1,6 +1,5 @@
 hostname: energycalculator2.dev
 application: slim3
-phpversion: 7.0
-sharetype: nfs
+phpversion: 7.1
 network:
     ip: 10.15.10.15
