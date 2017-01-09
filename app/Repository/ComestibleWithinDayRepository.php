@@ -23,12 +23,11 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
     }
 
     /**
-     * @param string $dayId
      * @return ComestibleWithinDay
      */
-    public function create(string $dayId): ComestibleWithinDay
+    public function create(): ComestibleWithinDay
     {
-        return ComestibleWithinDay::create((string) Uuid::uuid4(), new \DateTime(), $dayId);
+        return ComestibleWithinDay::create((string) Uuid::uuid4(), new \DateTime());
     }
 
     /**
@@ -38,7 +37,7 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
      */
     protected function fromPersistence(array $row): ModelInterface
     {
-        $row['comestible'] = new LazyModelReference($this->resolver->lazyFind(Comestible::class, $row['comestibleId']));
+        $row['comestible'] = new LazyModelReference($this->resolver, Comestible::class, $row['comestibleId']);
 
         return ComestibleWithinDay::fromPersistence($row);
     }

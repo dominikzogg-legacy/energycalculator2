@@ -52,8 +52,10 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
         $day->id = $id;
         $day->setCreatedAt($createdAt);
         $day->date = $date->format('Y-m-d');
-        $day->user = new ModelReference($user);
-        $day->comestiblesWithinDay = new ModelCollection();
+        $day->user = (new ModelReference())->setModel($user);
+        $day->comestiblesWithinDay = new ModelCollection(
+            ComestibleWithinDay::class, 'dayId', $id, ['createdAt' => 'ASC']
+        );
 
         return $day;
     }

@@ -64,7 +64,7 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
 
         $comestible->id = $id;
         $comestible->setCreatedAt($createdAt);
-        $comestible->user = new ModelReference($user);
+        $comestible->user = (new ModelReference())->setModel($user);
 
         return $comestible;
     }

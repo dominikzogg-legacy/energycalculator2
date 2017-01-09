@@ -288,7 +288,7 @@ final class DayController
                 $comestibleWithinDay = $comestiblesWithinDay[$i];
                 $comestibleWithinDay = $comestibleWithinDay->withUpdatedAt(new \DateTime());
             } else {
-                $comestibleWithinDay = $this->comestibleWithinDayRepository->create($day->getId());
+                $comestibleWithinDay = $this->comestibleWithinDayRepository->create();
             }
 
             $comestibleWithinDay = $comestibleWithinDay->withComestible(

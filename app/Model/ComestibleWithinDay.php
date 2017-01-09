@@ -36,16 +36,14 @@ final class ComestibleWithinDay implements ValidatableModelInterface
     /**
      * @param string $id
      * @param \DateTime $createdAt
-     * @param $dayId
      * @return ComestibleWithinDay
      */
-    public static function create(string $id, \DateTime $createdAt, $dayId): ComestibleWithinDay
+    public static function create(string $id, \DateTime $createdAt): ComestibleWithinDay
     {
         $comestibleWithinDay = new self();
 
         $comestibleWithinDay->id = $id;
         $comestibleWithinDay->setCreatedAt($createdAt);
-        $comestibleWithinDay->dayId = $dayId;
         $comestibleWithinDay->comestible = new ModelReference();
 
         return $comestibleWithinDay;
