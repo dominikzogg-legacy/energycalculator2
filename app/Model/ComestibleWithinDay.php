@@ -4,17 +4,14 @@ namespace Energycalculator\Model;
 
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\Reference\ModelReference;
-use Chubbyphp\Model\Reference\ModelReferenceInterface;
 use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
-use Energycalculator\Model\Traits\CloneWithModificationTrait;
 use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
 use Respect\Validation\Validator as v;
 
 final class ComestibleWithinDay implements ValidatableModelInterface
 {
-    use CloneWithModificationTrait;
     use CreatedAndUpdatedAtTrait;
     use IdTrait;
 
@@ -56,12 +53,11 @@ final class ComestibleWithinDay implements ValidatableModelInterface
      *
      * @return ComestibleWithinDay
      */
-    public function withComestible(Comestible $comestible): ComestibleWithinDay
+    public function setComestible(Comestible $comestible): ComestibleWithinDay
     {
-        $comestibleWithinDay = $this->cloneWithModification(__METHOD__, $comestible->getId(), $this->comestible->getId());
-        $comestibleWithinDay->comestible = $comestible;
+        $this->comestible = $comestible;
 
-        return $comestibleWithinDay;
+        return $this;
     }
 
     /**
@@ -137,12 +133,11 @@ final class ComestibleWithinDay implements ValidatableModelInterface
      *
      * @return ComestibleWithinDay
      */
-    public function withAmount(float $amount): ComestibleWithinDay
+    public function setAmount(float $amount): ComestibleWithinDay
     {
-        $comestibleWithinDay = $this->cloneWithModification(__METHOD__, $amount, $this->amount);
-        $comestibleWithinDay->amount = $amount;
+        $this->amount = $amount;
 
-        return $comestibleWithinDay;
+        return $this;
     }
 
     /**

@@ -177,14 +177,14 @@ final class UserController
         if ('POST' === $request->getMethod()) {
             $data = $request->getParsedBody();
 
-            $user = $user->withEmail($data['email'] ?? '');
+            $user = $user->setEmail($data['email'] ?? '');
 
             if (isset($data['roles'])) {
-                $user = $user->withRoles($this->getWishedRoles($data['roles'], $possibleRoles));
+                $user = $user->setRoles($this->getWishedRoles($data['roles'], $possibleRoles));
             }
 
             try {
-                $user = $user->withPassword($this->passwordManager->hash($data['password'] ?? ''));
+                $user = $user->setPassword($this->passwordManager->hash($data['password'] ?? ''));
             } catch (EmptyPasswordException $e) {
             }
 
@@ -245,18 +245,18 @@ final class UserController
         if ('POST' === $request->getMethod()) {
             $data = $request->getParsedBody();
 
-            $user = $user->withEmail($data['email'] ?? '');
+            $user = $user->setEmail($data['email'] ?? '');
 
             if (isset($data['roles']) && $authenticatedUser->getId() !== $user->getId()) {
-                $user = $user->withRoles($this->getWishedRoles($data['roles'], $possibleRoles));
+                $user = $user->setRoles($this->getWishedRoles($data['roles'], $possibleRoles));
             }
 
             if ($data['password']) {
-                $user = $user->withPassword($this->passwordManager->hash($data['password']));
+                $user = $user->setPassword($this->passwordManager->hash($data['password']));
             }
 
             if ([] === $errorMessages = $this->validator->validateModel($user)) {
-                $user = $user->withUpdatedAt(new \DateTime());
+                $user = $user->setUpdatedAt(new \DateTime());
 
                 $this->userRepository->persist($user);
                 $this->session->addFlash(

@@ -8,7 +8,6 @@ use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
 use Chubbyphp\Security\UserInterface;
 use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
-use Energycalculator\Model\Traits\CloneWithModificationTrait;
 use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
 use Energycalculator\Model\Traits\OwnedByUserTrait;
@@ -17,7 +16,6 @@ use Respect\Validation\Validator as v;
 
 final class Comestible implements OwnedByUserModelInterface, ValidatableModelInterface
 {
-    use CloneWithModificationTrait;
     use CreatedAndUpdatedAtTrait;
     use IdTrait;
     use OwnedByUserTrait;
@@ -76,12 +74,11 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
      *
      * @return Comestible
      */
-    public function withName(string $name): Comestible
+    public function setName(string $name): Comestible
     {
-        $comestible = $this->cloneWithModification(__METHOD__, $name, $this->name);
-        $comestible->name = $name;
+        $this->name = $name;
 
-        return $comestible;
+        return $this;
     }
 
     /**
@@ -97,12 +94,11 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
      *
      * @return Comestible
      */
-    public function withCalorie(float $calorie): Comestible
+    public function setCalorie(float $calorie): Comestible
     {
-        $comestible = $this->cloneWithModification(__METHOD__, $calorie, $this->calorie);
-        $comestible->calorie = $calorie;
+        $this->calorie = $calorie;
 
-        return $comestible;
+        return $this;
     }
 
     /**
@@ -118,12 +114,11 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
      *
      * @return Comestible
      */
-    public function withProtein(float $protein): Comestible
+    public function setProtein(float $protein): Comestible
     {
-        $comestible = $this->cloneWithModification(__METHOD__, $protein, $this->protein);
-        $comestible->protein = $protein;
+        $this->protein = $protein;
 
-        return $comestible;
+        return $this;
     }
 
     /**
@@ -139,12 +134,11 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
      *
      * @return Comestible
      */
-    public function withCarbohydrate(float $carbohydrate): Comestible
+    public function setCarbohydrate(float $carbohydrate): Comestible
     {
-        $comestible = $this->cloneWithModification(__METHOD__, $carbohydrate, $this->carbohydrate);
-        $comestible->carbohydrate = $carbohydrate;
+        $this->carbohydrate = $carbohydrate;
 
-        return $comestible;
+        return $this;
     }
 
     /**
@@ -160,12 +154,11 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
      *
      * @return Comestible
      */
-    public function withFat(float $fat): Comestible
+    public function setFat(float $fat): Comestible
     {
-        $comestible = $this->cloneWithModification(__METHOD__, $fat, $this->fat);
-        $comestible->fat = $fat;
+        $this->fat = $fat;
 
-        return $comestible;
+        return $this;
     }
 
     /**
@@ -181,12 +174,11 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
      *
      * @return Comestible
      */
-    public function withDefaultValue(float $defaultValue = null): Comestible
+    public function setDefaultValue(float $defaultValue = null): Comestible
     {
-        $comestible = $this->cloneWithModification(__METHOD__, $defaultValue, $this->defaultValue);
-        $comestible->defaultValue = $defaultValue;
+        $this->defaultValue = $defaultValue;
 
-        return $comestible;
+        return $this;
     }
 
     /**

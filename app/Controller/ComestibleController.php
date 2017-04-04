@@ -161,12 +161,12 @@ final class ComestibleController
             $data = $request->getParsedBody();
 
             $comestible = $comestible
-                ->withName($data['name'] ?? '')
-                ->withCalorie($data['calorie'] ?? 0)
-                ->withProtein($data['protein'] ?? 0)
-                ->withCarbohydrate($data['carbohydrate'] ?? 0)
-                ->withFat($data['fat'] ?? 0)
-                ->withDefaultValue($data['defaultValue'] ? (float) $data['defaultValue'] : null)
+                ->setName($data['name'] ?? '')
+                ->setCalorie($data['calorie'] ?? 0)
+                ->setProtein($data['protein'] ?? 0)
+                ->setCarbohydrate($data['carbohydrate'] ?? 0)
+                ->setFat($data['fat'] ?? 0)
+                ->setDefaultValue($data['defaultValue'] ? (float) $data['defaultValue'] : null)
             ;
 
             if ([] === $errorMessages = $this->validator->validateModel($comestible)) {
@@ -223,16 +223,16 @@ final class ComestibleController
             $data = $request->getParsedBody();
 
             $comestible = $comestible
-                ->withName($data['name'] ?? '')
-                ->withCalorie($data['calorie'] ?? 0)
-                ->withProtein($data['protein'] ?? 0)
-                ->withCarbohydrate($data['carbohydrate'] ?? 0)
-                ->withFat($data['fat'] ?? 0)
-                ->withDefaultValue($data['defaultValue'] ? (float) $data['defaultValue'] : null)
+                ->setName($data['name'] ?? '')
+                ->setCalorie($data['calorie'] ?? 0)
+                ->setProtein($data['protein'] ?? 0)
+                ->setCarbohydrate($data['carbohydrate'] ?? 0)
+                ->setFat($data['fat'] ?? 0)
+                ->setDefaultValue($data['defaultValue'] ? (float) $data['defaultValue'] : null)
             ;
 
             if ([] === $errorMessages = $this->validator->validateModel($comestible)) {
-                $comestible = $comestible->withUpdatedAt(new \DateTime());
+                $comestible = $comestible->setUpdatedAt(new \DateTime());
 
                 $this->comestibleRepository->persist($comestible);
                 $this->session->addFlash(

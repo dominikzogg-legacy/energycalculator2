@@ -36,13 +36,11 @@ trait CreatedAndUpdatedAtTrait
      *
      * @return self
      */
-    public function withUpdatedAt(\DateTime $updatedAt)
+    public function setUpdatedAt(\DateTime $updatedAt)
     {
-        $updatedAt = $updatedAt->format('Y-m-d H:i:s');
-        $model = $this->cloneWithModification(__METHOD__, $updatedAt, $this->updatedAt);
-        $model->updatedAt = $updatedAt;
+        $this->updatedAt = $updatedAt->format('Y-m-d H:i:s');
 
-        return $model;
+        return $this;
     }
 
     /**

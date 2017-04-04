@@ -54,9 +54,9 @@ final class CreateUserCommand
         $roles = $input->getArgument('roles');
 
         $user = ($this->userRepository->create())
-            ->withEmail($email)
-            ->withPassword($this->passwordManager->hash($password))
-            ->withRoles($roles)
+            ->setEmail($email)
+            ->setPassword($this->passwordManager->hash($password))
+            ->setRoles($roles)
         ;
 
         $errors = $this->validator->validateModel($user);

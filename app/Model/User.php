@@ -6,14 +6,12 @@ use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\UserPasswordInterface;
 use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
-use Energycalculator\Model\Traits\CloneWithModificationTrait;
 use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
 use Respect\Validation\Validator as v;
 
 final class User implements UserPasswordInterface, ValidatableModelInterface
 {
-    use CloneWithModificationTrait;
     use CreatedAndUpdatedAtTrait;
     use IdTrait;
 
@@ -66,13 +64,12 @@ final class User implements UserPasswordInterface, ValidatableModelInterface
      *
      * @return User
      */
-    public function withEmail(string $email): User
+    public function setEmail(string $email): User
     {
-        $user = $this->cloneWithModification(__METHOD__, $email, $this->email);
-        $user->email = $email;
-        $user->username = $email;
+        $this->email = $email;
+        $this->username = $email;
 
-        return $user;
+        return $this;
     }
 
     /**
@@ -88,12 +85,11 @@ final class User implements UserPasswordInterface, ValidatableModelInterface
      *
      * @return User
      */
-    public function withPassword(string $password): User
+    public function setPassword(string $password): User
     {
-        $user = $this->cloneWithModification(__METHOD__, $password, $this->password);
-        $user->password = $password;
+        $this->password = $password;
 
-        return $user;
+        return $this;
     }
 
     /**
@@ -117,12 +113,11 @@ final class User implements UserPasswordInterface, ValidatableModelInterface
      *
      * @return User
      */
-    public function withRoles(array $roles): User
+    public function setRoles(array $roles): User
     {
-        $user = $this->cloneWithModification(__METHOD__, $roles, $this->roles);
-        $user->roles = $roles;
+        $this->roles = $roles;
 
-        return $user;
+        return $this;
     }
 
     /**

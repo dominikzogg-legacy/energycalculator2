@@ -10,7 +10,6 @@ use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
 use Chubbyphp\Security\UserInterface;
 use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
-use Energycalculator\Model\Traits\CloneWithModificationTrait;
 use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
 use Energycalculator\Model\Traits\OwnedByUserTrait;
@@ -19,7 +18,6 @@ use Respect\Validation\Validator as v;
 
 final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
 {
-    use CloneWithModificationTrait;
     use CreatedAndUpdatedAtTrait;
     use IdTrait;
     use OwnedByUserTrait;
@@ -67,13 +65,11 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
      *
      * @return Day
      */
-    public function withDate(\DateTime $date): Day
+    public function setDate(\DateTime $date): Day
     {
-        $date = $date->format('Y-m-d');
-        $day = $this->cloneWithModification(__METHOD__, $date, $this->date);
-        $day->date = $date;
+        $this->date = $date->format('Y-m-d');
 
-        return $day;
+        return $this;
     }
 
     /**
@@ -89,12 +85,11 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
      *
      * @return Day
      */
-    public function withWeight(float $weight = null): Day
+    public function setWeight(float $weight = null): Day
     {
-        $day = $this->cloneWithModification(__METHOD__, $weight, $this->weight);
-        $day->weight = $weight;
+        $this->weight = $weight;
 
-        return $day;
+        return $this;
     }
 
     /**
