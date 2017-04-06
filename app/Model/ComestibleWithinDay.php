@@ -8,6 +8,7 @@ use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
 use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
+use Ramsey\Uuid\Uuid;
 use Respect\Validation\Validator as v;
 
 final class ComestibleWithinDay implements ValidatableModelInterface
@@ -31,16 +32,15 @@ final class ComestibleWithinDay implements ValidatableModelInterface
     private $amount = 0;
 
     /**
-     * @param string $id
-     * @param \DateTime $createdAt
+     * @param string|null $id
      * @return ComestibleWithinDay
      */
-    public static function create(string $id, \DateTime $createdAt): ComestibleWithinDay
+    public static function create(string $id = null): ComestibleWithinDay
     {
         $comestibleWithinDay = new self();
 
-        $comestibleWithinDay->id = $id;
-        $comestibleWithinDay->setCreatedAt($createdAt);
+        $comestibleWithinDay->id = $id ?? Uuid::uuid4();
+        $comestibleWithinDay->setCreatedAt(new \DateTime());
         $comestibleWithinDay->comestible = new ModelReference();
 
         return $comestibleWithinDay;

@@ -2,6 +2,7 @@
 
 namespace Energycalculator\Controller;
 
+use Chubbyphp\Deserialize\DeserializerInterface;
 use Chubbyphp\ErrorHandler\HttpException;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
@@ -34,6 +35,11 @@ final class ComestibleController
     private $comestibleRepository;
 
     /**
+     * @var DeserializerInterface
+     */
+    private $deserializer;
+
+    /**
      * @var RedirectForPath
      */
     private $redirectForPath;
@@ -62,6 +68,7 @@ final class ComestibleController
      * @param AuthenticationInterface $authentication
      * @param AuthorizationInterface  $authorization
      * @param ComestibleRepository    $comestibleRepository
+     * @param DeserializerInterface   $deserializer
      * @param RedirectForPath         $redirectForPath
      * @param SessionInterface        $session
      * @param TemplateData            $templateData
@@ -72,6 +79,7 @@ final class ComestibleController
         AuthenticationInterface $authentication,
         AuthorizationInterface $authorization,
         ComestibleRepository $comestibleRepository,
+        DeserializerInterface $deserializer,
         RedirectForPath $redirectForPath,
         SessionInterface $session,
         TemplateData $templateData,
@@ -81,6 +89,7 @@ final class ComestibleController
         $this->authentication = $authentication;
         $this->authorization = $authorization;
         $this->comestibleRepository = $comestibleRepository;
+        $this->deserializer = $deserializer;
         $this->redirectForPath = $redirectForPath;
         $this->session = $session;
         $this->templateData = $templateData;
@@ -155,19 +164,12 @@ final class ComestibleController
             throw HttpException::create($request, $response, 403, 'comestible.error.permissiondenied');
         }
 
-        $comestible = $this->comestibleRepository->create($authenticatedUser);
+        $comestible = Comestible::create();
+        $comestible->setUser($authenticatedUser);
 
         if ('POST' === $request->getMethod()) {
-            $data = $request->getParsedBody();
-
-            $comestible = $comestible
-                ->setName($data['name'] ?? '')
-                ->setCalorie($data['calorie'] ?? 0)
-                ->setProtein($data['protein'] ?? 0)
-                ->setCarbohydrate($data['carbohydrate'] ?? 0)
-                ->setFat($data['fat'] ?? 0)
-                ->setDefaultValue($data['defaultValue'] ? (float) $data['defaultValue'] : null)
-            ;
+            /** @var Comestible $comestible */
+            $comestible = $this->deserializer->deserializeByObject($request->getParsedBody(), $comestible);
 
             if ([] === $errorMessages = $this->validator->validateModel($comestible)) {
                 $this->comestibleRepository->persist($comestible);
@@ -220,16 +222,8 @@ final class ComestibleController
         }
 
         if ('POST' === $request->getMethod()) {
-            $data = $request->getParsedBody();
-
-            $comestible = $comestible
-                ->setName($data['name'] ?? '')
-                ->setCalorie($data['calorie'] ?? 0)
-                ->setProtein($data['protein'] ?? 0)
-                ->setCarbohydrate($data['carbohydrate'] ?? 0)
-                ->setFat($data['fat'] ?? 0)
-                ->setDefaultValue($data['defaultValue'] ? (float) $data['defaultValue'] : null)
-            ;
+            /** @var Comestible $comestible */
+            $comestible = $this->deserializer->deserializeByObject($request->getParsedBody(), $comestible);
 
             if ([] === $errorMessages = $this->validator->validateModel($comestible)) {
                 $comestible = $comestible->setUpdatedAt(new \DateTime());

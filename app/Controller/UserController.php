@@ -2,10 +2,9 @@
 
 namespace Energycalculator\Controller;
 
+use Chubbyphp\Deserialize\DeserializerInterface;
 use Chubbyphp\ErrorHandler\HttpException;
-use Chubbyphp\Security\Authentication\Exception\EmptyPasswordException;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
-use Chubbyphp\Security\Authentication\PasswordManagerInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Security\Authorization\RoleHierarchyResolverInterface;
 use Chubbyphp\Validation\ValidatorInterface;
@@ -32,9 +31,9 @@ final class UserController
     private $authorization;
 
     /**
-     * @var PasswordManagerInterface
+     * @var DeserializerInterface
      */
-    private $passwordManager;
+    private $deserializer;
 
     /**
      * @var RedirectForPath
@@ -74,7 +73,7 @@ final class UserController
     /**
      * @param AuthenticationInterface        $authentication
      * @param AuthorizationInterface         $authorization
-     * @param PasswordManagerInterface       $passwordManager
+     * @param DeserializerInterface          $deserializer
      * @param RedirectForPath                $redirectForPath
      * @param RoleHierarchyResolverInterface $roleHierarchyResolver
      * @param SessionInterface               $session
@@ -86,7 +85,7 @@ final class UserController
     public function __construct(
         AuthenticationInterface $authentication,
         AuthorizationInterface $authorization,
-        PasswordManagerInterface $passwordManager,
+        DeserializerInterface $deserializer,
         RedirectForPath $redirectForPath,
         RoleHierarchyResolverInterface $roleHierarchyResolver,
         SessionInterface $session,
@@ -97,7 +96,7 @@ final class UserController
     ) {
         $this->authentication = $authentication;
         $this->authorization = $authorization;
-        $this->passwordManager = $passwordManager;
+        $this->deserializer = $deserializer;
         $this->redirectForPath = $redirectForPath;
         $this->roleHierarchyResolver = $roleHierarchyResolver;
         $this->session = $session;
@@ -170,23 +169,11 @@ final class UserController
             throw HttpException::create($request, $response, 403, 'user.error.permissiondenied');
         }
 
-        $possibleRoles = $this->roleHierarchyResolver->resolve(['ADMIN']);
-
-        $user = $this->userRepository->create();
+        $user = User::create();
 
         if ('POST' === $request->getMethod()) {
-            $data = $request->getParsedBody();
-
-            $user = $user->setEmail($data['email'] ?? '');
-
-            if (isset($data['roles'])) {
-                $user = $user->setRoles($this->getWishedRoles($data['roles'], $possibleRoles));
-            }
-
-            try {
-                $user = $user->setPassword($this->passwordManager->hash($data['password'] ?? ''));
-            } catch (EmptyPasswordException $e) {
-            }
+            /** @var User $user */
+            $user = $this->deserializer->deserializeByObject($request->getParsedBody(), $user);
 
             if ([] === $errorMessages = $this->validator->validateModel($user)) {
                 $this->userRepository->persist($user);
@@ -206,6 +193,8 @@ final class UserController
                 new FlashMessage(FlashMessage::TYPE_DANGER, 'user.flash.create.failed')
             );
         }
+
+        $possibleRoles = $this->roleHierarchyResolver->resolve(['ADMIN']);
 
         return $this->twig->render($response, '@Energycalculator/user/create.html.twig',
             $this->templateData->aggregate($request, [
@@ -232,8 +221,6 @@ final class UserController
             throw HttpException::create($request, $response, 403, 'user.error.permissiondenied');
         }
 
-        $possibleRoles = $this->roleHierarchyResolver->resolve(['ADMIN']);
-
         $id = $request->getAttribute('id');
 
         /** @var User $user */
@@ -243,17 +230,8 @@ final class UserController
         }
 
         if ('POST' === $request->getMethod()) {
-            $data = $request->getParsedBody();
-
-            $user = $user->setEmail($data['email'] ?? '');
-
-            if (isset($data['roles']) && $authenticatedUser->getId() !== $user->getId()) {
-                $user = $user->setRoles($this->getWishedRoles($data['roles'], $possibleRoles));
-            }
-
-            if ($data['password']) {
-                $user = $user->setPassword($this->passwordManager->hash($data['password']));
-            }
+            /** @var User $user */
+            $user = $this->deserializer->deserializeByObject($request->getParsedBody(), $user);
 
             if ([] === $errorMessages = $this->validator->validateModel($user)) {
                 $user = $user->setUpdatedAt(new \DateTime());
@@ -275,6 +253,8 @@ final class UserController
                 new FlashMessage(FlashMessage::TYPE_DANGER, 'user.flash.edit.failed')
             );
         }
+
+        $possibleRoles = $this->roleHierarchyResolver->resolve(['ADMIN']);
 
         return $this->twig->render($response, '@Energycalculator/user/edit.html.twig',
             $this->templateData->aggregate($request, [
@@ -316,21 +296,5 @@ final class UserController
         $this->userRepository->remove($user);
 
         return $this->redirectForPath->get($response, 302, 'user_list', ['locale' => $request->getAttribute('locale')]);
-    }
-
-    /**
-     * @param array $roles
-     *
-     * @return array
-     */
-    private function getWishedRoles(array $roles, $possibleRoles): array
-    {
-        foreach ($roles as $i => $role) {
-            if (!in_array($role, $possibleRoles, true)) {
-                unset($roles[$i]);
-            }
-        }
-
-        return $roles;
     }
 }

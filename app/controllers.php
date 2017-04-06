@@ -1,5 +1,6 @@
 <?php
 
+use Chubbyphp\Deserialize\Deserializer;
 use Chubbyphp\Security\Authentication\FormAuthentication;
 use Energycalculator\Controller\AuthController;
 use Energycalculator\Controller\ComestibleController;
@@ -36,6 +37,7 @@ $container[ComestibleController::class] = function () use ($container) {
         $container['security.authentication'],
         $container['security.authorization'],
         $container[ComestibleRepository::class],
+        $container[Deserializer::class],
         $container[RedirectForPath::class],
         $container['session'],
         $container[TemplateData::class],
@@ -51,6 +53,7 @@ $container[DayController::class] = function () use ($container) {
         $container[ComestibleRepository::class],
         $container[ComestibleWithinDayRepository::class],
         $container[DayRepository::class],
+        $container[Deserializer::class],
         $container[RedirectForPath::class],
         $container['session'],
         $container[TemplateData::class],
@@ -63,7 +66,7 @@ $container[UserController::class] = function () use ($container) {
     return new UserController(
         $container['security.authentication'],
         $container['security.authorization'],
-        $container['security.authentication.passwordmanager'],
+        $container[Deserializer::class],
         $container[RedirectForPath::class],
         $container['security.authorization.rolehierarchyresolver'],
         $container['session'],

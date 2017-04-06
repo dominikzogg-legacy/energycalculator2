@@ -1,6 +1,8 @@
 <?php
 
 use Chubbyphp\Csrf\CsrfProvider;
+use Chubbyphp\Deserialize\Deserializer;
+use Chubbyphp\Deserialize\Registry\ObjectMappingRegistry;
 use Chubbyphp\ErrorHandler\SimpleErrorHandlerProvider;
 use Chubbyphp\Model\StorageCache\ArrayStorageCache;
 use Chubbyphp\Model\Resolver;
@@ -14,6 +16,10 @@ use Chubbyphp\Translation\TranslationProvider;
 use Chubbyphp\Translation\TranslationTwigExtension;
 use Chubbyphp\Validation\Requirements\Repository;
 use Chubbyphp\Validation\ValidationProvider;
+use Energycalculator\Deserializer\ComestibleMapping;
+use Energycalculator\Deserializer\ComestibleWithinDayMapping;
+use Energycalculator\Deserializer\DayMapping;
+use Energycalculator\Deserializer\UserMapping;
 use Energycalculator\ErrorHandler\HtmlErrorResponseProvider;
 use Energycalculator\Provider\TwigProvider;
 use Energycalculator\Repository\DayRepository;
@@ -112,6 +118,40 @@ $container->extend('validator.helpers', function (array $helpers) use ($containe
 
     return $helpers;
 });
+
+// deserializer
+$container[Deserializer::class] = function () use ($container) {
+    return new Deserializer($container[ObjectMappingRegistry::class]);
+};
+
+$container[ObjectMappingRegistry::class] = function () use ($container) {
+    return new ObjectMappingRegistry([
+        $container[ComestibleMapping::class],
+        $container[ComestibleWithinDayMapping::class],
+        $container[DayMapping::class],
+        $container[UserMapping::class]
+    ]);
+};
+
+// mappings
+$container[ComestibleMapping::class] = function () use ($container) {
+    return new ComestibleMapping();
+};
+
+$container[ComestibleWithinDayMapping::class] = function () use ($container) {
+    return new ComestibleWithinDayMapping($container[Resolver::class]);
+};
+
+$container[DayMapping::class] = function () use ($container) {
+    return new DayMapping();
+};
+
+$container[UserMapping::class] = function () use ($container) {
+    return new UserMapping(
+        $container['security.authentication.passwordmanager'],
+        $container['security.authorization.rolehierarchyresolver']
+    );
+};
 
 // repositories
 $container[ArrayStorageCache::class] = function () {

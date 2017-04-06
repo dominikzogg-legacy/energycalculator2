@@ -2,10 +2,10 @@
 
 namespace Energycalculator\Controller;
 
+use Chubbyphp\Deserialize\DeserializerInterface;
 use Chubbyphp\ErrorHandler\HttpException;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
-use Chubbyphp\Security\UserInterface;
 use Chubbyphp\Validation\ValidatorInterface;
 use Energycalculator\Model\Day;
 use Energycalculator\Repository\ComestibleRepository;
@@ -47,6 +47,11 @@ final class DayController
     private $dayRepository;
 
     /**
+     * @var DeserializerInterface
+     */
+    private $deserializer;
+
+    /**
      * @var RedirectForPath
      */
     private $redirectForPath;
@@ -77,6 +82,7 @@ final class DayController
      * @param ComestibleRepository          $comestibleRepository
      * @param ComestibleWithinDayRepository $comestibleWithinDayRepository
      * @param DayRepository                 $dayRepository
+     * @param DeserializerInterface         $deserializer
      * @param RedirectForPath               $redirectForPath
      * @param SessionInterface              $session
      * @param TemplateData                  $templateData
@@ -89,6 +95,7 @@ final class DayController
         ComestibleRepository $comestibleRepository,
         ComestibleWithinDayRepository $comestibleWithinDayRepository,
         DayRepository $dayRepository,
+        DeserializerInterface $deserializer,
         RedirectForPath $redirectForPath,
         SessionInterface $session,
         TemplateData $templateData,
@@ -100,6 +107,7 @@ final class DayController
         $this->comestibleRepository = $comestibleRepository;
         $this->comestibleWithinDayRepository = $comestibleWithinDayRepository;
         $this->dayRepository = $dayRepository;
+        $this->deserializer = $deserializer;
         $this->redirectForPath = $redirectForPath;
         $this->session = $session;
         $this->templateData = $templateData;
@@ -174,16 +182,12 @@ final class DayController
             throw HttpException::create($request, $response, 403, 'day.error.permissiondenied');
         }
 
-        $day = $this->dayRepository->create($authenticatedUser);
+        $day = Day::create();
+        $day->setUser($authenticatedUser);
 
         if ('POST' === $request->getMethod()) {
-            $data = $request->getParsedBody();
-
-            $day = $day
-                ->setDate(new \DateTime($data['date'] ?? 'now'))
-                ->setWeight($data['weight'] ? (float) $data['weight'] : null)
-                ->setComestiblesWithinDay($this->getComestiblesWithinDay($day, $data, $authenticatedUser))
-            ;
+            /** @var Day $day */
+            $day = $this->deserializer->deserializeByObject($request->getParsedBody(), $day);
 
             if ([] === $errorMessages = $this->validator->validateModel($day)) {
                 $this->dayRepository->persist($day);
@@ -236,13 +240,8 @@ final class DayController
         }
 
         if ('POST' === $request->getMethod()) {
-            $data = $request->getParsedBody();
-
-            $day = $day
-                ->setDate(new \DateTime($data['date'] ?? 'now'))
-                ->setWeight($data['weight'] ? (float) $data['weight'] : null)
-                ->setComestiblesWithinDay($this->getComestiblesWithinDay($day, $data, $authenticatedUser))
-            ;
+            /** @var Day $day */
+            $day = $this->deserializer->deserializeByObject($request->getParsedBody(), $day);
 
             if ([] === $errorMessages = $this->validator->validateModel($day)) {
                 $day = $day->setUpdatedAt(new \DateTime());
@@ -270,39 +269,6 @@ final class DayController
                 'day' => prepareForView($day),
             ])
         );
-    }
-
-    /**
-     * @param Day           $day
-     * @param array         $data
-     * @param UserInterface $authenticatedUser
-     *
-     * @return array
-     */
-    private function getComestiblesWithinDay(Day $day, array $data, UserInterface $authenticatedUser)
-    {
-        $comestiblesWithinDay = $day->getComestiblesWithinDay();
-        $updatedComestiblesWithinDay = [];
-        foreach ($data['comestiblesWithinDay'] as $i => $comestibleWithinDayRow) {
-            if (isset($comestiblesWithinDay[$i])) {
-                $comestibleWithinDay = $comestiblesWithinDay[$i];
-                $comestibleWithinDay = $comestibleWithinDay->setUpdatedAt(new \DateTime());
-            } else {
-                $comestibleWithinDay = $this->comestibleWithinDayRepository->create();
-            }
-
-            $comestibleWithinDay = $comestibleWithinDay->setComestible(
-                $this->comestibleRepository->findOneBy([
-                    'id' => $comestibleWithinDayRow['comestible'],
-                    'userId' => $authenticatedUser->getId(),
-                ])
-            );
-
-            $comestibleWithinDay = $comestibleWithinDay->setAmount($comestibleWithinDayRow['amount']);
-            $updatedComestiblesWithinDay[$i] = $comestibleWithinDay;
-        }
-
-        return $updatedComestiblesWithinDay;
     }
 
     /**

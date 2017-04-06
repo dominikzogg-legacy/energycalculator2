@@ -7,8 +7,6 @@ use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\Reference\LazyModelReference;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Model\ComestibleWithinDay;
-use Energycalculator\Model\Day;
-use Ramsey\Uuid\Uuid;
 
 final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
 {
@@ -20,14 +18,6 @@ final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
     public function isResponsible(string $modelClass): bool
     {
         return $modelClass === ComestibleWithinDay::class;
-    }
-
-    /**
-     * @return ComestibleWithinDay
-     */
-    public function create(): ComestibleWithinDay
-    {
-        return ComestibleWithinDay::create((string) Uuid::uuid4(), new \DateTime());
     }
 
     /**

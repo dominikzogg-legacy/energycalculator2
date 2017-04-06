@@ -3,15 +3,12 @@
 namespace Energycalculator\Repository;
 
 use Chubbyphp\Model\Collection\LazyModelCollection;
-use Chubbyphp\Model\Collection\ModelCollection;
 use Chubbyphp\Model\Doctrine\DBAL\Repository\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\Reference\LazyModelReference;
-use Chubbyphp\Security\UserInterface;
 use Energycalculator\Model\ComestibleWithinDay;
 use Energycalculator\Model\Day;
 use Energycalculator\Model\User;
-use Ramsey\Uuid\Uuid;
 
 final class DayRepository extends AbstractDoctrineRepository
 {
@@ -23,15 +20,6 @@ final class DayRepository extends AbstractDoctrineRepository
     public function isResponsible(string $modelClass): bool
     {
         return $modelClass === Day::class;
-    }
-
-    /**
-     * @param UserInterface $user
-     * @return Day
-     */
-    public function create(UserInterface $user): Day
-    {
-        return Day::create((string) Uuid::uuid4(), new \DateTime(), new \DateTime(), $user);
     }
 
     /**

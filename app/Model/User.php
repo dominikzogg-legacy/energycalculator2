@@ -8,6 +8,7 @@ use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
 use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
+use Ramsey\Uuid\Uuid;
 use Respect\Validation\Validator as v;
 
 final class User implements UserPasswordInterface, ValidatableModelInterface
@@ -36,15 +37,14 @@ final class User implements UserPasswordInterface, ValidatableModelInterface
     private $roles;
 
     /**
-     * @param string $id
-     * @param \DateTime $createdAt
+     * @param string|null $id
      * @return User
      */
-    public static function create(string $id, \DateTime $createdAt): User
+    public static function create(string $id = null): User
     {
         $user = new self();
-        $user->id = $id;
-        $user->setCreatedAt($createdAt);
+        $user->id = $id ?? Uuid::uuid4();
+        $user->setCreatedAt(new \DateTime());
 
         return $user;
     }

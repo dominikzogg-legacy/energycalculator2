@@ -7,12 +7,12 @@ use Chubbyphp\Model\Collection\ModelCollectionInterface;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\Reference\ModelReference;
 use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
-use Chubbyphp\Security\UserInterface;
 use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
 use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
 use Energycalculator\Model\Traits\OwnedByUserTrait;
+use Ramsey\Uuid\Uuid;
 use Respect\Validation\Rules\FloatVal;
 use Respect\Validation\Validator as v;
 
@@ -38,21 +38,18 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
     private $comestiblesWithinDay;
 
     /**
-     * @param string $id
-     * @param \DateTime $createdAt
-     * @param \DateTime $date
-     * @param UserInterface $user
+     * @param string|null $id
      * @return Day
      */
-    public static function create(string $id, \DateTime $createdAt, \DateTime $date, UserInterface $user): Day
+    public static function create(string $id = null): Day
     {
         $day = new self();
-        $day->id = $id;
-        $day->setCreatedAt($createdAt);
-        $day->date = $date->format('Y-m-d');
-        $day->user = (new ModelReference())->setModel($user);
+        $day->id = $id ?? Uuid::uuid4();
+        $day->setCreatedAt(new \DateTime());
+        $day->user = new ModelReference();
+        $day->date = (new \DateTime())->format('Y-m-d');
         $day->comestiblesWithinDay = new ModelCollection(
-            ComestibleWithinDay::class, 'dayId', $id, ['createdAt' => 'ASC']
+            ComestibleWithinDay::class, 'dayId', $day->id, ['createdAt' => 'ASC']
         );
 
         return $day;

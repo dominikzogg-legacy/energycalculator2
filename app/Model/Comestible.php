@@ -5,12 +5,12 @@ namespace Energycalculator\Model;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\Reference\ModelReference;
 use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
-use Chubbyphp\Security\UserInterface;
 use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
 use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
 use Energycalculator\Model\Traits\OwnedByUserTrait;
+use Ramsey\Uuid\Uuid;
 use Respect\Validation\Rules\FloatVal;
 use Respect\Validation\Validator as v;
 
@@ -51,18 +51,16 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
     private $defaultValue;
 
     /**
-     * @param string $id
-     * @param \DateTime $createdAt
-     * @param UserInterface $user
+     * @param string|null $id
      * @return Comestible
      */
-    public static function create(string $id, \DateTime $createdAt, UserInterface $user): Comestible
+    public static function create(string $id = null): Comestible
     {
         $comestible = new self();
 
-        $comestible->id = $id;
-        $comestible->setCreatedAt($createdAt);
-        $comestible->user = (new ModelReference())->setModel($user);
+        $comestible->id = $id ?? Uuid::uuid4();
+        $comestible->setCreatedAt(new \DateTime());
+        $comestible->user = new ModelReference();
 
         return $comestible;
     }
