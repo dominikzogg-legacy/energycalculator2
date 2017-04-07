@@ -53,7 +53,7 @@ final class CreateUserCommand
         $password = $input->getArgument('password');
         $roles = $input->getArgument('roles');
 
-        $user = ($this->userRepository->create())
+        $user = User::create()
             ->setEmail($email)
             ->setPassword($this->passwordManager->hash($password))
             ->setRoles($roles)
