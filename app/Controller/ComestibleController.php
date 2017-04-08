@@ -226,8 +226,6 @@ final class ComestibleController
             $comestible = $this->deserializer->deserializeByObject($request->getParsedBody(), $comestible);
 
             if ([] === $errorMessages = $this->validator->validateModel($comestible)) {
-                $comestible = $comestible->setUpdatedAt(new \DateTime());
-
                 $this->comestibleRepository->persist($comestible);
                 $this->session->addFlash(
                     $request,

@@ -234,8 +234,6 @@ final class UserController
             $user = $this->deserializer->deserializeByObject($request->getParsedBody(), $user);
 
             if ([] === $errorMessages = $this->validator->validateModel($user)) {
-                $user = $user->setUpdatedAt(new \DateTime());
-
                 $this->userRepository->persist($user);
                 $this->session->addFlash(
                     $request,

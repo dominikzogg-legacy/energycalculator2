@@ -7,7 +7,6 @@ use Chubbyphp\Model\Reference\ModelReference;
 use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
 use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
-use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
 use Energycalculator\Model\Traits\OwnedByUserTrait;
 use Ramsey\Uuid\Uuid;
@@ -16,7 +15,6 @@ use Respect\Validation\Validator as v;
 
 final class Comestible implements OwnedByUserModelInterface, ValidatableModelInterface
 {
-    use CreatedAndUpdatedAtTrait;
     use IdTrait;
     use OwnedByUserTrait;
 
@@ -59,7 +57,6 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
         $comestible = new self();
 
         $comestible->id = $id ?? Uuid::uuid4();
-        $comestible->setCreatedAt(new \DateTime());
         $comestible->user = new ModelReference();
 
         return $comestible;
@@ -197,8 +194,6 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
         $comestible = new self();
 
         $comestible->id = $data['id'];
-        $comestible->createdAt = $data['createdAt'];
-        $comestible->updatedAt = $data['updatedAt'];
         $comestible->user = $data['user'];
         $comestible->name = $data['name'];
         $comestible->calorie = $data['calorie'];
@@ -217,8 +212,6 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
     {
         return [
             'id' => $this->id,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
             'userId' => $this->user->getId(),
             'name' => $this->name,
             'calorie' => $this->calorie,
@@ -236,8 +229,6 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
     {
         return [
             'id' => $this->id,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
             'user' => $this->user->jsonSerialize(),
             'name' => $this->name,
             'calorie' => $this->calorie,

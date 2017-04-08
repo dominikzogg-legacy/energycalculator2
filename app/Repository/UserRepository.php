@@ -2,11 +2,10 @@
 
 namespace Energycalculator\Repository;
 
-use Chubbyphp\Model\Doctrine\DBAL\Repository\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
 use Energycalculator\Model\User;
 
-final class UserRepository extends AbstractDoctrineRepository
+final class UserRepository extends AbstractRepository
 {
     /**
      * @param string $modelClass

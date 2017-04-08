@@ -2,13 +2,12 @@
 
 namespace Energycalculator\Repository;
 
-use Chubbyphp\Model\Doctrine\DBAL\Repository\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\Reference\LazyModelReference;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Model\ComestibleWithinDay;
 
-final class ComestibleWithinDayRepository extends AbstractDoctrineRepository
+final class ComestibleWithinDayRepository extends AbstractRepository
 {
     /**
      * @param string $modelClass

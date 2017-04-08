@@ -4,16 +4,13 @@ namespace Energycalculator\Model;
 
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\Reference\ModelReference;
-use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
-use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
 use Ramsey\Uuid\Uuid;
 use Respect\Validation\Validator as v;
 
 final class ComestibleWithinDay implements ValidatableModelInterface
 {
-    use CreatedAndUpdatedAtTrait;
     use IdTrait;
 
     /**
@@ -40,7 +37,6 @@ final class ComestibleWithinDay implements ValidatableModelInterface
         $comestibleWithinDay = new self();
 
         $comestibleWithinDay->id = $id ?? Uuid::uuid4();
-        $comestibleWithinDay->setCreatedAt(new \DateTime());
         $comestibleWithinDay->comestible = new ModelReference();
 
         return $comestibleWithinDay;
@@ -158,8 +154,6 @@ final class ComestibleWithinDay implements ValidatableModelInterface
         $comestibleWithinDay = new self();
 
         $comestibleWithinDay->id = $data['id'];
-        $comestibleWithinDay->createdAt = $data['createdAt'];
-        $comestibleWithinDay->updatedAt = $data['updatedAt'];
         $comestibleWithinDay->dayId = $data['dayId'];
         $comestibleWithinDay->comestible = $data['comestible'];
         $comestibleWithinDay->amount = $data['amount'];
@@ -174,8 +168,6 @@ final class ComestibleWithinDay implements ValidatableModelInterface
     {
         return [
             'id' => $this->id,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
             'comestibleId' => $this->comestible->getId(),
             'dayId' => $this->dayId,
             'amount' => $this->amount,
@@ -189,8 +181,6 @@ final class ComestibleWithinDay implements ValidatableModelInterface
     {
         return [
             'id' => $this->id,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
             'comestible' => $this->comestible->jsonSerialize(),
             'name' => $this->getName(),
             'calorie' => $this->getCalorie(),
@@ -206,7 +196,6 @@ final class ComestibleWithinDay implements ValidatableModelInterface
      */
     public function getModelValidator()
     {
-        return v::create()->addRule(new UniqueModelRule(['dayId', 'name']));
     }
 
     /**

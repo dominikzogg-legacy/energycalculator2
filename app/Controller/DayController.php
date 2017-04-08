@@ -244,7 +244,6 @@ final class DayController
             $day = $this->deserializer->deserializeByObject($request->getParsedBody(), $day);
 
             if ([] === $errorMessages = $this->validator->validateModel($day)) {
-                $day = $day->setUpdatedAt(new \DateTime());
                 $this->dayRepository->persist($day);
                 $this->session->addFlash(
                     $request,

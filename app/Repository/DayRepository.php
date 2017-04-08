@@ -3,14 +3,13 @@
 namespace Energycalculator\Repository;
 
 use Chubbyphp\Model\Collection\LazyModelCollection;
-use Chubbyphp\Model\Doctrine\DBAL\Repository\AbstractDoctrineRepository;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\Reference\LazyModelReference;
 use Energycalculator\Model\ComestibleWithinDay;
 use Energycalculator\Model\Day;
 use Energycalculator\Model\User;
 
-final class DayRepository extends AbstractDoctrineRepository
+final class DayRepository extends AbstractRepository
 {
     /**
      * @param string $modelClass
@@ -32,7 +31,7 @@ final class DayRepository extends AbstractDoctrineRepository
         $row['user'] = new LazyModelReference($this->resolver, User::class, $row['userId']);
 
         $row['comestiblesWithinDay'] = new LazyModelCollection(
-            $this->resolver, ComestibleWithinDay::class, 'dayId', $row['id'], ['createdAt' => 'ASC']
+            $this->resolver, ComestibleWithinDay::class, 'dayId', $row['id'], []
         );
 
         return Day::fromPersistence($row);

@@ -6,14 +6,12 @@ use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\UserPasswordInterface;
 use Chubbyphp\Validation\Rules\UniqueModelRule;
 use Chubbyphp\Validation\ValidatableModelInterface;
-use Energycalculator\Model\Traits\CreatedAndUpdatedAtTrait;
 use Energycalculator\Model\Traits\IdTrait;
 use Ramsey\Uuid\Uuid;
 use Respect\Validation\Validator as v;
 
 final class User implements UserPasswordInterface, ValidatableModelInterface
 {
-    use CreatedAndUpdatedAtTrait;
     use IdTrait;
 
     /**
@@ -44,7 +42,6 @@ final class User implements UserPasswordInterface, ValidatableModelInterface
     {
         $user = new self();
         $user->id = $id ?? Uuid::uuid4();
-        $user->setCreatedAt(new \DateTime());
 
         return $user;
     }
@@ -130,8 +127,6 @@ final class User implements UserPasswordInterface, ValidatableModelInterface
         $user = new self();
 
         $user->id = $data['id'];
-        $user->createdAt = $data['createdAt'];
-        $user->updatedAt = $data['updatedAt'];
         $user->username = $data['username'];
         $user->email = $data['email'];
         $user->password = $data['password'];
@@ -147,8 +142,6 @@ final class User implements UserPasswordInterface, ValidatableModelInterface
     {
         return [
             'id' => $this->id,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
             'username' => $this->username,
             'email' => $this->email,
             'password' => $this->password,
@@ -163,8 +156,6 @@ final class User implements UserPasswordInterface, ValidatableModelInterface
     {
         return [
             'id' => $this->id,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
             'username' => $this->username,
             'email' => $this->email,
             'roles' => $this->roles,
