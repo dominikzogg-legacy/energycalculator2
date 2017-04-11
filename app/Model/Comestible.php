@@ -9,7 +9,7 @@ use Energycalculator\Model\Traits\IdTrait;
 use Energycalculator\Model\Traits\OwnedByUserTrait;
 use Ramsey\Uuid\Uuid;
 
-final class Comestible implements OwnedByUserModelInterface
+final class Comestible implements ModelInterface, OwnedByUserModelInterface
 {
     use IdTrait;
     use OwnedByUserTrait;

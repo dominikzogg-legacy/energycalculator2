@@ -10,7 +10,8 @@ use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
 use Energycalculator\Model\Traits\IdTrait;
 use Energycalculator\Model\Traits\OwnedByUserTrait;
 use Ramsey\Uuid\Uuid;
-final class Day implements OwnedByUserModelInterface
+
+final class Day implements ModelInterface, OwnedByUserModelInterface
 {
     use IdTrait;
     use OwnedByUserTrait;
