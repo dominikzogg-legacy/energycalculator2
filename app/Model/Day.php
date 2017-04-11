@@ -38,7 +38,7 @@ final class Day implements ModelInterface, OwnedByUserModelInterface
     public static function create(string $id = null): Day
     {
         $day = new self();
-        $day->id = $id ?? Uuid::uuid4();
+        $day->id = $id ?? (string) Uuid::uuid4();
         $day->user = new ModelReference();
         $day->date = (new \DateTime())->format('Y-m-d');
         $day->comestiblesWithinDay = new ModelCollection(

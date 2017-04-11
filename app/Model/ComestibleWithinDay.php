@@ -34,7 +34,7 @@ final class ComestibleWithinDay implements ModelInterface
     {
         $comestibleWithinDay = new self();
 
-        $comestibleWithinDay->id = $id ?? Uuid::uuid4();
+        $comestibleWithinDay->id = $id ?? (string) Uuid::uuid4();
         $comestibleWithinDay->comestible = new ModelReference();
 
         return $comestibleWithinDay;

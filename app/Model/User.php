@@ -38,7 +38,7 @@ final class User implements UserPasswordInterface
     public static function create(string $id = null): User
     {
         $user = new self();
-        $user->id = $id ?? Uuid::uuid4();
+        $user->id = $id ?? (string) Uuid::uuid4();
 
         return $user;
     }

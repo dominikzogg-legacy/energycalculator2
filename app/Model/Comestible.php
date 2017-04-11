@@ -52,7 +52,7 @@ final class Comestible implements ModelInterface, OwnedByUserModelInterface
     {
         $comestible = new self();
 
-        $comestible->id = $id ?? Uuid::uuid4();
+        $comestible->id = $id ?? (string) Uuid::uuid4();
         $comestible->user = new ModelReference();
 
         return $comestible;
