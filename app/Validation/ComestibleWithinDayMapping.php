@@ -2,8 +2,12 @@
 
 namespace Energycalculator\Validation;
 
+use Chubbyphp\Validation\Constraint\NotNullConstraint;
+use Chubbyphp\Validation\Constraint\NumericConstraint;
 use Chubbyphp\Validation\Mapping\ObjectMappingInterface;
+use Chubbyphp\Validation\Mapping\PropertyMapping;
 use Chubbyphp\Validation\Mapping\PropertyMappingInterface;
+use Chubbyphp\ValidationModel\Constraint\ModelReferenceConstraint;
 use Energycalculator\Model\ComestibleWithinDay;
 
 class ComestibleWithinDayMapping implements ObjectMappingInterface
@@ -21,6 +25,9 @@ class ComestibleWithinDayMapping implements ObjectMappingInterface
      */
     public function getPropertyMappings(): array
     {
-        return [];
+        return [
+            new PropertyMapping('comestible', [new ModelReferenceConstraint()]),
+            new PropertyMapping('amount', [new NotNullConstraint(), new NumericConstraint()]),
+        ];
     }
 }
