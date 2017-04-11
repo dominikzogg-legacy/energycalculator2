@@ -31,7 +31,7 @@ class DayMapping implements ObjectMappingInterface
             new PropertyMapping('user', [new ModelReferenceConstraint()]),
             new PropertyMapping('date', [new NotNullConstraint(), new DateConstraint()]),
             new PropertyMapping('weight', [new NumericConstraint()]),
-            new PropertyMapping('comestibleWithinDays', [new ModelCollectionConstraint()]),
+            new PropertyMapping('comestiblesWithinDay', [new ModelCollectionConstraint()]),
         ];
     }
 }
