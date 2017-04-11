@@ -26,7 +26,7 @@ class ComestibleWithinDayMapping implements ObjectMappingInterface
     public function getPropertyMappings(): array
     {
         return [
-            new PropertyMapping('comestible', [new ModelReferenceConstraint()]),
+            new PropertyMapping('comestible', [new ModelReferenceConstraint(false)]),
             new PropertyMapping('amount', [new NotNullConstraint(), new NumericConstraint()]),
         ];
     }

@@ -28,7 +28,7 @@ class DayMapping implements ObjectMappingInterface
     public function getPropertyMappings(): array
     {
         return [
-            new PropertyMapping('user', [new ModelReferenceConstraint()]),
+            new PropertyMapping('user', [new ModelReferenceConstraint(false)]),
             new PropertyMapping('date', [new NotNullConstraint(), new DateConstraint()]),
             new PropertyMapping('weight', [new NumericConstraint()]),
             new PropertyMapping('comestiblesWithinDay', [new ModelCollectionConstraint()]),

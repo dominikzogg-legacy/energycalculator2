@@ -27,7 +27,7 @@ class ComestibleMapping implements ObjectMappingInterface
     public function getPropertyMappings(): array
     {
         return [
-            new PropertyMapping('user', [new ModelReferenceConstraint()]),
+            new PropertyMapping('user', [new ModelReferenceConstraint(false)]),
             new PropertyMapping('name', [new NotNullConstraint(), new NotBlankConstraint()]),
             new PropertyMapping('calorie', [new NotNullConstraint(), new NumericConstraint()]),
             new PropertyMapping('protein', [new NotNullConstraint(), new NumericConstraint()]),
