@@ -1,10 +1,11 @@
 <?php
 
-namespace Energycalculator\Deserializer;
+namespace Energycalculator\Deserialize;
 
 use Chubbyphp\Deserialize\Callback\ReferenceCallback;
 use Chubbyphp\Deserialize\Mapping\ObjectMappingInterface;
 use Chubbyphp\Deserialize\Mapping\PropertyMapping;
+use Chubbyphp\Deserialize\Mapping\PropertyMappingInterface;
 use Chubbyphp\Model\ResolverInterface;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Model\ComestibleWithinDay;
@@ -24,6 +25,9 @@ class ComestibleWithinDayMapping implements ObjectMappingInterface
         $this->resolver = $resolver;
     }
 
+    /**
+     * @return string
+     */
     public function getClass(): string
     {
         return ComestibleWithinDay::class;
@@ -38,7 +42,7 @@ class ComestibleWithinDayMapping implements ObjectMappingInterface
     }
 
     /**
-     * @return array
+     * @return PropertyMappingInterface[]
      */
     public function getPropertyMappings(): array
     {

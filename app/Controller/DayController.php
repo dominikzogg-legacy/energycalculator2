@@ -4,6 +4,7 @@ namespace Energycalculator\Controller;
 
 use Chubbyphp\Deserialize\DeserializerInterface;
 use Chubbyphp\ErrorHandler\HttpException;
+use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Validation\ValidatorInterface;
@@ -186,10 +187,10 @@ final class DayController
         $day->setUser($authenticatedUser);
 
         if ('POST' === $request->getMethod()) {
-            /** @var Day $day */
+            /** @var Day|ModelInterface $day */
             $day = $this->deserializer->deserializeByObject($request->getParsedBody(), $day);
 
-            if ([] === $errorMessages = $this->validator->validateModel($day)) {
+            if ([] === $errorMessages = $this->validator->validateObject($day)) {
                 $this->dayRepository->persist($day);
                 $this->session->addFlash(
                     $request,
@@ -228,7 +229,7 @@ final class DayController
     {
         $id = $request->getAttribute('id');
 
-        /** @var Day $day */
+        /** @var Day|ModelInterface $day */
         $day = $this->dayRepository->find($id);
         if (null === $day) {
             throw HttpException::create($request, $response, 404, 'day.error.notfound');
@@ -240,10 +241,10 @@ final class DayController
         }
 
         if ('POST' === $request->getMethod()) {
-            /** @var Day $day */
+            /** @var Day|ModelInterface $day */
             $day = $this->deserializer->deserializeByObject($request->getParsedBody(), $day);
 
-            if ([] === $errorMessages = $this->validator->validateModel($day)) {
+            if ([] === $errorMessages = $this->validator->validateObject($day)) {
                 $this->dayRepository->persist($day);
                 $this->session->addFlash(
                     $request,
@@ -282,7 +283,7 @@ final class DayController
     {
         $id = $request->getAttribute('id');
 
-        /** @var Day $day */
+        /** @var Day|ModelInterface $day */
         $day = $this->dayRepository->find($id);
         if (null === $day) {
             throw HttpException::create($request, $response, 404, 'day.error.notfound');

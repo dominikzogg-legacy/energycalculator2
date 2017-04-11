@@ -7,15 +7,10 @@ use Chubbyphp\Model\Collection\ModelCollectionInterface;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\Reference\ModelReference;
 use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
-use Chubbyphp\Validation\Rules\UniqueModelRule;
-use Chubbyphp\Validation\ValidatableModelInterface;
 use Energycalculator\Model\Traits\IdTrait;
 use Energycalculator\Model\Traits\OwnedByUserTrait;
 use Ramsey\Uuid\Uuid;
-use Respect\Validation\Rules\FloatVal;
-use Respect\Validation\Validator as v;
-
-final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
+final class Day implements OwnedByUserModelInterface
 {
     use IdTrait;
     use OwnedByUserTrait;
@@ -213,25 +208,6 @@ final class Day implements OwnedByUserModelInterface, ValidatableModelInterface
             'carbohydrate' => $this->getCarbohydrate(),
             'fat' => $this->getFat(),
             'comestiblesWithinDay' => $this->comestiblesWithinDay->jsonSerialize(),
-        ];
-    }
-
-    /**
-     * @return v|null
-     */
-    public function getModelValidator()
-    {
-        return v::create()->addRule(new UniqueModelRule(['user', 'date']));
-    }
-
-    /**
-     * @return v[]|array
-     */
-    public function getPropertyValidators(): array
-    {
-        return [
-            'date' => v::date(),
-            'weight' => v::optional(new FloatVal()),
         ];
     }
 }

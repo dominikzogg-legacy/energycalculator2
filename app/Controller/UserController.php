@@ -4,6 +4,7 @@ namespace Energycalculator\Controller;
 
 use Chubbyphp\Deserialize\DeserializerInterface;
 use Chubbyphp\ErrorHandler\HttpException;
+use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Security\Authorization\RoleHierarchyResolverInterface;
@@ -175,7 +176,7 @@ final class UserController
             /** @var User $user */
             $user = $this->deserializer->deserializeByObject($request->getParsedBody(), $user);
 
-            if ([] === $errorMessages = $this->validator->validateModel($user)) {
+            if ([] === $errorMessages = $this->validator->validateObject($user)) {
                 $this->userRepository->persist($user);
                 $this->session->addFlash(
                     $request,
@@ -230,10 +231,10 @@ final class UserController
         }
 
         if ('POST' === $request->getMethod()) {
-            /** @var User $user */
+            /** @var User|ModelInterface $user */
             $user = $this->deserializer->deserializeByObject($request->getParsedBody(), $user);
 
-            if ([] === $errorMessages = $this->validator->validateModel($user)) {
+            if ([] === $errorMessages = $this->validator->validateObject($user)) {
                 $this->userRepository->persist($user);
                 $this->session->addFlash(
                     $request,

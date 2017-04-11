@@ -2,7 +2,7 @@
 
 use Chubbyphp\Csrf\CsrfProvider;
 use Chubbyphp\Deserialize\Deserializer;
-use Chubbyphp\Deserialize\Registry\ObjectMappingRegistry;
+use Chubbyphp\Deserialize\Registry\ObjectMappingRegistry as DeserializeObjectMappingRegistry;
 use Chubbyphp\ErrorHandler\SimpleErrorHandlerProvider;
 use Chubbyphp\Model\StorageCache\ArrayStorageCache;
 use Chubbyphp\Model\Resolver;
@@ -14,12 +14,12 @@ use Chubbyphp\Session\SessionProvider;
 use Chubbyphp\Translation\LocaleTranslationProvider;
 use Chubbyphp\Translation\TranslationProvider;
 use Chubbyphp\Translation\TranslationTwigExtension;
-use Chubbyphp\Validation\Requirements\Repository;
-use Chubbyphp\Validation\ValidationProvider;
-use Energycalculator\Deserializer\ComestibleMapping;
-use Energycalculator\Deserializer\ComestibleWithinDayMapping;
-use Energycalculator\Deserializer\DayMapping;
-use Energycalculator\Deserializer\UserMapping;
+use Chubbyphp\Validation\Registry\ObjectMappingRegistry as ValidationObjectMappingRegistry;
+use Chubbyphp\Validation\Validator;
+use Energycalculator\Deserialize\ComestibleMapping as DeserializeComestibleMapping;
+use Energycalculator\Deserialize\ComestibleWithinDayMapping as DeserializeComestibleWithinDayMapping;
+use Energycalculator\Deserialize\DayMapping as DeserializeDayMapping;
+use Energycalculator\Deserialize\UserMapping as DeserializeUserMapping;
 use Energycalculator\ErrorHandler\HtmlErrorResponseProvider;
 use Energycalculator\Provider\TwigProvider;
 use Energycalculator\Repository\DayRepository;
@@ -31,6 +31,10 @@ use Energycalculator\Service\TemplateData;
 use Energycalculator\Service\TwigRender;
 use Energycalculator\Twig\NumericExtension;
 use Energycalculator\Twig\RouterExtension;
+use Energycalculator\Validation\ComestibleMapping as ValidationComestibleMapping;
+use Energycalculator\Validation\ComestibleWithinDayMapping as ValidationComestibleWithinDayMapping;
+use Energycalculator\Validation\DayMapping as ValidationDayMapping;
+use Energycalculator\Validation\UserMapping as ValidationUserMapping;
 use Negotiation\LanguageNegotiator;
 use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\MonologServiceProvider;
@@ -46,7 +50,6 @@ $container->register(new MonologServiceProvider());
 $container->register(new SessionProvider());
 $container->register(new TranslationProvider());
 $container->register(new TwigProvider());
-$container->register(new ValidationProvider());
 
 // extend providers
 $container['errorHandler.defaultProvider'] = function () use ($container) {
@@ -110,44 +113,34 @@ $container->extend('twig.extensions', function (array $extensions) use ($contain
     return $extensions;
 });
 
-$container->extend('validator.helpers', function (array $helpers) use ($container) {
-    $helpers[] = $container[Repository::class.'Comestible'];
-    $helpers[] = $container[Repository::class.'ComestibleWithinDay'];
-    $helpers[] = $container[Repository::class.'Day'];
-    $helpers[] = $container[Repository::class.'User'];
-
-    return $helpers;
-});
-
 // deserializer
 $container[Deserializer::class] = function () use ($container) {
-    return new Deserializer($container[ObjectMappingRegistry::class]);
+    return new Deserializer($container[DeserializeObjectMappingRegistry::class]);
 };
 
-$container[ObjectMappingRegistry::class] = function () use ($container) {
-    return new ObjectMappingRegistry([
-        $container[ComestibleMapping::class],
-        $container[ComestibleWithinDayMapping::class],
-        $container[DayMapping::class],
-        $container[UserMapping::class]
+$container[DeserializeObjectMappingRegistry::class] = function () use ($container) {
+    return new DeserializeObjectMappingRegistry([
+        $container[DeserializeComestibleMapping::class],
+        $container[DeserializeComestibleWithinDayMapping::class],
+        $container[DeserializeDayMapping::class],
+        $container[DeserializeUserMapping::class]
     ]);
 };
 
-// mappings
-$container[ComestibleMapping::class] = function () use ($container) {
-    return new ComestibleMapping();
+$container[DeserializeComestibleMapping::class] = function () use ($container) {
+    return new DeserializeComestibleMapping();
 };
 
-$container[ComestibleWithinDayMapping::class] = function () use ($container) {
-    return new ComestibleWithinDayMapping($container[Resolver::class]);
+$container[DeserializeComestibleWithinDayMapping::class] = function () use ($container) {
+    return new DeserializeComestibleWithinDayMapping($container[Resolver::class]);
 };
 
-$container[DayMapping::class] = function () use ($container) {
-    return new DayMapping();
+$container[DeserializeDayMapping::class] = function () use ($container) {
+    return new DeserializeDayMapping();
 };
 
-$container[UserMapping::class] = function () use ($container) {
-    return new UserMapping(
+$container[DeserializeUserMapping::class] = function () use ($container) {
+    return new DeserializeUserMapping(
         $container['security.authentication.passwordmanager'],
         $container['security.authorization.rolehierarchyresolver']
     );
@@ -229,22 +222,6 @@ $container[RedirectForPath::class] = function () use ($container) {
     return new RedirectForPath($container['router']);
 };
 
-$container[Repository::class.'Comestible'] = function () use ($container) {
-    return new Repository($container[ComestibleRepository::class]);
-};
-
-$container[Repository::class.'ComestibleWithinDay'] = function () use ($container) {
-    return new Repository($container[ComestibleWithinDayRepository::class]);
-};
-
-$container[Repository::class.'Day'] = function () use ($container) {
-    return new Repository($container[DayRepository::class]);
-};
-
-$container[Repository::class.'User'] = function () use ($container) {
-    return new Repository($container[UserRepository::class]);
-};
-
 $container[RoleAuthorization::class] = function ($container) {
     return new RoleAuthorization($container['security.authorization.rolehierarchyresolver'], $container['logger']);
 };
@@ -276,4 +253,35 @@ $container[TemplateData::class] = function () use ($container) {
 
 $container[TwigRender::class] = function () use ($container) {
     return new TwigRender($container['twig']);
+};
+
+// validation
+
+$container[Validator::class] = function () use ($container) {
+    return new Validator($container[ValidationObjectMappingRegistry::class]);
+};
+
+$container[ValidationObjectMappingRegistry::class] = function () use ($container) {
+    return new ValidationObjectMappingRegistry([
+        $container[ValidationComestibleMapping::class],
+        $container[ValidationComestibleWithinDayMapping::class],
+        $container[ValidationDayMapping::class],
+        $container[ValidationUserMapping::class]
+    ]);
+};
+
+$container[ValidationComestibleMapping::class] = function () use ($container) {
+    return new ValidationComestibleMapping();
+};
+
+$container[ValidationComestibleWithinDayMapping::class] = function () use ($container) {
+    return new ValidationComestibleWithinDayMapping();
+};
+
+$container[ValidationDayMapping::class] = function () use ($container) {
+    return new ValidationDayMapping();
+};
+
+$container[ValidationUserMapping::class] = function () use ($container) {
+    return new ValidationUserMapping();
 };

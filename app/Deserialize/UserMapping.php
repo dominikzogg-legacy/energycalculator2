@@ -1,10 +1,11 @@
 <?php
 
-namespace Energycalculator\Deserializer;
+namespace Energycalculator\Deserialize;
 
 use Chubbyphp\Deserialize\DeserializerInterface;
 use Chubbyphp\Deserialize\Mapping\ObjectMappingInterface;
 use Chubbyphp\Deserialize\Mapping\PropertyMapping;
+use Chubbyphp\Deserialize\Mapping\PropertyMappingInterface;
 use Chubbyphp\Security\Authentication\PasswordManagerInterface;
 use Chubbyphp\Security\Authorization\RoleHierarchyResolverInterface;
 use Energycalculator\Model\User;
@@ -49,6 +50,9 @@ class UserMapping implements ObjectMappingInterface
         return 'create';
     }
 
+    /**
+     * @return PropertyMappingInterface[]
+     */
     public function getPropertyMappings(): array
     {
         return [

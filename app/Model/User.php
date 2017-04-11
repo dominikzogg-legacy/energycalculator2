@@ -4,13 +4,10 @@ namespace Energycalculator\Model;
 
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\UserPasswordInterface;
-use Chubbyphp\Validation\Rules\UniqueModelRule;
-use Chubbyphp\Validation\ValidatableModelInterface;
 use Energycalculator\Model\Traits\IdTrait;
 use Ramsey\Uuid\Uuid;
-use Respect\Validation\Validator as v;
 
-final class User implements UserPasswordInterface, ValidatableModelInterface
+final class User implements UserPasswordInterface
 {
     use IdTrait;
 
@@ -159,27 +156,6 @@ final class User implements UserPasswordInterface, ValidatableModelInterface
             'username' => $this->username,
             'email' => $this->email,
             'roles' => $this->roles,
-        ];
-    }
-
-    /**
-     * @return v|null
-     */
-    public function getModelValidator()
-    {
-        return v::create()->addRule(new UniqueModelRule(['username', 'email']));
-    }
-
-    /**
-     * @return v[]|array
-     */
-    public function getPropertyValidators(): array
-    {
-        return [
-            'username' => v::notBlank()->email(),
-            'email' => v::notBlank()->email(),
-            'password' => v::notBlank(),
-            'roles' => v::notEmpty(),
         ];
     }
 }

@@ -4,12 +4,10 @@ namespace Energycalculator\Model;
 
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\Reference\ModelReference;
-use Chubbyphp\Validation\ValidatableModelInterface;
 use Energycalculator\Model\Traits\IdTrait;
 use Ramsey\Uuid\Uuid;
-use Respect\Validation\Validator as v;
 
-final class ComestibleWithinDay implements ValidatableModelInterface
+final class ComestibleWithinDay
 {
     use IdTrait;
 
@@ -188,24 +186,6 @@ final class ComestibleWithinDay implements ValidatableModelInterface
             'carbohydrate' => $this->getCarbohydrate(),
             'fat' => $this->getFat(),
             'amount' => $this->amount,
-        ];
-    }
-
-    /**
-     * @return v|null
-     */
-    public function getModelValidator()
-    {
-    }
-
-    /**
-     * @return v[]|array
-     */
-    public function getPropertyValidators(): array
-    {
-        return [
-            'comestible' => v::notBlank(),
-            'amount' => v::floatVal(),
         ];
     }
 }

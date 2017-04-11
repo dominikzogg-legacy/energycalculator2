@@ -4,6 +4,7 @@ namespace Energycalculator\Controller;
 
 use Chubbyphp\Deserialize\DeserializerInterface;
 use Chubbyphp\ErrorHandler\HttpException;
+use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Validation\ValidatorInterface;
@@ -132,7 +133,7 @@ final class ComestibleController
     {
         $id = $request->getAttribute('id');
 
-        /** @var Comestible $comestible */
+        /** @var Comestible|ModelInterface $comestible */
         $comestible = $this->comestibleRepository->find($id);
         if (null === $comestible) {
             throw HttpException::create($request, $response, 404, 'comestible.error.notfound');
@@ -168,10 +169,10 @@ final class ComestibleController
         $comestible->setUser($authenticatedUser);
 
         if ('POST' === $request->getMethod()) {
-            /** @var Comestible $comestible */
+            /** @var Comestible|ModelInterface $comestible */
             $comestible = $this->deserializer->deserializeByObject($request->getParsedBody(), $comestible);
 
-            if ([] === $errorMessages = $this->validator->validateModel($comestible)) {
+            if ([] === $errorMessages = $this->validator->validateObject($comestible)) {
                 $this->comestibleRepository->persist($comestible);
                 $this->session->addFlash(
                     $request,
@@ -210,7 +211,7 @@ final class ComestibleController
     {
         $id = $request->getAttribute('id');
 
-        /** @var Comestible $comestible */
+        /** @var Comestible|ModelInterface $comestible */
         $comestible = $this->comestibleRepository->find($id);
         if (null === $comestible) {
             throw HttpException::create($request, $response, 404, 'comestible.error.notfound');
@@ -222,10 +223,10 @@ final class ComestibleController
         }
 
         if ('POST' === $request->getMethod()) {
-            /** @var Comestible $comestible */
+            /** @var Comestible|ModelInterface $comestible */
             $comestible = $this->deserializer->deserializeByObject($request->getParsedBody(), $comestible);
 
-            if ([] === $errorMessages = $this->validator->validateModel($comestible)) {
+            if ([] === $errorMessages = $this->validator->validateObject($comestible)) {
                 $this->comestibleRepository->persist($comestible);
                 $this->session->addFlash(
                     $request,
@@ -264,7 +265,7 @@ final class ComestibleController
     {
         $id = $request->getAttribute('id');
 
-        /** @var Comestible $comestible */
+        /** @var Comestible|ModelInterface $comestible */
         $comestible = $this->comestibleRepository->find($id);
         if (null === $comestible) {
             throw HttpException::create($request, $response, 404, 'comestible.error.notfound');

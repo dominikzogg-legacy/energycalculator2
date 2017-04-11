@@ -5,15 +5,11 @@ namespace Energycalculator\Model;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\Reference\ModelReference;
 use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
-use Chubbyphp\Validation\Rules\UniqueModelRule;
-use Chubbyphp\Validation\ValidatableModelInterface;
 use Energycalculator\Model\Traits\IdTrait;
 use Energycalculator\Model\Traits\OwnedByUserTrait;
 use Ramsey\Uuid\Uuid;
-use Respect\Validation\Rules\FloatVal;
-use Respect\Validation\Validator as v;
 
-final class Comestible implements OwnedByUserModelInterface, ValidatableModelInterface
+final class Comestible implements OwnedByUserModelInterface
 {
     use IdTrait;
     use OwnedByUserTrait;
@@ -236,30 +232,6 @@ final class Comestible implements OwnedByUserModelInterface, ValidatableModelInt
             'carbohydrate' => $this->carbohydrate,
             'fat' => $this->fat,
             'defaultValue' => $this->defaultValue,
-        ];
-    }
-
-    /**
-     * @return v|null
-     */
-    public function getModelValidator()
-    {
-        return v::create()->addRule(new UniqueModelRule(['user', 'name']));
-    }
-
-    /**
-     * @return v[]|array
-     */
-    public function getPropertyValidators(): array
-    {
-        return [
-            'user' => v::notBlank(),
-            'name' => v::notBlank(),
-            'calorie' => v::floatVal(),
-            'protein' => v::floatVal(),
-            'carbohydrate' => v::floatVal(),
-            'fat' => v::floatVal(),
-            'defaultValue' => v::optional(new FloatVal()),
         ];
     }
 }

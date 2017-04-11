@@ -1,9 +1,10 @@
 <?php
 
-namespace Energycalculator\Deserializer;
+namespace Energycalculator\Deserialize;
 
 use Chubbyphp\Deserialize\Mapping\ObjectMappingInterface;
 use Chubbyphp\Deserialize\Mapping\PropertyMapping;
+use Chubbyphp\Deserialize\Mapping\PropertyMappingInterface;
 use Energycalculator\Model\Comestible;
 
 class ComestibleMapping implements ObjectMappingInterface
@@ -25,7 +26,7 @@ class ComestibleMapping implements ObjectMappingInterface
     }
 
     /**
-     * @return array
+     * @return PropertyMappingInterface[]
      */
     public function getPropertyMappings(): array
     {
