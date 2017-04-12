@@ -8,6 +8,7 @@ use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Security\Authorization\RoleHierarchyResolverInterface;
+use Chubbyphp\Validation\Error\Errors;
 use Chubbyphp\Validation\ValidatorInterface;
 use Energycalculator\Repository\UserRepository;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -176,7 +177,7 @@ final class UserController
             /** @var User $user */
             $user = $this->deserializer->deserializeByObject($request->getParsedBody(), $user);
 
-            if ([] === $errorMessages = $this->validator->validateObject($user)) {
+            if ([] === $errors = $this->validator->validateObject($user)) {
                 $this->userRepository->persist($user);
                 $this->session->addFlash(
                     $request,
@@ -188,6 +189,8 @@ final class UserController
                     'id' => $user->getId(),
                 ]);
             }
+
+            $errorMessages = (new Errors($errors))->getTree();
 
             $this->session->addFlash(
                 $request,
@@ -234,7 +237,7 @@ final class UserController
             /** @var User|ModelInterface $user */
             $user = $this->deserializer->deserializeByObject($request->getParsedBody(), $user);
 
-            if ([] === $errorMessages = $this->validator->validateObject($user)) {
+            if ([] === $errors = $this->validator->validateObject($user)) {
                 $this->userRepository->persist($user);
                 $this->session->addFlash(
                     $request,
@@ -246,6 +249,8 @@ final class UserController
                     'id' => $user->getId(),
                 ]);
             }
+
+            $errorMessages = (new Errors($errors))->getTree();
 
             $this->session->addFlash(
                 $request,

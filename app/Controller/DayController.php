@@ -7,6 +7,7 @@ use Chubbyphp\ErrorHandler\HttpException;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
+use Chubbyphp\Validation\Error\Errors;
 use Chubbyphp\Validation\ValidatorInterface;
 use Energycalculator\Model\Day;
 use Energycalculator\Repository\ComestibleRepository;
@@ -190,7 +191,7 @@ final class DayController
             /** @var Day|ModelInterface $day */
             $day = $this->deserializer->deserializeByObject($request->getParsedBody(), $day);
 
-            if ([] === $errorMessages = $this->validator->validateObject($day)) {
+            if ([] === $errors = $this->validator->validateObject($day)) {
                 $this->dayRepository->persist($day);
                 $this->session->addFlash(
                     $request,
@@ -202,6 +203,8 @@ final class DayController
                     'id' => $day->getId(),
                 ]);
             }
+
+            $errorMessages = (new Errors($errors))->getTree();
 
             $this->session->addFlash(
                 $request,
@@ -244,7 +247,7 @@ final class DayController
             /** @var Day|ModelInterface $day */
             $day = $this->deserializer->deserializeByObject($request->getParsedBody(), $day);
 
-            if ([] === $errorMessages = $this->validator->validateObject($day)) {
+            if ([] === $errors = $this->validator->validateObject($day)) {
                 $this->dayRepository->persist($day);
                 $this->session->addFlash(
                     $request,
@@ -256,6 +259,8 @@ final class DayController
                     'id' => $day->getId(),
                 ]);
             }
+
+            $errorMessages = (new Errors($errors))->getTree();
 
             $this->session->addFlash(
                 $request,

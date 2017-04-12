@@ -7,6 +7,7 @@ use Chubbyphp\ErrorHandler\HttpException;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
+use Chubbyphp\Validation\Error\Errors;
 use Chubbyphp\Validation\ValidatorInterface;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Repository\ComestibleRepository;
@@ -172,7 +173,7 @@ final class ComestibleController
             /** @var Comestible|ModelInterface $comestible */
             $comestible = $this->deserializer->deserializeByObject($request->getParsedBody(), $comestible);
 
-            if ([] === $errorMessages = $this->validator->validateObject($comestible)) {
+            if ([] === $errors = $this->validator->validateObject($comestible)) {
                 $this->comestibleRepository->persist($comestible);
                 $this->session->addFlash(
                     $request,
@@ -184,6 +185,8 @@ final class ComestibleController
                     'id' => $comestible->getId(),
                 ]);
             }
+
+            $errorMessages = (new Errors($errors))->getTree();
 
             $this->session->addFlash(
                 $request,
@@ -226,7 +229,7 @@ final class ComestibleController
             /** @var Comestible|ModelInterface $comestible */
             $comestible = $this->deserializer->deserializeByObject($request->getParsedBody(), $comestible);
 
-            if ([] === $errorMessages = $this->validator->validateObject($comestible)) {
+            if ([] === $errors = $this->validator->validateObject($comestible)) {
                 $this->comestibleRepository->persist($comestible);
                 $this->session->addFlash(
                     $request,
@@ -238,6 +241,8 @@ final class ComestibleController
                     'id' => $comestible->getId(),
                 ]);
             }
+
+            $errorMessages = (new Errors($errors))->getTree();
 
             $this->session->addFlash(
                 $request,
