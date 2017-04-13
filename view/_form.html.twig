@@ -211,7 +211,7 @@
                                 'model': model,
                                 'id': (id~'_'~(field.parameters.id|default(field.parameters.property))),
                                 'name': (name~'['~(field.parameters.name|default(field.parameters.property))~']'),
-                                'errorMessages': errorMessages[field.parameters.property]|default([]),
+                                'errorMessages': errorMessages|default([]),
                                 'locale': locale
                             })
                         ]
