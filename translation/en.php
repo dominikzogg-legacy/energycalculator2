@@ -131,6 +131,7 @@ return [
     'user.title.view' => 'View user',
 
     'constraint.date.notparseable' => 'Date "{{date}}" could not be detected!',
+    'constraint.modelcollection.outofrange' => 'There have to at least "{{min}}" and at maximum "{{max}}" elements within this collection. There are "{{count}}"',
     'constraint.modelreference.notnull' => 'This reference field must not be empty!',
     'constraint.notnull' => 'This field must not be empty!',
 ];
