@@ -131,7 +131,8 @@ return [
     'user.title.view' => 'Benutzer anschauen',
 
     'constraint.date.notparseable' => 'Datum "{{date}}" konnte nicht erkannt werden!',
-    'constraint.modelcollection.outofrange' => 'Es müssten mindestens "{{min}}" und maximal "{{max}}" Elemente in dieser Kollektion sein. Es sind "{{count}}"',
-    'constraint.modelreference.notnull' => 'Diese Referenz-Feld darf nicht leer sein!',
-    'constraint.notnull' => 'Diese Feld darf nicht leer sein!',
+    'constraint.modelcollection.outofrange' => 'Es müssten mindestens "{{min}}" und maximal "{{max}}" Elemente in dieser Kollektion sein. Es sind "{{count}}"!',
+    'constraint.modelreference.notnull' => 'Referenz darf nicht leer sein!',
+    'constraint.notnull' => 'Darf nicht leer sein!',
+    'constraint.numeric' => 'Keine Zahl!'
 ];
