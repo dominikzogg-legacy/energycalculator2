@@ -79,11 +79,11 @@ final class ComestibleWithinDay implements ModelInterface
      */
     public function getCalorie()
     {
-        if (null === $this->getComestible()) {
+        if (null === $this->getComestible() || null === $this->amount) {
             return 0;
         }
 
-        return $this->getComestible()->getCalorie() * $this->getAmount() / 100;
+        return $this->getComestible()->getCalorie() * $this->amount / 100;
     }
 
     /**
@@ -91,11 +91,11 @@ final class ComestibleWithinDay implements ModelInterface
      */
     public function getProtein()
     {
-        if (null === $this->getComestible()) {
+        if (null === $this->getComestible() || null === $this->amount) {
             return 0;
         }
 
-        return $this->getComestible()->getProtein() * $this->getAmount() / 100;
+        return $this->getComestible()->getProtein() * $this->amount / 100;
     }
 
     /**
@@ -103,11 +103,11 @@ final class ComestibleWithinDay implements ModelInterface
      */
     public function getCarbohydrate()
     {
-        if (null === $this->getComestible()) {
+        if (null === $this->getComestible() || null === $this->amount) {
             return 0;
         }
 
-        return $this->getComestible()->getCarbohydrate() * $this->getAmount() / 100;
+        return $this->getComestible()->getCarbohydrate() * $this->amount / 100;
     }
 
     /**
@@ -115,11 +115,11 @@ final class ComestibleWithinDay implements ModelInterface
      */
     public function getFat()
     {
-        if (null === $this->getComestible()) {
+        if (null === $this->getComestible() || null === $this->amount) {
             return 0;
         }
 
-        return $this->getComestible()->getFat() * $this->getAmount() / 100;
+        return $this->getComestible()->getFat() * $this->amount / 100;
     }
 
     /**
