@@ -7,7 +7,6 @@ use Chubbyphp\ErrorHandler\HttpException;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
-use Chubbyphp\Validation\Error\Errors;
 use Chubbyphp\Validation\ValidatorInterface;
 use Energycalculator\Model\Day;
 use Energycalculator\Repository\ComestibleRepository;
@@ -191,6 +190,8 @@ final class DayController
             /** @var Day|ModelInterface $day */
             $day = $this->deserializer->deserializeByObject($request->getParsedBody(), $day);
 
+            $locale = $request->getAttribute('locale');
+
             if ([] === $errors = $this->validator->validateObject($day)) {
                 $this->dayRepository->persist($day);
                 $this->session->addFlash(
@@ -199,12 +200,12 @@ final class DayController
                 );
 
                 return $this->redirectForPath->get($response, 302, 'day_edit', [
-                    'locale' => $request->getAttribute('locale'),
+                    'locale' => $locale,
                     'id' => $day->getId(),
                 ]);
             }
 
-            $errorMessages = (new Errors($errors))->getTree();
+            $errorMessages = $this->templateData->getErrorMessages($locale, $errors);
 
             $this->session->addFlash(
                 $request,
@@ -247,6 +248,8 @@ final class DayController
             /** @var Day|ModelInterface $day */
             $day = $this->deserializer->deserializeByObject($request->getParsedBody(), $day);
 
+            $locale = $request->getAttribute('locale');
+
             if ([] === $errors = $this->validator->validateObject($day)) {
                 $this->dayRepository->persist($day);
                 $this->session->addFlash(
@@ -255,12 +258,12 @@ final class DayController
                 );
 
                 return $this->redirectForPath->get($response, 302, 'day_edit', [
-                    'locale' => $request->getAttribute('locale'),
+                    'locale' => $locale,
                     'id' => $day->getId(),
                 ]);
             }
 
-            $errorMessages = (new Errors($errors))->getTree();
+            $errorMessages = $this->templateData->getErrorMessages($locale, $errors);
 
             $this->session->addFlash(
                 $request,

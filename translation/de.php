@@ -130,7 +130,7 @@ return [
     'user.title.list' => 'Benutzerliste',
     'user.title.view' => 'Benutzer anschauen',
 
-    '{{name}} must not be blank' => 'darf nicht leer sein',
-    '{{name}} must be valid email' => '{{name}} ist keine gültige E-Mail Adresse',
-    '{{name}} are not unique' => '{{name}} wird bereits verwendet',
+    'constraint.date.notparseable' => 'Datum "{{date}}" konnte nicht erkannt werden!',
+    'constraint.modelreference.notnull' => 'Diese Referenz-Feld darf nicht leer sein!',
+    'constraint.notnull' => 'Diese Feld darf nicht leer sein!',
 ];

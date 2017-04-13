@@ -8,7 +8,6 @@ use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Security\Authorization\RoleHierarchyResolverInterface;
-use Chubbyphp\Validation\Error\Errors;
 use Chubbyphp\Validation\ValidatorInterface;
 use Energycalculator\Repository\UserRepository;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -177,6 +176,8 @@ final class UserController
             /** @var User $user */
             $user = $this->deserializer->deserializeByObject($request->getParsedBody(), $user);
 
+            $locale = $request->getAttribute('locale');
+
             if ([] === $errors = $this->validator->validateObject($user)) {
                 $this->userRepository->persist($user);
                 $this->session->addFlash(
@@ -185,12 +186,12 @@ final class UserController
                 );
 
                 return $this->redirectForPath->get($response, 302, 'user_edit', [
-                    'locale' => $request->getAttribute('locale'),
+                    'locale' => $locale,
                     'id' => $user->getId(),
                 ]);
             }
 
-            $errorMessages = (new Errors($errors))->getTree();
+            $errorMessages = $this->templateData->getErrorMessages($locale, $errors);
 
             $this->session->addFlash(
                 $request,
@@ -237,6 +238,8 @@ final class UserController
             /** @var User|ModelInterface $user */
             $user = $this->deserializer->deserializeByObject($request->getParsedBody(), $user);
 
+            $locale = $request->getAttribute('locale');
+
             if ([] === $errors = $this->validator->validateObject($user)) {
                 $this->userRepository->persist($user);
                 $this->session->addFlash(
@@ -245,12 +248,12 @@ final class UserController
                 );
 
                 return $this->redirectForPath->get($response, 302, 'user_edit', [
-                    'locale' => $request->getAttribute('locale'),
+                    'locale' => $locale,
                     'id' => $user->getId(),
                 ]);
             }
 
-            $errorMessages = (new Errors($errors))->getTree();
+            $errorMessages = $this->templateData->getErrorMessages($locale, $errors);
 
             $this->session->addFlash(
                 $request,

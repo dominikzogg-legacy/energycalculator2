@@ -5,6 +5,8 @@ namespace Energycalculator\Service;
 use Chubbyphp\Csrf\CsrfMiddleware;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Session\SessionInterface;
+use Chubbyphp\Translation\TranslatorInterface;
+use Chubbyphp\Validation\Error\NestedErrorMessages;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Route;
 
@@ -31,21 +33,29 @@ final class TemplateData
     private $trail;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param AuthenticationInterface $authentication
      * @param bool                    $debug
      * @param SessionInterface        $session
      * @param array                   $trail
+     * @param TranslatorInterface     $translator
      */
     public function __construct(
         AuthenticationInterface $authentication,
         bool $debug,
         SessionInterface $session,
-        array $trail
+        array $trail,
+        TranslatorInterface $translator
     ) {
         $this->authentication = $authentication;
         $this->debug = $debug;
         $this->session = $session;
         $this->trail = $trail;
+        $this->translator = $translator;
     }
 
     /**
@@ -73,6 +83,20 @@ final class TemplateData
             'locale' => $locale,
             'trail' => $this->getTrailForRoute($route),
         ], $variables);
+    }
+
+    /**
+     * @param string $locale
+     * @param array $errors
+     * @return array
+     */
+    public function getErrorMessages(string $locale, array $errors): array
+    {
+        $translate = function (string $key, array $args) use ($locale) {
+            return $this->translator->translate($locale, $key, $args);
+        };
+
+        return (new NestedErrorMessages($errors, $translate))->getMessages();
     }
 
     /**

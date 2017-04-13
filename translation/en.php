@@ -130,7 +130,7 @@ return [
     'user.title.list' => 'Userlist',
     'user.title.view' => 'View user',
 
-    '{{name}} must not be blank' => 'must not be blank',
-    '{{name}} must be valid email' => '{{name}} must be valid email',
-    '{{name}} are not unique' => '{{name}} are not unique',
+    'constraint.date.notparseable' => 'Date "{{date}}" could not be detected!',
+    'constraint.modelreference.notnull' => 'This reference field must not be empty!',
+    'constraint.notnull' => 'This field must not be empty!',
 ];

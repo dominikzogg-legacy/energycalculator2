@@ -7,7 +7,6 @@ use Chubbyphp\ErrorHandler\HttpException;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
-use Chubbyphp\Validation\Error\Errors;
 use Chubbyphp\Validation\ValidatorInterface;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Repository\ComestibleRepository;
@@ -173,6 +172,8 @@ final class ComestibleController
             /** @var Comestible|ModelInterface $comestible */
             $comestible = $this->deserializer->deserializeByObject($request->getParsedBody(), $comestible);
 
+            $locale = $request->getAttribute('locale');
+
             if ([] === $errors = $this->validator->validateObject($comestible)) {
                 $this->comestibleRepository->persist($comestible);
                 $this->session->addFlash(
@@ -181,12 +182,12 @@ final class ComestibleController
                 );
 
                 return $this->redirectForPath->get($response, 302, 'comestible_edit', [
-                    'locale' => $request->getAttribute('locale'),
+                    'locale' => $locale,
                     'id' => $comestible->getId(),
                 ]);
             }
 
-            $errorMessages = (new Errors($errors))->getTree();
+            $errorMessages = $this->templateData->getErrorMessages($locale, $errors);
 
             $this->session->addFlash(
                 $request,
@@ -229,6 +230,8 @@ final class ComestibleController
             /** @var Comestible|ModelInterface $comestible */
             $comestible = $this->deserializer->deserializeByObject($request->getParsedBody(), $comestible);
 
+            $locale = $request->getAttribute('locale');
+
             if ([] === $errors = $this->validator->validateObject($comestible)) {
                 $this->comestibleRepository->persist($comestible);
                 $this->session->addFlash(
@@ -237,12 +240,12 @@ final class ComestibleController
                 );
 
                 return $this->redirectForPath->get($response, 302, 'comestible_edit', [
-                    'locale' => $request->getAttribute('locale'),
+                    'locale' => $locale,
                     'id' => $comestible->getId(),
                 ]);
             }
 
-            $errorMessages = (new Errors($errors))->getTree();
+            $errorMessages = $this->templateData->getErrorMessages($locale, $errors);
 
             $this->session->addFlash(
                 $request,

@@ -247,7 +247,8 @@ $container[TemplateData::class] = function () use ($container) {
             'user_edit' => ['user_list'],
             'user_list' => [],
             'user_view' => ['user_list'],
-        ]
+        ],
+        $container['translator']
     );
 };
 
