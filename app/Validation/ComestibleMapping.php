@@ -2,6 +2,7 @@
 
 namespace Energycalculator\Validation;
 
+use Chubbyphp\Validation\Constraint\ConstraintInterface;
 use Chubbyphp\Validation\Constraint\NotBlankConstraint;
 use Chubbyphp\Validation\Constraint\NotNullConstraint;
 use Chubbyphp\Validation\Constraint\NumericConstraint;
@@ -19,6 +20,14 @@ class ComestibleMapping implements ObjectMappingInterface
     public function getClass(): string
     {
         return Comestible::class;
+    }
+
+    /**
+     * @return ConstraintInterface[]
+     */
+    public function getConstraints(): array
+    {
+        return [];
     }
 
     /**

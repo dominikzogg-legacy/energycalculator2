@@ -134,5 +134,6 @@ return [
     'constraint.modelcollection.outofrange' => 'Es müssten mindestens "{{min}}" und maximal "{{max}}" Elemente in dieser Kollektion sein. Es sind "{{count}}"!',
     'constraint.modelreference.notnull' => 'Referenz darf nicht leer sein!',
     'constraint.notnull' => 'Darf nicht leer sein!',
-    'constraint.numeric' => 'Keine Zahl!'
+    'constraint.numeric' => 'Keine Zahl!',
+    'constraint.uniquemodel.notunique' => 'Dieser Wert wird bereits verwendet!'
 ];

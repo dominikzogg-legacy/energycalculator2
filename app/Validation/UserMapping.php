@@ -2,22 +2,46 @@
 
 namespace Energycalculator\Validation;
 
+use Chubbyphp\Model\ResolverInterface;
+use Chubbyphp\Validation\Constraint\ConstraintInterface;
 use Chubbyphp\Validation\Constraint\EmailConstraint;
 use Chubbyphp\Validation\Constraint\NotBlankConstraint;
 use Chubbyphp\Validation\Constraint\NotNullConstraint;
 use Chubbyphp\Validation\Mapping\PropertyMapping;
 use Chubbyphp\Validation\Mapping\PropertyMappingInterface;
 use Chubbyphp\Validation\Mapping\ObjectMappingInterface;
+use Chubbyphp\ValidationModel\Constraint\UniqueModelConstraint;
 use Energycalculator\Model\User;
 
 class UserMapping implements ObjectMappingInterface
 {
+    /**
+     * @var ResolverInterface
+     */
+    private $resolver;
+
+    /**
+     * @param ResolverInterface $resolver
+     */
+    public function __construct(ResolverInterface $resolver)
+    {
+        $this->resolver = $resolver;
+    }
+
     /**
      * @return string
      */
     public function getClass(): string
     {
         return User::class;
+    }
+
+    /**
+     * @return ConstraintInterface[]
+     */
+    public function getConstraints(): array
+    {
+        return [new UniqueModelConstraint($this->resolver, ['username', 'email'])];
     }
 
     /**

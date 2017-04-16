@@ -280,9 +280,9 @@ $container[ValidationComestibleWithinDayMapping::class] = function () use ($cont
 };
 
 $container[ValidationDayMapping::class] = function () use ($container) {
-    return new ValidationDayMapping();
+    return new ValidationDayMapping($container[Resolver::class]);
 };
 
 $container[ValidationUserMapping::class] = function () use ($container) {
-    return new ValidationUserMapping();
+    return new ValidationUserMapping($container[Resolver::class]);
 };
