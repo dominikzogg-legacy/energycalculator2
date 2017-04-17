@@ -130,7 +130,7 @@ return [
     'user.title.list' => 'Benutzerliste',
     'user.title.view' => 'Benutzer anschauen',
 
-    'constraint.date.notparseable' => 'Datum "{{value}}" konnte nicht erkannt werden!',
+    'constraint.date.notparseable' => 'Datum "{{input}}" konnte nicht erkannt werden!',
     'constraint.modelcollection.outofrange' => 'Es müssten mindestens "{{min}}" und maximal "{{max}}" Elemente in dieser Kollektion sein. Es sind "{{count}}"!',
     'constraint.modelreference.notnull' => 'Referenz darf nicht leer sein!',
     'constraint.notnull' => 'Darf nicht leer sein!',
