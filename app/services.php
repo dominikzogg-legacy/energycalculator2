@@ -14,8 +14,7 @@ use Chubbyphp\Session\SessionProvider;
 use Chubbyphp\Translation\LocaleTranslationProvider;
 use Chubbyphp\Translation\TranslationProvider;
 use Chubbyphp\Translation\TranslationTwigExtension;
-use Chubbyphp\Validation\Registry\ObjectMappingRegistry as ValidationObjectMappingRegistry;
-use Chubbyphp\Validation\Validator;
+use Chubbyphp\Validation\ValidationProvider;
 use Energycalculator\Deserialize\ComestibleMapping as DeserializeComestibleMapping;
 use Energycalculator\Deserialize\ComestibleWithinDayMapping as DeserializeComestibleWithinDayMapping;
 use Energycalculator\Deserialize\DayMapping as DeserializeDayMapping;
@@ -50,6 +49,7 @@ $container->register(new MonologServiceProvider());
 $container->register(new SessionProvider());
 $container->register(new TranslationProvider());
 $container->register(new TwigProvider());
+$container->register(new ValidationProvider());
 
 // extend providers
 $container['errorHandler.defaultProvider'] = function () use ($container) {
@@ -111,6 +111,16 @@ $container->extend('twig.extensions', function (array $extensions) use ($contain
     }
 
     return $extensions;
+});
+
+
+$container->extend('validator.objectmappings', function (array $objectMappings) use ($container) {
+    $objectMappings[] = new ValidationComestibleMapping();
+    $objectMappings[] = new ValidationComestibleWithinDayMapping();
+    $objectMappings[] = new ValidationDayMapping($container[Resolver::class]);
+    $objectMappings[] = new ValidationUserMapping($container[Resolver::class]);
+
+    return $objectMappings;
 });
 
 // deserializer
@@ -254,35 +264,4 @@ $container[TemplateData::class] = function () use ($container) {
 
 $container[TwigRender::class] = function () use ($container) {
     return new TwigRender($container['twig']);
-};
-
-// validation
-
-$container[Validator::class] = function () use ($container) {
-    return new Validator($container[ValidationObjectMappingRegistry::class]);
-};
-
-$container[ValidationObjectMappingRegistry::class] = function () use ($container) {
-    return new ValidationObjectMappingRegistry([
-        $container[ValidationComestibleMapping::class],
-        $container[ValidationComestibleWithinDayMapping::class],
-        $container[ValidationDayMapping::class],
-        $container[ValidationUserMapping::class]
-    ]);
-};
-
-$container[ValidationComestibleMapping::class] = function () use ($container) {
-    return new ValidationComestibleMapping();
-};
-
-$container[ValidationComestibleWithinDayMapping::class] = function () use ($container) {
-    return new ValidationComestibleWithinDayMapping();
-};
-
-$container[ValidationDayMapping::class] = function () use ($container) {
-    return new ValidationDayMapping($container[Resolver::class]);
-};
-
-$container[ValidationUserMapping::class] = function () use ($container) {
-    return new ValidationUserMapping($container[Resolver::class]);
 };

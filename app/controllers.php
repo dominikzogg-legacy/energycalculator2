@@ -2,7 +2,6 @@
 
 use Chubbyphp\Deserialize\Deserializer;
 use Chubbyphp\Security\Authentication\FormAuthentication;
-use Chubbyphp\Validation\Validator;
 use Energycalculator\Controller\AuthController;
 use Energycalculator\Controller\ComestibleController;
 use Energycalculator\Controller\DayController;
@@ -43,7 +42,7 @@ $container[ComestibleController::class] = function () use ($container) {
         $container['session'],
         $container[TemplateData::class],
         $container[TwigRender::class],
-        $container[Validator::class]
+        $container['validator']
     );
 };
 
@@ -59,7 +58,7 @@ $container[DayController::class] = function () use ($container) {
         $container['session'],
         $container[TemplateData::class],
         $container[TwigRender::class],
-        $container[Validator::class]
+        $container['validator']
     );
 };
 
@@ -74,7 +73,7 @@ $container[UserController::class] = function () use ($container) {
         $container[TemplateData::class],
         $container[TwigRender::class],
         $container[UserRepository::class],
-        $container[Validator::class]
+        $container['validator']
     );
 };
 

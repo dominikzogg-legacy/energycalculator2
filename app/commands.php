@@ -4,7 +4,6 @@ use Chubbyphp\Lazy\LazyCommand;
 use Chubbyphp\Model\Doctrine\DBAL\Command\CreateDatabaseCommand;
 use Chubbyphp\Model\Doctrine\DBAL\Command\RunSqlCommand;
 use Chubbyphp\Model\Doctrine\DBAL\Command\SchemaUpdateCommand;
-use Chubbyphp\Validation\Validator;
 use Energycalculator\Command\CreateUserCommand;
 use Energycalculator\Provider\ConsoleProvider;
 use Energycalculator\Repository\UserRepository;
@@ -23,7 +22,7 @@ $container[CreateUserCommand::class] = function () use ($container) {
     return new CreateUserCommand(
         $container['security.authentication.passwordmanager'],
         $container[UserRepository::class],
-        $container[Validator::class]
+        $container['validator']
     );
 };
 
