@@ -14,12 +14,17 @@ use Chubbyphp\Session\SessionProvider;
 use Chubbyphp\Translation\LocaleTranslationProvider;
 use Chubbyphp\Translation\TranslationProvider;
 use Chubbyphp\Translation\TranslationTwigExtension;
-use Chubbyphp\Validation\ValidationProvider;
+use Chubbyphp\Validation\Mapping\LazyObjectMapping as ValidationLazyObjectMapping;
+use Chubbyphp\Validation\Provider\ValidationProvider;
 use Energycalculator\Deserialize\ComestibleMapping as DeserializeComestibleMapping;
 use Energycalculator\Deserialize\ComestibleWithinDayMapping as DeserializeComestibleWithinDayMapping;
 use Energycalculator\Deserialize\DayMapping as DeserializeDayMapping;
 use Energycalculator\Deserialize\UserMapping as DeserializeUserMapping;
 use Energycalculator\ErrorHandler\HtmlErrorResponseProvider;
+use Energycalculator\Model\Comestible;
+use Energycalculator\Model\ComestibleWithinDay;
+use Energycalculator\Model\Day;
+use Energycalculator\Model\User;
 use Energycalculator\Provider\TwigProvider;
 use Energycalculator\Repository\DayRepository;
 use Energycalculator\Repository\ComestibleRepository;
@@ -113,12 +118,27 @@ $container->extend('twig.extensions', function (array $extensions) use ($contain
     return $extensions;
 });
 
-
 $container->extend('validator.objectmappings', function (array $objectMappings) use ($container) {
-    $objectMappings[] = new ValidationComestibleMapping();
-    $objectMappings[] = new ValidationComestibleWithinDayMapping();
-    $objectMappings[] = new ValidationDayMapping($container[Resolver::class]);
-    $objectMappings[] = new ValidationUserMapping($container[Resolver::class]);
+    $objectMappings[] = new ValidationLazyObjectMapping(
+        $container,
+        ValidationComestibleMapping::class,
+        Comestible::class
+    );
+    $objectMappings[] = new ValidationLazyObjectMapping(
+        $container,
+        ValidationComestibleWithinDayMapping::class,
+        ComestibleWithinDay::class
+    );
+    $objectMappings[] = new ValidationLazyObjectMapping(
+        $container,
+        ValidationDayMapping::class,
+        Day::class
+    );
+    $objectMappings[] = new ValidationLazyObjectMapping(
+        $container,
+        ValidationUserMapping::class,
+        User::class
+    );
 
     return $objectMappings;
 });
@@ -264,4 +284,21 @@ $container[TemplateData::class] = function () use ($container) {
 
 $container[TwigRender::class] = function () use ($container) {
     return new TwigRender($container['twig']);
+};
+
+// validation
+$container[ValidationComestibleMapping::class] = function () use ($container) {
+    return new ValidationComestibleMapping();
+};
+
+$container[ValidationComestibleWithinDayMapping::class] = function () use ($container) {
+    return new ValidationComestibleWithinDayMapping();
+};
+
+$container[ValidationDayMapping::class] = function () use ($container) {
+    return new ValidationDayMapping($container[Resolver::class]);
+};
+
+$container[ValidationUserMapping::class] = function () use ($container) {
+    return new ValidationUserMapping($container[Resolver::class]);
 };
