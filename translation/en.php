@@ -132,7 +132,7 @@ return [
 
     'constraint.date.invalidformat' => 'Date "{{input}}" could not be detected!',
     'constraint.modelcollection.outofrange' => 'There have to at least "{{min}}" and at maximum "{{max}}" elements within this collection. There are "{{count}}"!',
-    'constraint.modelreference.notnull' => 'Reference must not be empty!',
+    'constraint.modelreference.null' => 'Reference must not be empty!',
     'constraint.notnull.null' => 'Must not be empty!',
     'constraint.numeric.notnumeric' => 'Not numeric!',
     'constraint.uniquemodel.notunique' => 'This value is already in use!'
