@@ -7,7 +7,7 @@ use Chubbyphp\Model\Reference\ModelReference;
 use Energycalculator\Model\Traits\IdTrait;
 use Ramsey\Uuid\Uuid;
 
-final class ComestibleWithinDay implements ModelInterface
+final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
 {
     use IdTrait;
 

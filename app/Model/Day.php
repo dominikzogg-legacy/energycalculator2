@@ -11,7 +11,7 @@ use Energycalculator\Model\Traits\IdTrait;
 use Energycalculator\Model\Traits\OwnedByUserTrait;
 use Ramsey\Uuid\Uuid;
 
-final class Day implements ModelInterface, OwnedByUserModelInterface
+final class Day implements ModelInterface, OwnedByUserModelInterface, \JsonSerializable
 {
     use IdTrait;
     use OwnedByUserTrait;

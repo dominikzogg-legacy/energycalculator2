@@ -7,7 +7,7 @@ use Chubbyphp\Security\Authentication\UserPasswordInterface;
 use Energycalculator\Model\Traits\IdTrait;
 use Ramsey\Uuid\Uuid;
 
-final class User implements UserPasswordInterface
+final class User implements UserPasswordInterface, \JsonSerializable
 {
     use IdTrait;
 
