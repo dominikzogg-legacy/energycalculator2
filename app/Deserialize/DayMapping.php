@@ -2,10 +2,10 @@
 
 namespace Energycalculator\Deserialize;
 
-use Chubbyphp\Deserialize\Callback\OneToManyCallback;
 use Chubbyphp\Deserialize\Mapping\ObjectMappingInterface;
 use Chubbyphp\Deserialize\Mapping\PropertyMapping;
 use Chubbyphp\Deserialize\Mapping\PropertyMappingInterface;
+use Chubbyphp\DeserializeModel\Callback\OneToManyCallback;
 use Energycalculator\Model\ComestibleWithinDay;
 use Energycalculator\Model\Day;
 

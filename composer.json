@@ -5,6 +5,7 @@
     "php": "~7.0",
     "chubbyphp/chubbyphp-csrf": "~1.0",
     "chubbyphp/chubbyphp-deserialize": "~1.0@dev",
+    "chubbyphp/chubbyphp-deserialize-model": "~1.0@dev",
     "chubbyphp/chubbyphp-error-handler": "~1.1",
     "chubbyphp/chubbyphp-lazy": "~1.1",
     "chubbyphp/chubbyphp-model": "~3.0@dev",
