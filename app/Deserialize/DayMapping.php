@@ -35,7 +35,10 @@ class DayMapping implements ObjectMappingInterface
         return [
             new PropertyMapping('date'),
             new PropertyMapping('weight'),
-            new PropertyMapping('comestiblesWithinDay', new PropertyModelCollectionDeserialize(ComestibleWithinDay::class)),
+            new PropertyMapping(
+                'comestiblesWithinDay',
+                new PropertyModelCollectionDeserialize(ComestibleWithinDay::class)
+            ),
         ];
     }
 }

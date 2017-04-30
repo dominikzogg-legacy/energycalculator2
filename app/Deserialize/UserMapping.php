@@ -2,6 +2,7 @@
 
 namespace Energycalculator\Deserialize;
 
+use Chubbyphp\Deserialize\Deserialize\PropertyDeserializeCallback;
 use Chubbyphp\Deserialize\DeserializerInterface;
 use Chubbyphp\Deserialize\Mapping\ObjectMappingInterface;
 use Chubbyphp\Deserialize\Mapping\PropertyMapping;
@@ -58,37 +59,43 @@ class UserMapping implements ObjectMappingInterface
         return [
             new PropertyMapping(
                 'email',
-                function (DeserializerInterface $deserializer, $newEmail, $oldEmail, $object) {
-                    $reflectionProperty = new \ReflectionProperty(get_class($object), 'username');
-                    $reflectionProperty->setAccessible(true);
-                    $reflectionProperty->setValue($object, $newEmail);
+                new PropertyDeserializeCallback(
+                        function (DeserializerInterface $deserializer, $newEmail, $oldEmail, $object) {
+                        $reflectionProperty = new \ReflectionProperty(get_class($object), 'username');
+                        $reflectionProperty->setAccessible(true);
+                        $reflectionProperty->setValue($object, $newEmail);
 
-                    return $newEmail;
-                }
+                        return $newEmail;
+                    }
+                )
             ),
             new PropertyMapping(
                 'password',
-                function (DeserializerInterface $deserializer, $newPlainPassword, $oldPassword) {
-                    if (!$newPlainPassword) {
-                        return $oldPassword;
-                    }
+                new PropertyDeserializeCallback(
+                    function (DeserializerInterface $deserializer, $newPlainPassword, $oldPassword) {
+                        if (!$newPlainPassword) {
+                            return $oldPassword;
+                        }
 
-                    return $this->passwordManager->hash($newPlainPassword);
-                }
+                        return $this->passwordManager->hash($newPlainPassword);
+                    }
+                )
             ),
             new PropertyMapping(
                 'roles',
-                function (DeserializerInterface $deserializer, $serializedRoles) {
-                    $possibleRoles = $this->roleHierarchyResolver->resolve(['ADMIN']);
+                new PropertyDeserializeCallback(
+                    function (DeserializerInterface $deserializer, $serializedRoles) {
+                        $possibleRoles = $this->roleHierarchyResolver->resolve(['ADMIN']);
 
-                    foreach ($serializedRoles as $i => $role) {
-                        if (!in_array($role, $possibleRoles, true)) {
-                            unset($serializedRoles[$i]);
+                        foreach ($serializedRoles as $i => $role) {
+                            if (!in_array($role, $possibleRoles, true)) {
+                                unset($serializedRoles[$i]);
+                            }
                         }
-                    }
 
-                    return $serializedRoles;
-                }
+                        return $serializedRoles;
+                    }
+                )
             ),
         ];
     }
