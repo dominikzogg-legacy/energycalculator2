@@ -2,8 +2,7 @@
 
 namespace Energycalculator\Deserialize;
 
-use Chubbyphp\Deserialize\Deserialize\PropertyDeserializeCallback;
-use Chubbyphp\Deserialize\DeserializerInterface;
+use Chubbyphp\Deserialize\Deserializer\PropertyDeserializerCallback;
 use Chubbyphp\Deserialize\Mapping\ObjectMappingInterface;
 use Chubbyphp\Deserialize\Mapping\PropertyMapping;
 use Chubbyphp\Deserialize\Mapping\PropertyMappingInterface;
@@ -59,11 +58,13 @@ class UserMapping implements ObjectMappingInterface
         return [
             new PropertyMapping(
                 'email',
-                new PropertyDeserializeCallback(
-                        function (DeserializerInterface $deserializer, $newEmail, $oldEmail, $object) {
-                        $reflectionProperty = new \ReflectionProperty(get_class($object), 'username');
+                new PropertyDeserializerCallback(
+                    function ($newEmail, $oldEmail, $user) {
+                        $this->userOrException($user);
+
+                        $reflectionProperty = new \ReflectionProperty(get_class($user), 'username');
                         $reflectionProperty->setAccessible(true);
-                        $reflectionProperty->setValue($object, $newEmail);
+                        $reflectionProperty->setValue($user, $newEmail);
 
                         return $newEmail;
                     }
@@ -71,8 +72,8 @@ class UserMapping implements ObjectMappingInterface
             ),
             new PropertyMapping(
                 'password',
-                new PropertyDeserializeCallback(
-                    function (DeserializerInterface $deserializer, $newPlainPassword, $oldPassword) {
+                new PropertyDeserializerCallback(
+                    function ($newPlainPassword, $oldPassword) {
                         if (!$newPlainPassword) {
                             return $oldPassword;
                         }
@@ -83,8 +84,8 @@ class UserMapping implements ObjectMappingInterface
             ),
             new PropertyMapping(
                 'roles',
-                new PropertyDeserializeCallback(
-                    function (DeserializerInterface $deserializer, $serializedRoles) {
+                new PropertyDeserializerCallback(
+                    function ($serializedRoles) {
                         $possibleRoles = $this->roleHierarchyResolver->resolve(['ADMIN']);
 
                         foreach ($serializedRoles as $i => $role) {
@@ -98,5 +99,18 @@ class UserMapping implements ObjectMappingInterface
                 )
             ),
         ];
+    }
+
+    private function userOrException($user)
+    {
+        if (!$user instanceof User) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Object needs to implement: %s, given: %s',
+                    User::class,
+                    is_object($user) ? get_class($user) : gettype($user)
+                )
+            );
+        }
     }
 }
