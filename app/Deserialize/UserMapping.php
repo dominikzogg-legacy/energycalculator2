@@ -59,7 +59,7 @@ class UserMapping implements ObjectMappingInterface
             new PropertyMapping(
                 'email',
                 new PropertyDeserializerCallback(
-                    function ($newEmail, $oldEmail, $user) {
+                    function ($path, $newEmail, $oldEmail, $user) {
                         $this->userOrException($user);
 
                         $reflectionProperty = new \ReflectionProperty(get_class($user), 'username');
@@ -73,7 +73,7 @@ class UserMapping implements ObjectMappingInterface
             new PropertyMapping(
                 'password',
                 new PropertyDeserializerCallback(
-                    function ($newPlainPassword, $oldPassword) {
+                    function ($path, $newPlainPassword, $oldPassword) {
                         if (!$newPlainPassword) {
                             return $oldPassword;
                         }
@@ -85,7 +85,7 @@ class UserMapping implements ObjectMappingInterface
             new PropertyMapping(
                 'roles',
                 new PropertyDeserializerCallback(
-                    function ($serializedRoles) {
+                    function ($path, $serializedRoles) {
                         $possibleRoles = $this->roleHierarchyResolver->resolve(['ADMIN']);
 
                         foreach ($serializedRoles as $i => $role) {
