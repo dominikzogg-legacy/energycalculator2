@@ -20,11 +20,11 @@ class DayMapping implements ObjectMappingInterface
     }
 
     /**
-     * @return string
+     * @return callable
      */
-    public function getConstructMethod(): string
+    public function getFactory(): callable
     {
-        return 'create';
+        return [Day::class, 'create'];
     }
 
     /**

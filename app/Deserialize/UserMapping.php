@@ -43,11 +43,11 @@ class UserMapping implements ObjectMappingInterface
     }
 
     /**
-     * @return string
+     * @return callable
      */
-    public function getConstructMethod(): string
+    public function getFactory(): callable
     {
-        return 'create';
+        return [User::class, 'create'];
     }
 
     /**

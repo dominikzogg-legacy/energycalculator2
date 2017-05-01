@@ -34,11 +34,11 @@ class ComestibleWithinDayMapping implements ObjectMappingInterface
     }
 
     /**
-     * @return string
+     * @return callable
      */
-    public function getConstructMethod(): string
+    public function getFactory(): callable
     {
-        return 'create';
+        return [ComestibleWithinDay::class, 'create'];
     }
 
     /**
