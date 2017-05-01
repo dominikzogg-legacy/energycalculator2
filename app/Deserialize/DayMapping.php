@@ -5,7 +5,7 @@ namespace Energycalculator\Deserialize;
 use Chubbyphp\Deserialize\Mapping\ObjectMappingInterface;
 use Chubbyphp\Deserialize\Mapping\PropertyMapping;
 use Chubbyphp\Deserialize\Mapping\PropertyMappingInterface;
-use Chubbyphp\DeserializeModel\Deserialize\PropertyModelCollectionDeserialize;
+use Chubbyphp\DeserializeModel\Deserializer\PropertyModelCollectionDeserializer;
 use Energycalculator\Model\ComestibleWithinDay;
 use Energycalculator\Model\Day;
 
@@ -37,7 +37,7 @@ class DayMapping implements ObjectMappingInterface
             new PropertyMapping('weight'),
             new PropertyMapping(
                 'comestiblesWithinDay',
-                new PropertyModelCollectionDeserialize(ComestibleWithinDay::class)
+                new PropertyModelCollectionDeserializer(ComestibleWithinDay::class)
             ),
         ];
     }

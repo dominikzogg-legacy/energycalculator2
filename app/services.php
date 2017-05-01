@@ -1,8 +1,8 @@
 <?php
 
 use Chubbyphp\Csrf\CsrfProvider;
-use Chubbyphp\Deserialize\Deserializer;
-use Chubbyphp\Deserialize\Registry\ObjectMappingRegistry as DeserializeObjectMappingRegistry;
+use Chubbyphp\Deserialize\Mapping\LazyObjectMapping as DeserializeLazyObjectMapping;
+use Chubbyphp\Deserialize\Provider\DeserializeProvider;
 use Chubbyphp\ErrorHandler\SimpleErrorHandlerProvider;
 use Chubbyphp\Model\StorageCache\ArrayStorageCache;
 use Chubbyphp\Model\Resolver;
@@ -48,6 +48,7 @@ use Slim\Container;
 $container->register(new AuthenticationProvider());
 $container->register(new AuthorizationProvider());
 $container->register(new CsrfProvider());
+$container->register(new DeserializeProvider());
 $container->register(new DoctrineServiceProvider());
 $container->register(new SimpleErrorHandlerProvider());
 $container->register(new MonologServiceProvider());
@@ -57,6 +58,33 @@ $container->register(new TwigProvider());
 $container->register(new ValidationProvider());
 
 // extend providers
+$container['deserializer.emptystringtonull'] = true;
+
+$container->extend('deserializer.objectmappings', function (array $objectMappings) use ($container) {
+    $objectMappings[] = new DeserializeLazyObjectMapping(
+        $container,
+        DeserializeComestibleMapping::class,
+        Comestible::class
+    );
+    $objectMappings[] = new DeserializeLazyObjectMapping(
+        $container,
+        DeserializeComestibleWithinDayMapping::class,
+        ComestibleWithinDay::class
+    );
+    $objectMappings[] = new DeserializeLazyObjectMapping(
+        $container,
+        DeserializeDayMapping::class,
+        Day::class
+    );
+    $objectMappings[] = new DeserializeLazyObjectMapping(
+        $container,
+        DeserializeUserMapping::class,
+        User::class
+    );
+
+    return $objectMappings;
+});
+
 $container['errorHandler.defaultProvider'] = function () use ($container) {
     return $container[HtmlErrorResponseProvider::class];
 };
@@ -144,19 +172,6 @@ $container->extend('validator.objectmappings', function (array $objectMappings) 
 });
 
 // deserializer
-$container[Deserializer::class] = function () use ($container) {
-    return new Deserializer($container[DeserializeObjectMappingRegistry::class]);
-};
-
-$container[DeserializeObjectMappingRegistry::class] = function () use ($container) {
-    return new DeserializeObjectMappingRegistry([
-        $container[DeserializeComestibleMapping::class],
-        $container[DeserializeComestibleWithinDayMapping::class],
-        $container[DeserializeDayMapping::class],
-        $container[DeserializeUserMapping::class]
-    ]);
-};
-
 $container[DeserializeComestibleMapping::class] = function () use ($container) {
     return new DeserializeComestibleMapping();
 };
