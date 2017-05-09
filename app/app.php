@@ -13,7 +13,6 @@ $container->extend('twig', function (\Twig_Environment $twig) use ($container) {
     return new DebugBar\Bridge\Twig\TraceableTwigEnvironment($twig);
 });
 
-
 $debugStack = new Doctrine\DBAL\Logging\DebugStack();
 $container['db']->getConfiguration()->setSQLLogger($debugStack);
 
@@ -34,6 +33,5 @@ $app->get('/phpdebugbar-storage', function () use ($debugbar) {
     $openHandler = new DebugBar\OpenHandler($debugbar);
     $openHandler->handle();
 })->setName('phpdebugbar_storage');
-
 
 return $app;

@@ -16,6 +16,7 @@ trait OwnedByUserTrait
 
     /**
      * @param UserInterface $user
+     *
      * @return $this
      */
     public function setUser(UserInterface $user)

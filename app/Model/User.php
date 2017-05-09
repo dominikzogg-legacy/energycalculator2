@@ -33,6 +33,7 @@ final class User implements UserPasswordInterface, \JsonSerializable
 
     /**
      * @param string|null $id
+     *
      * @return User
      */
     public static function create(string $id = null): User
@@ -43,7 +44,9 @@ final class User implements UserPasswordInterface, \JsonSerializable
         return $user;
     }
 
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     /**
      * @return string

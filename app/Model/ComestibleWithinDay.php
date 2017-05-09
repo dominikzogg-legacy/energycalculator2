@@ -28,6 +28,7 @@ final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
 
     /**
      * @param string|null $id
+     *
      * @return ComestibleWithinDay
      */
     public static function create(string $id = null): ComestibleWithinDay
@@ -40,7 +41,9 @@ final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
         return $comestibleWithinDay;
     }
 
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     /**
      * @param Comestible $comestible
@@ -119,7 +122,7 @@ final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
             return 0;
         }
 
-        return $this->getComestible()->getFat() *  (float) $this->amount / 100;
+        return $this->getComestible()->getFat() * (float) $this->amount / 100;
     }
 
     /**

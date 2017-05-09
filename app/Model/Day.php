@@ -33,6 +33,7 @@ final class Day implements ModelInterface, OwnedByUserModelInterface, \JsonSeria
 
     /**
      * @param string|null $id
+     *
      * @return Day
      */
     public static function create(string $id = null): Day
@@ -48,7 +49,9 @@ final class Day implements ModelInterface, OwnedByUserModelInterface, \JsonSeria
         return $day;
     }
 
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     /**
      * @param \DateTime $date

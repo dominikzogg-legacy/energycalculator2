@@ -5,10 +5,9 @@ namespace Energycalculator\PhpDebugBar;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Route;
 
 /**
- * Collects info about the current request
+ * Collects info about the current request.
  */
 class Psr7RequestDataCollector extends DataCollector implements Renderable
 {
@@ -66,12 +65,12 @@ class Psr7RequestDataCollector extends DataCollector implements Renderable
     public function getWidgets()
     {
         return array(
-            "request" => array(
-                "icon" => "tags",
-                "widget" => "PhpDebugBar.Widgets.VariableListWidget",
-                "map" => "request",
-                "default" => "{}"
-            )
+            'request' => array(
+                'icon' => 'tags',
+                'widget' => 'PhpDebugBar.Widgets.VariableListWidget',
+                'map' => 'request',
+                'default' => '{}',
+            ),
         );
     }
 }

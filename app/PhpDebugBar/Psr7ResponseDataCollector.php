@@ -7,7 +7,7 @@ use DebugBar\DataCollector\Renderable;
 use Psr\Http\Message\ResponseInterface as Response;
 
 /**
- * Collects info about the current response
+ * Collects info about the current response.
  */
 class Psr7ResponseDataCollector extends DataCollector implements Renderable
 {
@@ -34,7 +34,6 @@ class Psr7ResponseDataCollector extends DataCollector implements Renderable
 
         $headerData = [];
         foreach (array_keys($response->getHeaders()) as $headerName) {
-
             $headerData[$headerName] = $response->getHeaderLine($headerName);
         }
 
@@ -42,7 +41,7 @@ class Psr7ResponseDataCollector extends DataCollector implements Renderable
             'protocolVersion' => $formatter->formatVar($response->getProtocolVersion()),
             'statusCode' => $formatter->formatVar($response->getStatusCode()),
             'reasonPhrase' => $formatter->formatVar($response->getReasonPhrase()),
-            'headers' => $formatter->formatVar($headerData)
+            'headers' => $formatter->formatVar($headerData),
         ];
     }
 
@@ -60,12 +59,12 @@ class Psr7ResponseDataCollector extends DataCollector implements Renderable
     public function getWidgets()
     {
         return array(
-            "response" => array(
-                "icon" => "tags",
-                "widget" => "PhpDebugBar.Widgets.VariableListWidget",
-                "map" => "response",
-                "default" => "{}"
-            )
+            'response' => array(
+                'icon' => 'tags',
+                'widget' => 'PhpDebugBar.Widgets.VariableListWidget',
+                'map' => 'response',
+                'default' => '{}',
+            ),
         );
     }
 }

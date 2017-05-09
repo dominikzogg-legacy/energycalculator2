@@ -44,8 +44,8 @@ class Psr7PhpDebugBarMiddleware
 
     /**
      * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param callable $next
+     * @param ResponseInterface      $response
+     * @param callable               $next
      *
      * @return ResponseInterface
      */
@@ -75,10 +75,10 @@ class Psr7PhpDebugBarMiddleware
 
         if ($this->isHtmlResponse($outResponse)) {
             $body = $outResponse->getBody();
-            if (! $body->eof() && $body->isSeekable()) {
+            if (!$body->eof() && $body->isSeekable()) {
                 $body->seek(0, SEEK_END);
             }
-            $body->write($debugBarHead . $debugBarBody);
+            $body->write($debugBarHead.$debugBarBody);
 
             return $outResponse;
         }
@@ -106,7 +106,7 @@ class Psr7PhpDebugBarMiddleware
 
         $pathToFile = substr($path, strlen($this->debugBarRenderer->getBaseUrl()));
 
-        $fullPathToFile = $this->debugBarRenderer->getBasePath() . $pathToFile;
+        $fullPathToFile = $this->debugBarRenderer->getBasePath().$pathToFile;
 
         if (!file_exists($fullPathToFile)) {
             return;
@@ -134,6 +134,7 @@ class Psr7PhpDebugBarMiddleware
                 return $basePath;
             }
         }
+
         return $uri->getPath();
     }
 
@@ -186,8 +187,8 @@ class Psr7PhpDebugBarMiddleware
 
     /**
      * @param MessageInterface $message
-     * @param string $headerName
-     * @param string $value
+     * @param string           $headerName
+     * @param string           $value
      *
      * @return bool
      */

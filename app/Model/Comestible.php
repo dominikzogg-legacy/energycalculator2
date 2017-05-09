@@ -46,6 +46,7 @@ final class Comestible implements ModelInterface, OwnedByUserModelInterface, \Js
 
     /**
      * @param string|null $id
+     *
      * @return Comestible
      */
     public static function create(string $id = null): Comestible
@@ -58,7 +59,9 @@ final class Comestible implements ModelInterface, OwnedByUserModelInterface, \Js
         return $comestible;
     }
 
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     /**
      * @param string $name

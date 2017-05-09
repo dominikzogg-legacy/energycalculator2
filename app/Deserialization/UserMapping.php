@@ -23,7 +23,7 @@ class UserMapping implements ObjectMappingInterface
     private $roleHierarchyResolver;
 
     /**
-     * @param PasswordManagerInterface $passwordManager
+     * @param PasswordManagerInterface       $passwordManager
      * @param RoleHierarchyResolverInterface $roleHierarchyResolver
      */
     public function __construct(

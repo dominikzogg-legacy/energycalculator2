@@ -8,7 +8,7 @@ use DebugBar\DebugBarException;
 
 /**
  * Collects info about the request duration as well as providing
- * a way to log duration of any operations
+ * a way to log duration of any operations.
  */
 class TimeDataCollector extends DataCollector implements Renderable
 {
@@ -38,7 +38,7 @@ class TimeDataCollector extends DataCollector implements Renderable
     }
 
     /**
-     * Returns the request start time
+     * Returns the request start time.
      *
      * @return float
      */
@@ -48,7 +48,7 @@ class TimeDataCollector extends DataCollector implements Renderable
     }
 
     /**
-     * Returns the request end time
+     * Returns the request end time.
      *
      * @return float
      */
@@ -58,7 +58,7 @@ class TimeDataCollector extends DataCollector implements Renderable
     }
 
     /**
-     * Returns the duration of a request
+     * Returns the duration of a request.
      *
      * @return float
      */
@@ -67,11 +67,13 @@ class TimeDataCollector extends DataCollector implements Renderable
         if ($this->requestEndTime !== null) {
             return $this->requestEndTime - $this->requestStartTime;
         }
+
         return microtime(true) - $this->requestStartTime;
     }
 
     /**
      * @return array
+     *
      * @throws DebugBarException
      */
     public function collect()
@@ -82,7 +84,7 @@ class TimeDataCollector extends DataCollector implements Renderable
             'start' => $this->requestStartTime,
             'end' => $this->requestEndTime,
             'duration' => $this->getRequestDuration(),
-            'duration_str' => $this->getDataFormatter()->formatDuration($this->getRequestDuration())
+            'duration_str' => $this->getDataFormatter()->formatDuration($this->getRequestDuration()),
         );
     }
 
@@ -100,12 +102,12 @@ class TimeDataCollector extends DataCollector implements Renderable
     public function getWidgets()
     {
         return array(
-            "time" => array(
-                "icon" => "clock-o",
-                "tooltip" => "Request Duration",
-                "map" => "time.duration_str",
-                "default" => "'0ms'"
-            )
+            'time' => array(
+                'icon' => 'clock-o',
+                'tooltip' => 'Request Duration',
+                'map' => 'time.duration_str',
+                'default' => "'0ms'",
+            ),
         );
     }
 }

@@ -6,7 +6,7 @@ use Chubbyphp\Model\Doctrine\DBAL\Repository\AbstractDoctrineRepository;
 
 abstract class AbstractRepository extends AbstractDoctrineRepository
 {
-   /**
+    /**
      * @param string $id
      * @param array  $row
      */

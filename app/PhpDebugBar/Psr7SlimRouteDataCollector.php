@@ -8,7 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Route;
 
 /**
- * Collects info about the current request
+ * Collects info about the current request.
  */
 class Psr7SlimRouteDataCollector extends DataCollector implements Renderable
 {
@@ -62,12 +62,12 @@ class Psr7SlimRouteDataCollector extends DataCollector implements Renderable
     public function getWidgets()
     {
         return array(
-            "route" => array(
-                "icon" => "tags",
-                "widget" => "PhpDebugBar.Widgets.VariableListWidget",
-                "map" => "route",
-                "default" => "{}"
-            )
+            'route' => array(
+                'icon' => 'tags',
+                'widget' => 'PhpDebugBar.Widgets.VariableListWidget',
+                'map' => 'route',
+                'default' => '{}',
+            ),
         );
     }
 }

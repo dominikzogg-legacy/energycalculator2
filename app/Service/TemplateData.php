@@ -87,7 +87,8 @@ final class TemplateData
 
     /**
      * @param string $locale
-     * @param array $errors
+     * @param array  $errors
+     *
      * @return array
      */
     public function getErrorMessages(string $locale, array $errors): array
