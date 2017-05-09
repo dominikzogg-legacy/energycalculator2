@@ -1,11 +1,11 @@
 <?php
 
-namespace Energycalculator\Deserialize;
+namespace Energycalculator\Deserialization;
 
-use Chubbyphp\Deserialize\Mapping\ObjectMappingInterface;
-use Chubbyphp\Deserialize\Mapping\PropertyMapping;
-use Chubbyphp\Deserialize\Mapping\PropertyMappingInterface;
-use Chubbyphp\DeserializeModel\Deserializer\PropertyModelRefenceDeserializer;
+use Chubbyphp\Deserialization\Mapping\ObjectMappingInterface;
+use Chubbyphp\Deserialization\Mapping\PropertyMapping;
+use Chubbyphp\Deserialization\Mapping\PropertyMappingInterface;
+use Chubbyphp\DeserializationModel\Deserializer\PropertyModelRefenceDeserializer;
 use Chubbyphp\Model\ResolverInterface;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Model\ComestibleWithinDay;

@@ -1,8 +1,8 @@
 <?php
 
 use Chubbyphp\Csrf\CsrfProvider;
-use Chubbyphp\Deserialize\Mapping\LazyObjectMapping as DeserializeLazyObjectMapping;
-use Chubbyphp\Deserialize\Provider\DeserializeProvider;
+use Chubbyphp\Deserialization\Mapping\LazyObjectMapping as DeserializationLazyObjectMapping;
+use Chubbyphp\Deserialization\Provider\DeserializationProvider;
 use Chubbyphp\ErrorHandler\SimpleErrorHandlerProvider;
 use Chubbyphp\Model\StorageCache\ArrayStorageCache;
 use Chubbyphp\Model\Resolver;
@@ -16,10 +16,10 @@ use Chubbyphp\Translation\TranslationProvider;
 use Chubbyphp\Translation\TranslationTwigExtension;
 use Chubbyphp\Validation\Mapping\LazyObjectMapping as ValidationLazyObjectMapping;
 use Chubbyphp\Validation\Provider\ValidationProvider;
-use Energycalculator\Deserialize\ComestibleMapping as DeserializeComestibleMapping;
-use Energycalculator\Deserialize\ComestibleWithinDayMapping as DeserializeComestibleWithinDayMapping;
-use Energycalculator\Deserialize\DayMapping as DeserializeDayMapping;
-use Energycalculator\Deserialize\UserMapping as DeserializeUserMapping;
+use Energycalculator\Deserialization\ComestibleMapping as DeserializationComestibleMapping;
+use Energycalculator\Deserialization\ComestibleWithinDayMapping as DeserializationComestibleWithinDayMapping;
+use Energycalculator\Deserialization\DayMapping as DeserializationDayMapping;
+use Energycalculator\Deserialization\UserMapping as DeserializationUserMapping;
 use Energycalculator\ErrorHandler\HtmlErrorResponseProvider;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Model\ComestibleWithinDay;
@@ -48,7 +48,7 @@ use Slim\Container;
 $container->register(new AuthenticationProvider());
 $container->register(new AuthorizationProvider());
 $container->register(new CsrfProvider());
-$container->register(new DeserializeProvider());
+$container->register(new DeserializationProvider());
 $container->register(new DoctrineServiceProvider());
 $container->register(new SimpleErrorHandlerProvider());
 $container->register(new MonologServiceProvider());
@@ -61,24 +61,24 @@ $container->register(new ValidationProvider());
 $container['deserializer.emptystringtonull'] = true;
 
 $container->extend('deserializer.objectmappings', function (array $objectMappings) use ($container) {
-    $objectMappings[] = new DeserializeLazyObjectMapping(
+    $objectMappings[] = new DeserializationLazyObjectMapping(
         $container,
-        DeserializeComestibleMapping::class,
+        DeserializationComestibleMapping::class,
         Comestible::class
     );
-    $objectMappings[] = new DeserializeLazyObjectMapping(
+    $objectMappings[] = new DeserializationLazyObjectMapping(
         $container,
-        DeserializeComestibleWithinDayMapping::class,
+        DeserializationComestibleWithinDayMapping::class,
         ComestibleWithinDay::class
     );
-    $objectMappings[] = new DeserializeLazyObjectMapping(
+    $objectMappings[] = new DeserializationLazyObjectMapping(
         $container,
-        DeserializeDayMapping::class,
+        DeserializationDayMapping::class,
         Day::class
     );
-    $objectMappings[] = new DeserializeLazyObjectMapping(
+    $objectMappings[] = new DeserializationLazyObjectMapping(
         $container,
-        DeserializeUserMapping::class,
+        DeserializationUserMapping::class,
         User::class
     );
 
@@ -172,20 +172,20 @@ $container->extend('validator.objectmappings', function (array $objectMappings) 
 });
 
 // deserializer
-$container[DeserializeComestibleMapping::class] = function () use ($container) {
-    return new DeserializeComestibleMapping();
+$container[DeserializationComestibleMapping::class] = function () use ($container) {
+    return new DeserializationComestibleMapping();
 };
 
-$container[DeserializeComestibleWithinDayMapping::class] = function () use ($container) {
-    return new DeserializeComestibleWithinDayMapping($container[Resolver::class]);
+$container[DeserializationComestibleWithinDayMapping::class] = function () use ($container) {
+    return new DeserializationComestibleWithinDayMapping($container[Resolver::class]);
 };
 
-$container[DeserializeDayMapping::class] = function () use ($container) {
-    return new DeserializeDayMapping();
+$container[DeserializationDayMapping::class] = function () use ($container) {
+    return new DeserializationDayMapping();
 };
 
-$container[DeserializeUserMapping::class] = function () use ($container) {
-    return new DeserializeUserMapping(
+$container[DeserializationUserMapping::class] = function () use ($container) {
+    return new DeserializationUserMapping(
         $container['security.authentication.passwordmanager'],
         $container['security.authorization.rolehierarchyresolver']
     );

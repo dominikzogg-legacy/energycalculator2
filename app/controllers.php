@@ -1,6 +1,6 @@
 <?php
 
-use Chubbyphp\Deserialize\Deserializer;
+use Chubbyphp\Deserialization\Deserializer;
 use Chubbyphp\Security\Authentication\FormAuthentication;
 use Energycalculator\Controller\AuthController;
 use Energycalculator\Controller\ComestibleController;

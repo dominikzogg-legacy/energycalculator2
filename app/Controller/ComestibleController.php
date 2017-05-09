@@ -2,7 +2,7 @@
 
 namespace Energycalculator\Controller;
 
-use Chubbyphp\Deserialize\DeserializerInterface;
+use Chubbyphp\Deserialization\DeserializerInterface;
 use Chubbyphp\ErrorHandler\HttpException;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
