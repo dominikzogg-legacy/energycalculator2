@@ -83,7 +83,7 @@ final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
             return 0;
         }
 
-        return $this->getComestible()->getCalorie() * $this->amount / 100;
+        return $this->getComestible()->getCalorie() * (float) $this->amount / 100;
     }
 
     /**
@@ -95,7 +95,7 @@ final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
             return 0;
         }
 
-        return $this->getComestible()->getProtein() * $this->amount / 100;
+        return $this->getComestible()->getProtein() * (float) $this->amount / 100;
     }
 
     /**
@@ -107,7 +107,7 @@ final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
             return 0;
         }
 
-        return $this->getComestible()->getCarbohydrate() * $this->amount / 100;
+        return $this->getComestible()->getCarbohydrate() * (float) $this->amount / 100;
     }
 
     /**
@@ -119,7 +119,7 @@ final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
             return 0;
         }
 
-        return $this->getComestible()->getFat() * $this->amount / 100;
+        return $this->getComestible()->getFat() *  (float) $this->amount / 100;
     }
 
     /**
