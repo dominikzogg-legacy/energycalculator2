@@ -59,7 +59,7 @@ final class CreateUserCommand
             ->setRoles($roles)
         ;
 
-        $errors = $this->validator->validateModel($user);
+        $errors = $this->validator->validateObject($user);
         if ([] !== $errors) {
             foreach ($errors as $field => $errorsPerField) {
                 foreach ($errorsPerField as $errorPerField) {
