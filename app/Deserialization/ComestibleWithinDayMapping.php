@@ -5,7 +5,7 @@ namespace Energycalculator\Deserialization;
 use Chubbyphp\Deserialization\Mapping\ObjectMappingInterface;
 use Chubbyphp\Deserialization\Mapping\PropertyMapping;
 use Chubbyphp\Deserialization\Mapping\PropertyMappingInterface;
-use Chubbyphp\DeserializationModel\Deserializer\PropertyModelRefenceDeserializer;
+use Chubbyphp\DeserializationModel\Deserializer\PropertyModelReferenceDeserializer;
 use Chubbyphp\Model\ResolverInterface;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Model\ComestibleWithinDay;
@@ -47,7 +47,7 @@ class ComestibleWithinDayMapping implements ObjectMappingInterface
     public function getPropertyMappings(): array
     {
         return [
-            new PropertyMapping('comestible', new PropertyModelRefenceDeserializer($this->resolver, Comestible::class)),
+            new PropertyMapping('comestible', new PropertyModelReferenceDeserializer($this->resolver, Comestible::class)),
             new PropertyMapping('amount'),
         ];
     }
