@@ -58,6 +58,23 @@ $container->register(new TwigProvider());
 $container->register(new ValidationProvider());
 
 // extend providers
+
+$container[\Energycalculator\Middleware\ErrorResponseHandler::class] = function () use ($container) {
+    return new \Energycalculator\Middleware\ErrorResponseHandler(
+        $container[TemplateData::class],
+        $container[TwigRender::class]
+    );
+};
+
+$container['csrf.middleware'] = function () use ($container) {
+    return new \Energycalculator\Middleware\CsrfMiddleware(
+        $container['csrf.tokenGenerator'],
+        $container['session'],
+        $container[\Energycalculator\Middleware\ErrorResponseHandler::class],
+        $container['logger'] ?? null
+    );
+};
+
 $container['deserializer.emptystringtonull'] = true;
 
 $container->extend('deserializer.objectmappings', function (array $objectMappings) use ($container) {
