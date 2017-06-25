@@ -130,6 +130,11 @@ return [
     'user.title.list' => 'Benutzerliste',
     'user.title.view' => 'Benutzer anschauen',
 
+    'csrf.missingInSession' => 'CSRF Token: fehlt in der Session',
+    'csrf.missingInBody' => 'CSRF Token: fehlt in der Anfrage',
+    'csrf.isNotSame' => 'CSRF Token: der Anfrage weicht von jener in der Session ab',
+
+
     'constraint.date.invalidformat' => 'Datum "{{input}}" konnte nicht erkannt werden!',
     'constraint.modelcollection.outofrange' => 'Es müssten mindestens "{{min}}" und maximal "{{max}}" Elemente in dieser Kollektion sein. Es sind "{{count}}"!',
     'constraint.modelreference.null' => 'Referenz darf nicht leer sein!',

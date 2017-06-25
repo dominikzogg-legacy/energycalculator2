@@ -70,7 +70,6 @@ $container['csrf.middleware'] = function () use ($container) {
     return new \Energycalculator\Middleware\CsrfMiddleware(
         $container['csrf.tokenGenerator'],
         $container['session'],
-        $container[\Energycalculator\Middleware\ErrorResponseHandler::class],
         $container['logger'] ?? null
     );
 };

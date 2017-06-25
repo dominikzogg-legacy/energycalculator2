@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Energycalculator\Middleware;
 
 use Chubbyphp\Csrf\CsrfTokenGeneratorInterface;
-use Chubbyphp\ErrorHandler\HttpException;
+use Chubbyphp\Session\FlashMessage;
 use Chubbyphp\Session\SessionInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -27,20 +27,15 @@ final class CsrfMiddleware
     const CSRF_KEY = 'csrf';
 
     /**
-     * @var ErrorResponseHandler
-     */
-    private $responseHandler;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
 
     const EXCEPTION_STATUS = 424;
 
-    const EXCEPTION_MISSING_IN_SESSION = 'Csrf token is missing within session';
-    const EXCEPTION_MISSING_IN_BODY = 'Csrf token is missing within body';
-    const EXCEPTION_IS_NOT_SAME = 'Csrf token within body is not the same as in session';
+    const EXCEPTION_MISSING_IN_SESSION = 'csrf.missingInSession';
+    const EXCEPTION_MISSING_IN_BODY = 'csrf.missingInBody';
+    const EXCEPTION_IS_NOT_SAME = 'csrf.isNotSame';
 
     /**
      * @param CsrfTokenGeneratorInterface $csrfTokenGenerator
@@ -50,12 +45,10 @@ final class CsrfMiddleware
     public function __construct(
         CsrfTokenGeneratorInterface $csrfTokenGenerator,
         SessionInterface $session,
-        ErrorResponseHandler $responseHandler,
         LoggerInterface $logger = null
     ) {
         $this->csrfTokenGenerator = $csrfTokenGenerator;
         $this->session = $session;
-        $this->responseHandler = $responseHandler;
         $this->logger = $logger ?? new NullLogger();
     }
 
@@ -94,7 +87,7 @@ final class CsrfMiddleware
      */
     private function checkCsrf(Request $request, Response $response)
     {
-        if ($this->session->has($request, self::CSRF_KEY)) {
+        if (!$this->session->has($request, self::CSRF_KEY)) {
             return $this->errorResponse($request, $response, self::EXCEPTION_MISSING_IN_SESSION);
         }
 
@@ -120,7 +113,13 @@ final class CsrfMiddleware
     private function errorResponse(Request $request, Response $response, string $reasonPhrase)
     {
         $this->session->set($request, self::CSRF_KEY, $this->csrfTokenGenerator->generate());
+        $this->session->addFlash(
+            $request,
+            new FlashMessage(FlashMessage::TYPE_DANGER, $reasonPhrase)
+        );
 
-        return $this->responseHandler->errorResponse($request, $response, self::EXCEPTION_STATUS, $reasonPhrase);
+        return $response
+            ->withStatus(301)
+            ->withHeader('Location', $request->getHeader('Referer'));
     }
 }
