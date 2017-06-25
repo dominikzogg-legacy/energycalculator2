@@ -71,8 +71,6 @@ final class CsrfMiddleware
         if (in_array($request->getMethod(), ['POST', 'PUT', 'DELETE', 'PATCH'])) {
             $this->logger->info('csrf: check token');
             if (null !== $errorResponse = $this->checkCsrf($request, $response)) {
-                $this->session->set($request, self::CSRF_KEY, $this->csrfTokenGenerator->generate());
-
                 return $errorResponse;
             }
         }
@@ -96,20 +94,33 @@ final class CsrfMiddleware
      */
     private function checkCsrf(Request $request, Response $response)
     {
-        if (!$this->session->has($request, self::CSRF_KEY)) {
-            return $this->responseHandler->errorResponse($request, $response, self::EXCEPTION_STATUS, self::EXCEPTION_MISSING_IN_SESSION);
+        if ($this->session->has($request, self::CSRF_KEY)) {
+            return $this->errorResponse($request, $response, self::EXCEPTION_MISSING_IN_SESSION);
         }
 
         $data = $request->getParsedBody();
 
         if (!isset($data[self::CSRF_KEY])) {
-            return $this->responseHandler->errorResponse($request, $response, self::EXCEPTION_STATUS, self::EXCEPTION_MISSING_IN_BODY);
+            return $this->errorResponse($request, $response, self::EXCEPTION_MISSING_IN_BODY);
         }
 
         if ($this->session->get($request, self::CSRF_KEY) !== $data[self::CSRF_KEY]) {
-            return $this->responseHandler->errorResponse($request, $response, self::EXCEPTION_STATUS, self::EXCEPTION_IS_NOT_SAME);
+            return $this->errorResponse($request, $response, self::EXCEPTION_IS_NOT_SAME);
         }
 
         return null;
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param string $reasonPhrase
+     * @return Response
+     */
+    private function errorResponse(Request $request, Response $response, string $reasonPhrase)
+    {
+        $this->session->set($request, self::CSRF_KEY, $this->csrfTokenGenerator->generate());
+
+        return $this->responseHandler->errorResponse($request, $response, self::EXCEPTION_STATUS, $reasonPhrase);
     }
 }
