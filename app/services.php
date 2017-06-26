@@ -16,6 +16,7 @@ use Chubbyphp\Translation\TranslationProvider;
 use Chubbyphp\Translation\TranslationTwigExtension;
 use Chubbyphp\Validation\Mapping\LazyObjectMapping as ValidationLazyObjectMapping;
 use Chubbyphp\Validation\Provider\ValidationProvider;
+use Energycalculator\Csrf\CsrfErrorHandler;
 use Energycalculator\Deserialization\ComestibleMapping as DeserializationComestibleMapping;
 use Energycalculator\Deserialization\ComestibleWithinDayMapping as DeserializationComestibleWithinDayMapping;
 use Energycalculator\Deserialization\DayMapping as DeserializationDayMapping;
@@ -58,20 +59,8 @@ $container->register(new TwigProvider());
 $container->register(new ValidationProvider());
 
 // extend providers
-
-$container[\Energycalculator\Middleware\ErrorResponseHandler::class] = function () use ($container) {
-    return new \Energycalculator\Middleware\ErrorResponseHandler(
-        $container[TemplateData::class],
-        $container[TwigRender::class]
-    );
-};
-
-$container['csrf.middleware'] = function () use ($container) {
-    return new \Energycalculator\Middleware\CsrfMiddleware(
-        $container['csrf.tokenGenerator'],
-        $container['session'],
-        $container['logger'] ?? null
-    );
+$container['csrf.errorResponseHandler'] = function () use ($container) {
+    return new CsrfErrorHandler($container['session']);
 };
 
 $container['deserializer.emptystringtonull'] = true;
