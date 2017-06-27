@@ -6,9 +6,6 @@ $container = require_once __DIR__.'/bootstrap.php';
 
 $app = new App($container);
 
-require_once __DIR__.'/middlewares.php';
-require_once __DIR__.'/controllers.php';
-
 $container->extend('twig', function (\Twig_Environment $twig) use ($container) {
     return new DebugBar\Bridge\Twig\TraceableTwigEnvironment($twig);
 });
@@ -28,6 +25,9 @@ $debugbar = new \DebugBar\DebugBar();
 $debugbar->setStorage(new DebugBar\Storage\FileStorage('/tmp/phpdebugbar_storage'));
 
 $app->add(new \Energycalculator\PhpDebugBar\Psr7PhpDebugBarMiddleware($debugbar, $collectors));
+
+require_once __DIR__.'/middlewares.php';
+require_once __DIR__.'/controllers.php';
 
 $app->get('/phpdebugbar-storage', function () use ($debugbar) {
     $openHandler = new DebugBar\OpenHandler($debugbar);

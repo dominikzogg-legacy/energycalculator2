@@ -31,6 +31,7 @@ use Energycalculator\Repository\DayRepository;
 use Energycalculator\Repository\ComestibleRepository;
 use Energycalculator\Repository\ComestibleWithinDayRepository;
 use Energycalculator\Repository\UserRepository;
+use Energycalculator\Security\AuthenticationErrorHandler;
 use Energycalculator\Service\RedirectForPath;
 use Energycalculator\Service\TemplateData;
 use Energycalculator\Service\TwigRender;
@@ -59,6 +60,10 @@ $container->register(new TwigProvider());
 $container->register(new ValidationProvider());
 
 // extend providers
+$container['security.authentication.errorResponseHandler'] = function () use ($container) {
+    return new AuthenticationErrorHandler($container[TemplateData::class], $container[TwigRender::class]);
+};
+
 $container['csrf.errorResponseHandler'] = function () use ($container) {
     return new CsrfErrorHandler($container['session']);
 };

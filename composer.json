@@ -11,7 +11,7 @@
     "chubbyphp/chubbyphp-model": "~3.0@alpha",
     "chubbyphp/chubbyphp-model-doctrine-dbal": "~1.0@alpha",
     "chubbyphp/chubbyphp-session": "~1.0",
-    "chubbyphp/chubbyphp-security": "~1.0",
+    "chubbyphp/chubbyphp-security": "~1.1@dev",
     "chubbyphp/chubbyphp-translation": "~1.1",
     "chubbyphp/chubbyphp-validation": "~2.0@alpha",
     "chubbyphp/chubbyphp-validation-model": "~1.0@alpha",
