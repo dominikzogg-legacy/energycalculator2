@@ -44,6 +44,6 @@ class CsrfErrorHandler implements CsrfErrorHandlerInterface
             $location = (string) $uri->withPath('/')->withQuery('')->withFragment('');
         }
 
-        return $response->withStatus(301)->withHeader('Location', $location);
+        return $response->withStatus(302)->withHeader('Location', $location);
     }
 }
