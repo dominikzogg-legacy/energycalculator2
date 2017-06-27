@@ -7,6 +7,7 @@ use Chubbyphp\Session\FlashMessage;
 use Chubbyphp\Session\SessionInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Http\Uri;
 
 class CsrfErrorHandler implements CsrfErrorHandlerInterface
 {
@@ -34,15 +35,15 @@ class CsrfErrorHandler implements CsrfErrorHandlerInterface
     {
         $this->session->addFlash($request, new FlashMessage(FlashMessage::TYPE_DANGER, $reasonPhrase));
 
-        $host = $request->getHeaderLine('Host');
-        $referer = $request->getHeaderLine('Referer');
+        $uri = $request->getUri();
+        $refererUri = Uri::createFromString($request->getHeaderLine('Referer'));
 
-        if ($host === parse_url($referer, PHP_URL_HOST)) {
-            return $response
-                ->withStatus(301)
-                ->withHeader('Location', $referer);
+        if ($uri->getHost() === $refererUri->getHost()) {
+            $location = (string) $refererUri;
+        } else {
+            $location = (string) $uri;
         }
 
-        throw \Chubbyphp\ErrorHandler\HttpException::create($request, $response, $code, $reasonPhrase);
+        return $response->withStatus(301)->withHeader('Location', $location);
     }
 }
