@@ -3,12 +3,12 @@
 namespace Energycalculator\Controller;
 
 use Chubbyphp\Deserialization\DeserializerInterface;
-use Chubbyphp\ErrorHandler\HttpException;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Security\Authorization\RoleHierarchyResolverInterface;
 use Chubbyphp\Validation\ValidatorInterface;
+use Energycalculator\ErrorHandler\ErrorResponseHandler;
 use Energycalculator\Repository\UserRepository;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -35,6 +35,11 @@ final class UserController
      * @var DeserializerInterface
      */
     private $deserializer;
+
+    /**
+     * @var ErrorResponseHandler
+     */
+    private $errorResponseHandler;
 
     /**
      * @var RedirectForPath
@@ -75,6 +80,7 @@ final class UserController
      * @param AuthenticationInterface        $authentication
      * @param AuthorizationInterface         $authorization
      * @param DeserializerInterface          $deserializer
+     * @param ErrorResponseHandler           $errorResponseHandler
      * @param RedirectForPath                $redirectForPath
      * @param RoleHierarchyResolverInterface $roleHierarchyResolver
      * @param SessionInterface               $session
@@ -87,6 +93,7 @@ final class UserController
         AuthenticationInterface $authentication,
         AuthorizationInterface $authorization,
         DeserializerInterface $deserializer,
+        ErrorResponseHandler $errorResponseHandler,
         RedirectForPath $redirectForPath,
         RoleHierarchyResolverInterface $roleHierarchyResolver,
         SessionInterface $session,
@@ -98,6 +105,7 @@ final class UserController
         $this->authentication = $authentication;
         $this->authorization = $authorization;
         $this->deserializer = $deserializer;
+        $this->errorResponseHandler = $errorResponseHandler;
         $this->redirectForPath = $redirectForPath;
         $this->roleHierarchyResolver = $roleHierarchyResolver;
         $this->session = $session;
@@ -116,7 +124,7 @@ final class UserController
     public function listAll(Request $request, Response $response)
     {
         if (!$this->authorization->isGranted($this->authentication->getAuthenticatedUser($request), 'ADMIN')) {
-            throw HttpException::create($request, $response, 403, 'user.error.permissiondenied');
+            return $this->errorResponseHandler->errorReponse($request, $response, 403, 'user.error.permissiondenied');
         }
 
         $users = $this->userRepository->findBy([]);
@@ -133,20 +141,19 @@ final class UserController
      * @param Response $response
      *
      * @return Response
-     *
-     * @throws HttpException
      */
     public function view(Request $request, Response $response)
     {
         if (!$this->authorization->isGranted($this->authentication->getAuthenticatedUser($request), 'ADMIN')) {
-            throw HttpException::create($request, $response, 403, 'user.error.permissiondenied');
+            return $this->errorResponseHandler->errorReponse($request, $response, 403, 'user.error.permissiondenied');
+
         }
 
         $id = $request->getAttribute('id');
 
         $user = $this->userRepository->find($id);
         if (null === $user) {
-            throw HttpException::create($request, $response, 404, 'user.error.notfound');
+            return $this->errorResponseHandler->errorReponse($request, $response, 404, 'user.error.notfound');
         }
 
         return $this->twig->render($response, '@Energycalculator/user/view.html.twig',
@@ -167,7 +174,8 @@ final class UserController
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
         if (!$this->authorization->isGranted($authenticatedUser, 'ADMIN')) {
-            throw HttpException::create($request, $response, 403, 'user.error.permissiondenied');
+            return $this->errorResponseHandler->errorReponse($request, $response, 403, 'user.error.permissiondenied');
+
         }
 
         $user = User::create();
@@ -215,15 +223,14 @@ final class UserController
      * @param Response $response
      *
      * @return Response
-     *
-     * @throws HttpException
      */
     public function edit(Request $request, Response $response)
     {
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
         if (!$this->authorization->isGranted($authenticatedUser, 'ADMIN')) {
-            throw HttpException::create($request, $response, 403, 'user.error.permissiondenied');
+            return $this->errorResponseHandler->errorReponse($request, $response, 403, 'user.error.permissiondenied');
+
         }
 
         $id = $request->getAttribute('id');
@@ -231,7 +238,7 @@ final class UserController
         /** @var User $user */
         $user = $this->userRepository->find($id);
         if (null === $user) {
-            throw HttpException::create($request, $response, 404, 'user.error.notfound');
+            return $this->errorResponseHandler->errorReponse($request, $response, 404, 'user.error.notfound');
         }
 
         if ('POST' === $request->getMethod()) {
@@ -277,15 +284,14 @@ final class UserController
      * @param Response $response
      *
      * @return Response
-     *
-     * @throws HttpException
      */
     public function delete(Request $request, Response $response)
     {
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
         if (!$this->authorization->isGranted($authenticatedUser, 'ADMIN')) {
-            throw HttpException::create($request, $response, 403, 'user.error.permissiondenied');
+            return $this->errorResponseHandler->errorReponse($request, $response, 403, 'user.error.permissiondenied');
+
         }
 
         $id = $request->getAttribute('id');
@@ -293,11 +299,16 @@ final class UserController
         /** @var User $user */
         $user = $this->userRepository->find($id);
         if (null === $user) {
-            throw HttpException::create($request, $response, 404, 'user.error.notfound');
+            return $this->errorResponseHandler->errorReponse($request, $response, 404, 'user.error.notfound');
         }
 
         if ($authenticatedUser->getId() === $user->getId()) {
-            throw HttpException::create($request, $response, 403, 'user.error.cantdeleteyourself');
+            return $this->errorResponseHandler->errorReponse(
+                $request,
+                $response,
+                403,
+                'user.error.cantdeleteyourself'
+            );
         }
 
         $this->userRepository->remove($user);

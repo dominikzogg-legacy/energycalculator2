@@ -20,4 +20,3 @@ $container[LocaleMiddleware::class] = function () use ($container) {
 $app->add(new LazyMiddleware($container, 'csrf.middleware'));
 $app->add(new LazyMiddleware($container, 'session.middleware'));
 $app->add(new LazyMiddleware($container, LocaleMiddleware::class));
-$app->add(new LazyMiddleware($container, 'errorHandler.middleware'));

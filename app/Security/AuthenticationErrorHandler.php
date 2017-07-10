@@ -3,32 +3,16 @@
 namespace Energycalculator\Security;
 
 use Chubbyphp\Security\Authentication\AuthenticationErrorHandlerInterface;
-use Energycalculator\Service\TemplateData;
-use Energycalculator\Service\TwigRender;
+use Energycalculator\ErrorHandler\ErrorResponseHandler;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class AuthenticationErrorHandler implements AuthenticationErrorHandlerInterface
 {
     /**
-     * @var TemplateData
+     * @var ErrorResponseHandler
      */
-    private $templateData;
-
-    /**
-     * @var TwigRender
-     */
-    private $twig;
-
-    /**
-     * @param TemplateData $templateData
-     * @param TwigRender $twig
-     */
-    public function __construct(TemplateData $templateData, TwigRender $twig)
-    {
-        $this->templateData = $templateData;
-        $this->twig = $twig;
-    }
+    private $errorResponseHandler;
 
     /**
      * @param Request $request
@@ -38,8 +22,6 @@ class AuthenticationErrorHandler implements AuthenticationErrorHandlerInterface
      */
     public function errorResponse(Request $request, Response $response, int $code): Response
     {
-        return $this->twig->render($response, '@Energycalculator/httpexception.html.twig',
-            $this->templateData->aggregate($request, ['code' => $code])
-        )->withStatus($code);
+        return $this->errorResponseHandler->errorReponse($request, $response, $code);
     }
 }

@@ -3,11 +3,11 @@
 namespace Energycalculator\Controller;
 
 use Chubbyphp\Deserialization\DeserializerInterface;
-use Chubbyphp\ErrorHandler\HttpException;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Validation\ValidatorInterface;
+use Energycalculator\ErrorHandler\ErrorResponseHandler;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Repository\ComestibleRepository;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -41,6 +41,11 @@ final class ComestibleController
     private $deserializer;
 
     /**
+     * @var ErrorResponseHandler
+     */
+    private $errorResponseHandler;
+
+    /**
      * @var RedirectForPath
      */
     private $redirectForPath;
@@ -70,6 +75,7 @@ final class ComestibleController
      * @param AuthorizationInterface  $authorization
      * @param ComestibleRepository    $comestibleRepository
      * @param DeserializerInterface   $deserializer
+     * @param ErrorResponseHandler    $errorResponseHandler
      * @param RedirectForPath         $redirectForPath
      * @param SessionInterface        $session
      * @param TemplateData            $templateData
@@ -81,6 +87,7 @@ final class ComestibleController
         AuthorizationInterface $authorization,
         ComestibleRepository $comestibleRepository,
         DeserializerInterface $deserializer,
+        ErrorResponseHandler $errorResponseHandler,
         RedirectForPath $redirectForPath,
         SessionInterface $session,
         TemplateData $templateData,
@@ -91,6 +98,7 @@ final class ComestibleController
         $this->authorization = $authorization;
         $this->comestibleRepository = $comestibleRepository;
         $this->deserializer = $deserializer;
+        $this->errorResponseHandler = $errorResponseHandler;
         $this->redirectForPath = $redirectForPath;
         $this->session = $session;
         $this->templateData = $templateData;
@@ -109,7 +117,12 @@ final class ComestibleController
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
         if (!$this->authorization->isGranted($authenticatedUser, 'COMESTIBLE_LIST')) {
-            throw HttpException::create($request, $response, 403, 'comestible.error.permissiondenied');
+            return $this->errorResponseHandler->errorReponse(
+                $request,
+                $response,
+                403,
+                'comestible.error.permissiondenied'
+            );
         }
 
         $comestibles = $this->comestibleRepository->findBy(['userId' => $authenticatedUser->getId()]);
@@ -126,8 +139,6 @@ final class ComestibleController
      * @param Response $response
      *
      * @return Response
-     *
-     * @throws HttpException
      */
     public function view(Request $request, Response $response)
     {
@@ -136,12 +147,18 @@ final class ComestibleController
         /** @var Comestible|ModelInterface $comestible */
         $comestible = $this->comestibleRepository->find($id);
         if (null === $comestible) {
-            throw HttpException::create($request, $response, 404, 'comestible.error.notfound');
+            return $this->errorResponseHandler->errorReponse($request, $response, 404, 'comestible.error.notfound'
+            );
         }
 
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
         if (!$this->authorization->isGranted($authenticatedUser, 'COMESTIBLE_VIEW', $comestible)) {
-            throw HttpException::create($request, $response, 403, 'comestible.error.permissiondenied');
+            return $this->errorResponseHandler->errorReponse(
+                $request,
+                $response,
+                403,
+                'comestible.error.permissiondenied'
+            );
         }
 
         return $this->twig->render($response, '@Energycalculator/comestible/view.html.twig',
@@ -162,7 +179,12 @@ final class ComestibleController
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
         if (!$this->authorization->isGranted($authenticatedUser, 'COMESTIBLE_CREATE')) {
-            throw HttpException::create($request, $response, 403, 'comestible.error.permissiondenied');
+            return $this->errorResponseHandler->errorReponse(
+                $request,
+                $response,
+                403,
+                'comestible.error.permissiondenied'
+            );
         }
 
         $comestible = Comestible::create();
@@ -208,8 +230,6 @@ final class ComestibleController
      * @param Response $response
      *
      * @return Response
-     *
-     * @throws HttpException
      */
     public function edit(Request $request, Response $response)
     {
@@ -218,12 +238,17 @@ final class ComestibleController
         /** @var Comestible|ModelInterface $comestible */
         $comestible = $this->comestibleRepository->find($id);
         if (null === $comestible) {
-            throw HttpException::create($request, $response, 404, 'comestible.error.notfound');
+            return $this->errorResponseHandler->errorReponse($request, $response, 404, 'comestible.error.notfound');
         }
 
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
         if (!$this->authorization->isGranted($authenticatedUser, 'COMESTIBLE_EDIT', $comestible)) {
-            throw HttpException::create($request, $response, 403, 'comestible.error.permissiondenied');
+            return $this->errorResponseHandler->errorReponse(
+                $request,
+                $response,
+                403,
+                'comestible.error.permissiondenied'
+            );
         }
 
         if ('POST' === $request->getMethod()) {
@@ -266,8 +291,6 @@ final class ComestibleController
      * @param Response $response
      *
      * @return Response
-     *
-     * @throws HttpException
      */
     public function delete(Request $request, Response $response)
     {
@@ -276,12 +299,17 @@ final class ComestibleController
         /** @var Comestible|ModelInterface $comestible */
         $comestible = $this->comestibleRepository->find($id);
         if (null === $comestible) {
-            throw HttpException::create($request, $response, 404, 'comestible.error.notfound');
+            return $this->errorResponseHandler->errorReponse($request, $response, 404, 'comestible.error.notfound');
         }
 
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
         if (!$this->authorization->isGranted($authenticatedUser, 'COMESTIBLE_DELETE', $comestible)) {
-            throw HttpException::create($request, $response, 403, 'comestible.error.permissiondenied');
+            return $this->errorResponseHandler->errorReponse(
+                $request,
+                $response,
+                403,
+                'comestible.error.permissiondenied'
+            );
         }
 
         $this->comestibleRepository->remove($comestible);
@@ -296,15 +324,18 @@ final class ComestibleController
      * @param Response $response
      *
      * @return Response
-     *
-     * @throws HttpException
      */
     public function findByNameLike(Request $request, Response $response)
     {
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
         if (!$this->authorization->isGranted($authenticatedUser, 'COMESTIBLE_LIST')) {
-            throw HttpException::create($request, $response, 403, 'comestible.error.permissiondenied');
+            return $this->errorResponseHandler->errorReponse(
+                $request,
+                $response,
+                403,
+                'comestible.error.permissiondenied'
+            );
         }
 
         $queryParams = $request->getQueryParams();

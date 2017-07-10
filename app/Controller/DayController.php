@@ -3,11 +3,11 @@
 namespace Energycalculator\Controller;
 
 use Chubbyphp\Deserialization\DeserializerInterface;
-use Chubbyphp\ErrorHandler\HttpException;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Validation\ValidatorInterface;
+use Energycalculator\ErrorHandler\ErrorResponseHandler;
 use Energycalculator\Model\Day;
 use Energycalculator\Repository\ComestibleRepository;
 use Energycalculator\Repository\ComestibleWithinDayRepository;
@@ -53,6 +53,11 @@ final class DayController
     private $deserializer;
 
     /**
+     * @var ErrorResponseHandler
+     */
+    private $errorResponseHandler;
+
+    /**
      * @var RedirectForPath
      */
     private $redirectForPath;
@@ -84,6 +89,7 @@ final class DayController
      * @param ComestibleWithinDayRepository $comestibleWithinDayRepository
      * @param DayRepository                 $dayRepository
      * @param DeserializerInterface         $deserializer
+     * @param ErrorResponseHandler          $errorResponseHandler
      * @param RedirectForPath               $redirectForPath
      * @param SessionInterface              $session
      * @param TemplateData                  $templateData
@@ -97,6 +103,7 @@ final class DayController
         ComestibleWithinDayRepository $comestibleWithinDayRepository,
         DayRepository $dayRepository,
         DeserializerInterface $deserializer,
+        ErrorResponseHandler $errorResponseHandler,
         RedirectForPath $redirectForPath,
         SessionInterface $session,
         TemplateData $templateData,
@@ -109,6 +116,7 @@ final class DayController
         $this->comestibleWithinDayRepository = $comestibleWithinDayRepository;
         $this->dayRepository = $dayRepository;
         $this->deserializer = $deserializer;
+        $this->errorResponseHandler = $errorResponseHandler;
         $this->redirectForPath = $redirectForPath;
         $this->session = $session;
         $this->templateData = $templateData;
@@ -127,7 +135,7 @@ final class DayController
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
         if (!$this->authorization->isGranted($authenticatedUser, 'DAY_LIST')) {
-            throw HttpException::create($request, $response, 403, 'day.error.permissiondenied');
+            return $this->errorResponseHandler->errorReponse($request, $response, 403, 'day.error.permissiondenied');
         }
 
         $days = $this->dayRepository->findBy(['userId' => $authenticatedUser->getId()], ['date' => 'DESC']);
@@ -144,8 +152,6 @@ final class DayController
      * @param Response $response
      *
      * @return Response
-     *
-     * @throws HttpException
      */
     public function view(Request $request, Response $response)
     {
@@ -154,12 +160,12 @@ final class DayController
         /** @var Day $day */
         $day = $this->dayRepository->find($id);
         if (null === $day) {
-            throw HttpException::create($request, $response, 404, 'day.error.notfound');
+            return $this->errorResponseHandler->errorReponse($request, $response, 404, 'day.error.notfound');
         }
 
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
         if (!$this->authorization->isGranted($authenticatedUser, 'DAY_VIEW', $day)) {
-            throw HttpException::create($request, $response, 403, 'day.error.permissiondenied');
+            return $this->errorResponseHandler->errorReponse($request, $response, 403, 'day.error.permissiondenied');
         }
 
         return $this->twig->render($response, '@Energycalculator/day/view.html.twig',
@@ -180,7 +186,7 @@ final class DayController
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
         if (!$this->authorization->isGranted($authenticatedUser, 'DAY_CREATE')) {
-            throw HttpException::create($request, $response, 403, 'day.error.permissiondenied');
+            return $this->errorResponseHandler->errorReponse($request, $response, 403, 'day.error.permissiondenied');
         }
 
         $day = Day::create();
@@ -226,8 +232,6 @@ final class DayController
      * @param Response $response
      *
      * @return Response
-     *
-     * @throws HttpException
      */
     public function edit(Request $request, Response $response)
     {
@@ -236,12 +240,12 @@ final class DayController
         /** @var Day|ModelInterface $day */
         $day = $this->dayRepository->find($id);
         if (null === $day) {
-            throw HttpException::create($request, $response, 404, 'day.error.notfound');
+            return $this->errorResponseHandler->errorReponse($request, $response, 404, 'day.error.notfound');
         }
 
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
         if (!$this->authorization->isGranted($authenticatedUser, 'DAY_EDIT', $day)) {
-            throw HttpException::create($request, $response, 403, 'day.error.permissiondenied');
+            return $this->errorResponseHandler->errorReponse($request, $response, 403, 'day.error.permissiondenied');
         }
 
         if ('POST' === $request->getMethod()) {
@@ -284,8 +288,6 @@ final class DayController
      * @param Response $response
      *
      * @return Response
-     *
-     * @throws HttpException
      */
     public function delete(Request $request, Response $response)
     {
@@ -294,12 +296,12 @@ final class DayController
         /** @var Day|ModelInterface $day */
         $day = $this->dayRepository->find($id);
         if (null === $day) {
-            throw HttpException::create($request, $response, 404, 'day.error.notfound');
+            return $this->errorResponseHandler->errorReponse($request, $response, 404, 'day.error.notfound');
         }
 
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
         if (!$this->authorization->isGranted($authenticatedUser, 'DAY_DELETE', $day)) {
-            throw HttpException::create($request, $response, 403, 'day.error.permissiondenied');
+            return $this->errorResponseHandler->errorReponse($request, $response, 403, 'day.error.permissiondenied');
         }
 
         $this->dayRepository->remove($day);

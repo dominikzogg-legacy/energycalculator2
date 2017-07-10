@@ -6,7 +6,6 @@
     "chubbyphp/chubbyphp-csrf": "~1.1@dev",
     "chubbyphp/chubbyphp-deserialization": "~1.0@alpha",
     "chubbyphp/chubbyphp-deserialization-model": "~1.0@alpha",
-    "chubbyphp/chubbyphp-error-handler": "~1.1",
     "chubbyphp/chubbyphp-lazy": "~1.1",
     "chubbyphp/chubbyphp-model": "~3.0@alpha",
     "chubbyphp/chubbyphp-model-doctrine-dbal": "~1.0@alpha",

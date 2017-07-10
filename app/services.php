@@ -3,7 +3,6 @@
 use Chubbyphp\Csrf\CsrfProvider;
 use Chubbyphp\Deserialization\Mapping\LazyObjectMapping as DeserializationLazyObjectMapping;
 use Chubbyphp\Deserialization\Provider\DeserializationProvider;
-use Chubbyphp\ErrorHandler\SimpleErrorHandlerProvider;
 use Chubbyphp\Model\StorageCache\ArrayStorageCache;
 use Chubbyphp\Model\Resolver;
 use Chubbyphp\Security\Authentication\AuthenticationProvider;
@@ -21,7 +20,7 @@ use Energycalculator\Deserialization\ComestibleMapping as DeserializationComesti
 use Energycalculator\Deserialization\ComestibleWithinDayMapping as DeserializationComestibleWithinDayMapping;
 use Energycalculator\Deserialization\DayMapping as DeserializationDayMapping;
 use Energycalculator\Deserialization\UserMapping as DeserializationUserMapping;
-use Energycalculator\ErrorHandler\HtmlErrorResponseProvider;
+use Energycalculator\ErrorHandler\ErrorResponseHandler;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Model\ComestibleWithinDay;
 use Energycalculator\Model\Day;
@@ -52,7 +51,6 @@ $container->register(new AuthorizationProvider());
 $container->register(new CsrfProvider());
 $container->register(new DeserializationProvider());
 $container->register(new DoctrineServiceProvider());
-$container->register(new SimpleErrorHandlerProvider());
 $container->register(new MonologServiceProvider());
 $container->register(new SessionProvider());
 $container->register(new TranslationProvider());
@@ -61,7 +59,7 @@ $container->register(new ValidationProvider());
 
 // extend providers
 $container['security.authentication.errorResponseHandler'] = function () use ($container) {
-    return new AuthenticationErrorHandler($container[TemplateData::class], $container[TwigRender::class]);
+    return new AuthenticationErrorHandler($container[ErrorResponseHandler::class]);
 };
 
 $container['csrf.errorResponseHandler'] = function () use ($container) {
@@ -94,10 +92,6 @@ $container->extend('deserializer.objectmappings', function (array $objectMapping
 
     return $objectMappings;
 });
-
-$container['errorHandler.defaultProvider'] = function () use ($container) {
-    return $container[HtmlErrorResponseProvider::class];
-};
 
 $container->extend('security.authentication.authentications', function (array $authentications) use ($container) {
     $authentications[] = $container[FormAuthentication::class];
@@ -252,20 +246,16 @@ $container[Resolver::class] = function () use ($container) {
 };
 
 // services
+$container[ErrorResponseHandler::class] = function () use ($container) {
+    return new ErrorResponseHandler($container[TemplateData::class], $container[TwigRender::class]);
+};
+
 $container[FormAuthentication::class] = function ($container) {
     return new FormAuthentication(
         $container['security.authentication.passwordmanager'],
         $container['session'],
         $container[UserRepository::class],
         $container['logger']
-    );
-};
-
-$container[HtmlErrorResponseProvider::class] = function () use ($container) {
-    return new HtmlErrorResponseProvider(
-        $container['errorHandler'],
-        $container[TemplateData::class],
-        $container[TwigRender::class]
     );
 };
 
