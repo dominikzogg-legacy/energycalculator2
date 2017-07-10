@@ -1,8 +1,8 @@
 <?php
 
 use Chubbyphp\Security\Authentication\FormAuthentication;
-use Energycalculator\Controller\Crud\ListController;
-use Energycalculator\Controller\Crud\ViewController;
+use Energycalculator\Controller\UserRelatedCrud\ListController;
+use Energycalculator\Controller\UserRelatedCrud\ViewController;
 use Energycalculator\Controller\AuthController;
 use Energycalculator\Controller\ComestibleController;
 use Energycalculator\Controller\DayController;

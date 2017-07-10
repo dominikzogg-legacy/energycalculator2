@@ -1,6 +1,6 @@
 <?php
 
-namespace Energycalculator\Controller\Crud;
+namespace Energycalculator\Controller\UserRelatedCrud;
 
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\RepositoryInterface;

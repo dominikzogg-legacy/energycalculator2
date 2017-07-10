@@ -1,6 +1,6 @@
 <?php
 
-namespace Energycalculator\Controller\Crud;
+namespace Energycalculator\Controller\UserRelatedCrud;
 
 use Chubbyphp\Model\RepositoryInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
