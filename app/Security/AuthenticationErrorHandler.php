@@ -15,9 +15,10 @@ class AuthenticationErrorHandler implements AuthenticationErrorHandlerInterface
     private $errorResponseHandler;
 
     /**
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
-     * @param int $code
+     * @param int      $code
+     *
      * @return Response
      */
     public function errorResponse(Request $request, Response $response, int $code): Response

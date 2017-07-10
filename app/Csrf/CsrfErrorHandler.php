@@ -25,10 +25,11 @@ class CsrfErrorHandler implements CsrfErrorHandlerInterface
     }
 
     /**
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
-     * @param int $code
-     * @param string $reasonPhrase
+     * @param int      $code
+     * @param string   $reasonPhrase
+     *
      * @return Response
      */
     public function errorResponse(Request $request, Response $response, int $code, string $reasonPhrase): Response

@@ -146,7 +146,6 @@ final class UserController
     {
         if (!$this->authorization->isGranted($this->authentication->getAuthenticatedUser($request), 'ADMIN')) {
             return $this->errorResponseHandler->errorReponse($request, $response, 403, 'user.error.permissiondenied');
-
         }
 
         $id = $request->getAttribute('id');
@@ -175,7 +174,6 @@ final class UserController
 
         if (!$this->authorization->isGranted($authenticatedUser, 'ADMIN')) {
             return $this->errorResponseHandler->errorReponse($request, $response, 403, 'user.error.permissiondenied');
-
         }
 
         $user = User::create();
@@ -230,7 +228,6 @@ final class UserController
 
         if (!$this->authorization->isGranted($authenticatedUser, 'ADMIN')) {
             return $this->errorResponseHandler->errorReponse($request, $response, 403, 'user.error.permissiondenied');
-
         }
 
         $id = $request->getAttribute('id');
@@ -291,7 +288,6 @@ final class UserController
 
         if (!$this->authorization->isGranted($authenticatedUser, 'ADMIN')) {
             return $this->errorResponseHandler->errorReponse($request, $response, 403, 'user.error.permissiondenied');
-
         }
 
         $id = $request->getAttribute('id');

@@ -67,7 +67,7 @@ final class ErrorResponseHandler
 
     /**
      * @param TemplateData $templateData
-     * @param TwigRender $twig
+     * @param TwigRender   $twig
      */
     public function __construct(TemplateData $templateData, TwigRender $twig)
     {
@@ -76,10 +76,11 @@ final class ErrorResponseHandler
     }
 
     /**
-     * @param Request $request
-     * @param Response $response
-     * @param int $code
+     * @param Request     $request
+     * @param Response    $response
+     * @param int         $code
      * @param string|null $message
+     *
      * @return Response
      */
     public function errorReponse(Request $request, Response $response, int $code, string $message = null): Response
@@ -91,7 +92,7 @@ final class ErrorResponseHandler
         )->withStatus($code, $reasonPhrase);
     }
 
-        /**
+    /**
      * @param int $status
      *
      * @return string
