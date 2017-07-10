@@ -3,6 +3,7 @@
 {% block title %}{{ parent() }} - {{ "comestible.title.list"|translate(locale) }}{% endblock %}
 
 {% block container %}
+    {% set comestibles = elements %}
     <div class="row">
         <div class="col-xs-12">
             <h1>{{ "comestible.title.list"|translate(locale) }}</h1>

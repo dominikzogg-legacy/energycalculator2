@@ -112,68 +112,6 @@ final class ComestibleController
      *
      * @return Response
      */
-    public function listAll(Request $request, Response $response)
-    {
-        $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
-
-        if (!$this->authorization->isGranted($authenticatedUser, 'COMESTIBLE_LIST')) {
-            return $this->errorResponseHandler->errorReponse(
-                $request,
-                $response,
-                403,
-                'comestible.error.permissiondenied'
-            );
-        }
-
-        $comestibles = $this->comestibleRepository->findBy(['userId' => $authenticatedUser->getId()]);
-
-        return $this->twig->render($response, '@Energycalculator/comestible/list.html.twig',
-            $this->templateData->aggregate($request, [
-                'comestibles' => prepareForView($comestibles),
-            ])
-        );
-    }
-
-    /**
-     * @param Request  $request
-     * @param Response $response
-     *
-     * @return Response
-     */
-    public function view(Request $request, Response $response)
-    {
-        $id = $request->getAttribute('id');
-
-        /** @var Comestible|ModelInterface $comestible */
-        $comestible = $this->comestibleRepository->find($id);
-        if (null === $comestible) {
-            return $this->errorResponseHandler->errorReponse($request, $response, 404, 'comestible.error.notfound'
-            );
-        }
-
-        $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
-        if (!$this->authorization->isGranted($authenticatedUser, 'COMESTIBLE_VIEW', $comestible)) {
-            return $this->errorResponseHandler->errorReponse(
-                $request,
-                $response,
-                403,
-                'comestible.error.permissiondenied'
-            );
-        }
-
-        return $this->twig->render($response, '@Energycalculator/comestible/view.html.twig',
-            $this->templateData->aggregate($request, [
-                'comestible' => prepareForView($comestible),
-            ])
-        );
-    }
-
-    /**
-     * @param Request  $request
-     * @param Response $response
-     *
-     * @return Response
-     */
     public function create(Request $request, Response $response)
     {
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);

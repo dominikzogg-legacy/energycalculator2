@@ -101,6 +101,9 @@ class UserMapping implements ObjectMappingInterface
         ];
     }
 
+    /**
+     * @param User $user
+     */
     private function userOrException($user)
     {
         if (!$user instanceof User) {

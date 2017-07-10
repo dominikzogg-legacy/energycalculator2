@@ -1,6 +1,8 @@
 <?php
 
 use Chubbyphp\Security\Authentication\FormAuthentication;
+use Energycalculator\Controller\Crud\ListController;
+use Energycalculator\Controller\Crud\ViewController;
 use Energycalculator\Controller\AuthController;
 use Energycalculator\Controller\ComestibleController;
 use Energycalculator\Controller\DayController;
@@ -19,6 +21,54 @@ use Slim\Container;
 
 /* @var App $app */
 /* @var Container $container */
+
+$container['comestible.constroller.list'] = function () use ($container) {
+    return new ListController(
+        'comestible',
+        $container['security.authentication'],
+        $container['security.authorization'],
+        $container[ErrorResponseHandler::class],
+        $container[ComestibleRepository::class],
+        $container[TemplateData::class],
+        $container[TwigRender::class]
+    );
+};
+
+$container['comestible.constroller.view'] = function () use ($container) {
+    return new ViewController(
+        'comestible',
+        $container['security.authentication'],
+        $container['security.authorization'],
+        $container[ErrorResponseHandler::class],
+        $container[ComestibleRepository::class],
+        $container[TemplateData::class],
+        $container[TwigRender::class]
+    );
+};
+
+$container['day.constroller.list'] = function () use ($container) {
+    return new ListController(
+        'day',
+        $container['security.authentication'],
+        $container['security.authorization'],
+        $container[ErrorResponseHandler::class],
+        $container[DayRepository::class],
+        $container[TemplateData::class],
+        $container[TwigRender::class]
+    );
+};
+
+$container['day.constroller.view'] = function () use ($container) {
+    return new ViewController(
+        'day',
+        $container['security.authentication'],
+        $container['security.authorization'],
+        $container[ErrorResponseHandler::class],
+        $container[DayRepository::class],
+        $container[TemplateData::class],
+        $container[TwigRender::class]
+    );
+};
 
 $container[AuthController::class] = function () use ($container) {
     return new AuthController(
@@ -87,19 +137,19 @@ $app->group('/{locale:'.implode('|', $container['locales']).'}', function () use
     $app->post('/logout', AuthController::class.':logout')->setName('logout');
 
     $app->group('/comestibles', function () use ($app, $container) {
-        $app->get('', ComestibleController::class.':listAll')->setName('comestible_list');
+        $app->get('', 'comestible.constroller.list')->setName('comestible_list');
         $app->map(['GET', 'POST'], '/create', ComestibleController::class.':create')->setName('comestible_create');
         $app->map(['GET', 'POST'], '/{id}/edit', ComestibleController::class.':edit')->setName('comestible_edit');
-        $app->get('/{id}/view', ComestibleController::class.':view')->setName('comestible_view');
+        $app->get('/{id}/view', 'comestible.constroller.view')->setName('comestible_view');
         $app->post('/{id}/delete', ComestibleController::class.':delete')->setName('comestible_delete');
         $app->get('/findbynamelike', ComestibleController::class.':findByNameLike')->setName('comestible_findbynamelike');
     })->add($container['security.authentication.middleware']);
 
     $app->group('/days', function () use ($app, $container) {
-        $app->get('', DayController::class.':listAll')->setName('day_list');
+        $app->get('', 'day.constroller.list')->setName('day_list');
         $app->map(['GET', 'POST'], '/create', DayController::class.':create')->setName('day_create');
         $app->map(['GET', 'POST'], '/{id}/edit', DayController::class.':edit')->setName('day_edit');
-        $app->get('/{id}/view', DayController::class.':view')->setName('day_view');
+        $app->get('/{id}/view', 'day.constroller.view')->setName('day_view');
         $app->post('/{id}/delete', DayController::class.':delete')->setName('day_delete');
     })->add($container['security.authentication.middleware']);
 

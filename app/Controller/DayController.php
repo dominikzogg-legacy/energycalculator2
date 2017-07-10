@@ -130,57 +130,6 @@ final class DayController
      *
      * @return Response
      */
-    public function listAll(Request $request, Response $response)
-    {
-        $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
-
-        if (!$this->authorization->isGranted($authenticatedUser, 'DAY_LIST')) {
-            return $this->errorResponseHandler->errorReponse($request, $response, 403, 'day.error.permissiondenied');
-        }
-
-        $days = $this->dayRepository->findBy(['userId' => $authenticatedUser->getId()], ['date' => 'DESC']);
-
-        return $this->twig->render($response, '@Energycalculator/day/list.html.twig',
-            $this->templateData->aggregate($request, [
-                'days' => prepareForView($days),
-            ])
-        );
-    }
-
-    /**
-     * @param Request  $request
-     * @param Response $response
-     *
-     * @return Response
-     */
-    public function view(Request $request, Response $response)
-    {
-        $id = $request->getAttribute('id');
-
-        /** @var Day $day */
-        $day = $this->dayRepository->find($id);
-        if (null === $day) {
-            return $this->errorResponseHandler->errorReponse($request, $response, 404, 'day.error.notfound');
-        }
-
-        $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
-        if (!$this->authorization->isGranted($authenticatedUser, 'DAY_VIEW', $day)) {
-            return $this->errorResponseHandler->errorReponse($request, $response, 403, 'day.error.permissiondenied');
-        }
-
-        return $this->twig->render($response, '@Energycalculator/day/view.html.twig',
-            $this->templateData->aggregate($request, [
-                'day' => prepareForView($day),
-            ])
-        );
-    }
-
-    /**
-     * @param Request  $request
-     * @param Response $response
-     *
-     * @return Response
-     */
     public function create(Request $request, Response $response)
     {
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);

@@ -3,6 +3,7 @@
 {% block title %}{{ parent() }} - {{ "day.title.list"|translate(locale) }}{% endblock %}
 
 {% block container %}
+    {% set days = elements %}
     <div class="row">
         <div class="col-xs-12">
             <h1>{{ "day.title.list"|translate(locale) }}</h1>
