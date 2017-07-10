@@ -86,8 +86,10 @@ final class ViewController
     {
         $id = $request->getAttribute('id');
 
+        $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
+
         /** @var ModelInterface $element */
-        $element = $this->repository->find($id);
+        $element = $this->repository->findOneBy(['id' => $id, 'userId' => $authenticatedUser->getId()]);
         if (null === $element) {
             return $this->errorResponseHandler->errorReponse(
                 $request,
@@ -97,8 +99,11 @@ final class ViewController
             );
         }
 
-        $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
-        if (!$this->authorization->isGranted($authenticatedUser, sprintf('%s_VIEW', strtoupper($this->type)), $element)) {
+        if (!$this->authorization->isGranted(
+            $authenticatedUser,
+            sprintf('%s_VIEW', strtoupper($this->type)),
+            $element
+        )) {
             return $this->errorResponseHandler->errorReponse(
                 $request,
                 $response,
