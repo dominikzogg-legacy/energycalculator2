@@ -1,3 +1,13 @@
+{% macro renderInputHidden(parameters) %}
+    {% set model = parameters.model %}
+    {% set property = parameters.property %}
+    {% set id = parameters.id|default(property) %}
+    {% set name = parameters.name|default(property) %}
+
+    <input type="hidden" id="{{ id }}" name="{{ name }}" value="{{ model[property] }}">
+
+{% endmacro %}
+
 {% macro renderInputText(parameters) %}
     {% set model = parameters.model %}
     {% set property = parameters.property %}

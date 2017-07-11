@@ -2,13 +2,13 @@
 
 {% import "@Energycalculator/_form.html.twig" as forms %}
 
-{% block title %}{{ parent() }} - {{ "user.title.edit"|translate(locale) }}{% endblock %}
+{% block title %}{{ parent() }} - {{ "user.title.update"|translate(locale) }}{% endblock %}
 
 {% block container %}
     <div class="row">
         <div class="col-xs-12">
-            <h1>{{ "user.title.edit"|translate(locale) }}</h1>
-            <form action="{{ path_for('user_edit', {'locale': locale, 'id': user.id}) }}" method="post" class="form-horizontal">
+            <h1>{{ "user.title.update"|translate(locale) }}</h1>
+            <form action="{{ path_for('user_update', {'locale': locale, 'id': user.id}) }}" method="post" class="form-horizontal">
                 {{ forms.renderInputText({'model': user, 'property': 'email', 'label': 'user.label.email', 'errorMessages': errorMessages, 'locale': locale}) }}
                 {{ forms.renderInputPassword({'model': user, 'property': 'password', 'label': 'user.label.password', 'errorMessages': errorMessages, 'locale': locale}) }}
                 {% if authenticatedUser.id != user.id %}

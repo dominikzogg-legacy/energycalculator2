@@ -28,7 +28,7 @@
                             <td>{{ user.email }}</td>
                             <td>{{ user.roles|join(', ') }}</td>
                             <td>
-                                <a href="{{ path_for('user_edit', {'locale': locale, 'id': user.id}) }}" type="button" class="btn btn-default btn-sm" title="{{ "user.action.edit"|translate(locale) }}">
+                                <a href="{{ path_for('user_update', {'locale': locale, 'id': user.id}) }}" type="button" class="btn btn-default btn-sm" title="{{ "user.action.update"|translate(locale) }}">
                                     <i class="glyphicon glyphicon-pencil"></i>
                                 </a>
                                 <a href="{{ path_for('user_read', {'locale': locale, 'id': user.id}) }}" type="button" class="btn btn-default btn-sm" title="{{ "user.action.read"|translate(locale) }}">

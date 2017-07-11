@@ -2,13 +2,14 @@
 
 {% import "@Energycalculator/_form.html.twig" as forms %}
 
-{% block title %}{{ parent() }} - {{ "comestible.title.edit"|translate(locale) }}{% endblock %}
+{% block title %}{{ parent() }} - {{ "comestible.title.update"|translate(locale) }}{% endblock %}
 
 {% block container %}
+    {% set comestible = element %}
     <div class="row">
         <div class="col-xs-12">
-            <h1>{{ "comestible.title.edit"|translate(locale) }}</h1>
-            <form action="{{ path_for('comestible_edit', {'locale': locale, 'id': comestible.id}) }}" method="post" class="form-horizontal">
+            <h1>{{ "comestible.title.update"|translate(locale) }}</h1>
+            <form action="{{ path_for('comestible_update', {'locale': locale, 'id': comestible.id}) }}" method="post" class="form-horizontal">
                 {{ forms.renderInputText({'model': comestible, 'property': 'name', 'label': 'comestible.label.name', 'errorMessages': errorMessages, 'locale': locale}) }}
                 {{ forms.renderInputText({'model': comestible, 'property': 'calorie', 'label': 'comestible.label.calorie', 'errorMessages': errorMessages, 'locale': locale}) }}
                 {{ forms.renderInputText({'model': comestible, 'property': 'protein', 'label': 'comestible.label.protein', 'errorMessages': errorMessages, 'locale': locale}) }}

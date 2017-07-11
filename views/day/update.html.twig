@@ -2,13 +2,14 @@
 
 {% import "@Energycalculator/_form.html.twig" as forms %}
 
-{% block title %}{{ parent() }} - {{ "day.title.edit"|translate(locale) }}{% endblock %}
+{% block title %}{{ parent() }} - {{ "day.title.update"|translate(locale) }}{% endblock %}
 
 {% block container %}
+    {% set day = element %}
     <div class="row">
         <div class="col-xs-12">
-            <h1>{{ "day.title.edit"|translate(locale) }}</h1>
-            <form action="{{ path_for('day_edit', {'locale': locale, 'id': day.id}) }}" method="post" class="form-horizontal">
+            <h1>{{ "day.title.update"|translate(locale) }}</h1>
+            <form action="{{ path_for('day_update', {'locale': locale, 'id': day.id}) }}" method="post" class="form-horizontal">
                 {{ forms.renderInputDate({'model': day, 'property': 'date', 'label': 'day.label.date', 'errorMessages': errorMessages, 'locale': locale}) }}
                 {{ forms.renderInputText({'model': day, 'property': 'weight', 'label': 'day.label.weight', 'errorMessages': errorMessages, 'locale': locale}) }}
                 {{ forms.renderCollection({'model': day, 'property': 'comestiblesWithinDay', 'label': 'day.label.comestiblesWithinDay', 'errorMessages': errorMessages, 'locale': locale, 'fields': [

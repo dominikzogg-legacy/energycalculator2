@@ -9,12 +9,11 @@ use Chubbyphp\Model\RepositoryInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Energycalculator\ErrorHandler\ErrorResponseHandler;
-use Energycalculator\Service\TemplateData;
-use Energycalculator\Service\TwigRender;
+use Energycalculator\Service\RedirectForPath;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-final class ReadController
+final class DeleteController
 {
     /**
      * @var string
@@ -37,45 +36,37 @@ final class ReadController
     private $errorResponseHandler;
 
     /**
+     * @var RedirectForPath
+     */
+    private $redirectForPath;
+
+    /**
      * @var RepositoryInterface
      */
     private $repository;
-
-    /**
-     * @var TemplateData
-     */
-    private $templateData;
-
-    /**
-     * @var TwigRender
-     */
-    private $twig;
 
     /**
      * @param string $type
      * @param AuthenticationInterface $authentication
      * @param AuthorizationInterface $authorization
      * @param ErrorResponseHandler $errorResponseHandler
+     * @param RedirectForPath $redirectForPath
      * @param RepositoryInterface $repository
-     * @param TemplateData $templateData
-     * @param TwigRender $twig
      */
     public function __construct(
         string $type,
         AuthenticationInterface $authentication,
         AuthorizationInterface $authorization,
         ErrorResponseHandler $errorResponseHandler,
-        RepositoryInterface $repository,
-        TemplateData $templateData,
-        TwigRender $twig
+        RedirectForPath $redirectForPath,
+        RepositoryInterface $repository
     ) {
+        $this->type = $type;
         $this->authentication = $authentication;
         $this->authorization = $authorization;
         $this->errorResponseHandler = $errorResponseHandler;
+        $this->redirectForPath = $redirectForPath;
         $this->repository = $repository;
-        $this->templateData = $templateData;
-        $this->type = $type;
-        $this->twig = $twig;
     }
 
     /**
@@ -104,7 +95,7 @@ final class ReadController
             );
         }
 
-        if (!$this->authorization->isGranted($authenticatedUser, sprintf('%s_READ', $typeUpper), $element)) {
+        if (!$this->authorization->isGranted($authenticatedUser, sprintf('%s_DELETE', $typeUpper), $element)) {
             return $this->errorResponseHandler->errorReponse(
                 $request,
                 $response,
@@ -113,10 +104,10 @@ final class ReadController
             );
         }
 
-        return $this->twig->render($response, sprintf('@Energycalculator/%s/read.html.twig', $typeLower),
-            $this->templateData->aggregate($request, [
-                'element' => prepareForView($element),
-            ])
+        $this->repository->remove($element);
+
+        return $this->redirectForPath->get(
+            $response, 302, sprintf('%s_list', $typeLower), ['locale' => $request->getAttribute('locale')]
         );
     }
 }

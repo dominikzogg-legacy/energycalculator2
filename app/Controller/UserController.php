@@ -193,7 +193,7 @@ final class UserController
                     new FlashMessage(FlashMessage::TYPE_SUCCESS, 'user.flash.create.success')
                 );
 
-                return $this->redirectForPath->get($response, 302, 'user_edit', [
+                return $this->redirectForPath->get($response, 302, 'user_update', [
                     'locale' => $locale,
                     'id' => $user->getId(),
                 ]);
@@ -253,7 +253,7 @@ final class UserController
                     new FlashMessage(FlashMessage::TYPE_SUCCESS, 'user.flash.edit.success')
                 );
 
-                return $this->redirectForPath->get($response, 302, 'user_edit', [
+                return $this->redirectForPath->get($response, 302, 'user_update', [
                     'locale' => $locale,
                     'id' => $user->getId(),
                 ]);

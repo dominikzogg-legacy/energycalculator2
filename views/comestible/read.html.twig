@@ -72,7 +72,7 @@
                 {% endfor %}
             </table>
             <div class="form-group">
-                <a class="btn btn-default" href="{{ path_for('comestible_edit', {'locale': locale, 'id': comestible.id}) }}" title="{{ "comestible.action.edit"|translate(locale) }}">
+                <a class="btn btn-default" href="{{ path_for('comestible_update', {'locale': locale, 'id': comestible.id}) }}" title="{{ "comestible.action.update"|translate(locale) }}">
                     <i class="glyphicon glyphicon-pencil"></i>
                 </a>
                 <a class="btn btn-default" href="{{ path_for('comestible_list', {'locale': locale}) }}" title="{{ "comestible.action.list"|translate(locale) }}">

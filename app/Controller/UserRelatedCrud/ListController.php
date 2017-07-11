@@ -85,20 +85,23 @@ final class ListController
      */
     public function __invoke(Request $request, Response $response)
     {
+        $typeLower = strtolower($this->type);
+        $typeUpper = strtoupper($this->type);
+
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
-        if (!$this->authorization->isGranted($authenticatedUser, sprintf('%s_LIST', strtoupper($this->type)))) {
+        if (!$this->authorization->isGranted($authenticatedUser, sprintf('%s_LIST', $typeUpper))) {
             return $this->errorResponseHandler->errorReponse(
                 $request,
                 $response,
                 403,
-                sprintf('%s.error.permissiondenied', strtolower($this->type))
+                sprintf('%s.error.permissiondenied', $typeLower)
             );
         }
 
         $elements = $this->repository->findBy(['userId' => $authenticatedUser->getId()]);
 
-        return $this->twig->render($response, sprintf('@Energycalculator/%s/list.html.twig', strtolower($this->type)),
+        return $this->twig->render($response, sprintf('@Energycalculator/%s/list.html.twig', $typeLower),
             $this->templateData->aggregate($request, [
                 'elements' => prepareForView($elements),
             ])

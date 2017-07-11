@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace Energycalculator\Controller\UserRelatedCrud;
 
+use Chubbyphp\Deserialization\DeserializerInterface;
 use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\RepositoryInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
+use Chubbyphp\Session\FlashMessage;
+use Chubbyphp\Session\SessionInterface;
+use Chubbyphp\Validation\ValidatorInterface;
 use Energycalculator\ErrorHandler\ErrorResponseHandler;
+use Energycalculator\Service\RedirectForPath;
 use Energycalculator\Service\TemplateData;
 use Energycalculator\Service\TwigRender;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-final class ReadController
+final class UpdateController
 {
     /**
      * @var string
@@ -32,14 +37,29 @@ final class ReadController
     private $authorization;
 
     /**
+     * @var DeserializerInterface
+     */
+    private $deserializer;
+
+    /**
      * @var ErrorResponseHandler
      */
     private $errorResponseHandler;
 
     /**
+     * @var RedirectForPath
+     */
+    private $redirectForPath;
+
+    /**
      * @var RepositoryInterface
      */
     private $repository;
+
+    /**
+     * @var SessionInterface
+     */
+    private $session;
 
     /**
      * @var TemplateData
@@ -52,30 +72,47 @@ final class ReadController
     private $twig;
 
     /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    /**
      * @param string $type
      * @param AuthenticationInterface $authentication
      * @param AuthorizationInterface $authorization
+     * @param DeserializerInterface $deserializer
      * @param ErrorResponseHandler $errorResponseHandler
+     * @param RedirectForPath $redirectForPath
      * @param RepositoryInterface $repository
+     * @param SessionInterface $session
      * @param TemplateData $templateData
      * @param TwigRender $twig
+     * @param ValidatorInterface $validator
      */
     public function __construct(
         string $type,
         AuthenticationInterface $authentication,
         AuthorizationInterface $authorization,
+        DeserializerInterface $deserializer,
         ErrorResponseHandler $errorResponseHandler,
+        RedirectForPath $redirectForPath,
         RepositoryInterface $repository,
+        SessionInterface $session,
         TemplateData $templateData,
-        TwigRender $twig
+        TwigRender $twig,
+        ValidatorInterface $validator
     ) {
+        $this->type = $type;
         $this->authentication = $authentication;
         $this->authorization = $authorization;
+        $this->deserializer = $deserializer;
         $this->errorResponseHandler = $errorResponseHandler;
+        $this->redirectForPath = $redirectForPath;
         $this->repository = $repository;
+        $this->session = $session;
         $this->templateData = $templateData;
-        $this->type = $type;
         $this->twig = $twig;
+        $this->validator = $validator;
     }
 
     /**
@@ -104,7 +141,7 @@ final class ReadController
             );
         }
 
-        if (!$this->authorization->isGranted($authenticatedUser, sprintf('%s_READ', $typeUpper), $element)) {
+        if (!$this->authorization->isGranted($authenticatedUser, sprintf('%s_UPDATE', $typeUpper), $element)) {
             return $this->errorResponseHandler->errorReponse(
                 $request,
                 $response,
@@ -113,8 +150,36 @@ final class ReadController
             );
         }
 
-        return $this->twig->render($response, sprintf('@Energycalculator/%s/read.html.twig', $typeLower),
+        if ('POST' === $request->getMethod()) {
+            /** @var ModelInterface $element */
+            $element = $this->deserializer->deserializeByObject($request->getParsedBody(), $element);
+
+            $locale = $request->getAttribute('locale');
+
+            if ([] === $errors = $this->validator->validateObject($element)) {
+                $this->repository->persist($element);
+                $this->session->addFlash(
+                    $request,
+                    new FlashMessage(FlashMessage::TYPE_SUCCESS, sprintf('%s.flash.update.success', $typeLower))
+                );
+
+                return $this->redirectForPath->get($response, 302, sprintf('%s_update', $typeLower), [
+                    'locale' => $locale,
+                    'id' => $element->getId(),
+                ]);
+            }
+
+            $errorMessages = $this->templateData->getErrorMessages($locale, $errors);
+
+            $this->session->addFlash(
+                $request,
+                new FlashMessage(FlashMessage::TYPE_DANGER, sprintf('%s.flash.update.failed', $typeLower))
+            );
+        }
+
+        return $this->twig->render($response, sprintf('@Energycalculator/%s/update.html.twig', $typeLower),
             $this->templateData->aggregate($request, [
+                'errorMessages' => $errorMessages ?? [],
                 'element' => prepareForView($element),
             ])
         );

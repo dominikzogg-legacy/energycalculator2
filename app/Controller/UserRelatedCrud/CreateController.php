@@ -149,12 +149,12 @@ final class CreateController
         /** @var callable $factory */
         $factory = $this->factory;
 
-        /** @var OwnedByUserTrait $element */
+        /** @var OwnedByUserTrait|ModelInterface $element */
         $element = $factory();
         $element->setUser($authenticatedUser);
 
         if ('POST' === $request->getMethod()) {
-            /** @var ModelInterface $element */
+            /** @var OwnedByUserTrait|ModelInterface $element */
             $element = $this->deserializer->deserializeByObject($request->getParsedBody(), $element);
 
             $locale = $request->getAttribute('locale');
@@ -166,7 +166,7 @@ final class CreateController
                     new FlashMessage(FlashMessage::TYPE_SUCCESS, sprintf('%s.flash.create.success', $typeLower))
                 );
 
-                return $this->redirectForPath->get($response, 302, sprintf('%s_edit', $typeLower), [
+                return $this->redirectForPath->get($response, 302, sprintf('%s_update', $typeLower), [
                     'locale' => $locale,
                     'id' => $element->getId(),
                 ]);

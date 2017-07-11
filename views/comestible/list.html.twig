@@ -35,7 +35,7 @@
                             <td>{{ comestible.carbohydrate }}</td>
                             <td>{{ comestible.fat }}</td>
                             <td>
-                                <a href="{{ path_for('comestible_edit', {'locale': locale, 'id': comestible.id}) }}" type="button" class="btn btn-default btn-sm" title="{{ "comestible.action.edit"|translate(locale) }}">
+                                <a href="{{ path_for('comestible_update', {'locale': locale, 'id': comestible.id}) }}" type="button" class="btn btn-default btn-sm" title="{{ "comestible.action.update"|translate(locale) }}">
                                     <i class="glyphicon glyphicon-pencil"></i>
                                 </a>
                                 <a href="{{ path_for('comestible_read', {'locale': locale, 'id': comestible.id}) }}" type="button" class="btn btn-default btn-sm" title="{{ "comestible.action.read"|translate(locale) }}">
