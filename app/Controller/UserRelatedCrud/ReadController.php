@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Energycalculator\Controller\UserRelatedCrud;
 
 use Chubbyphp\Model\ModelInterface;
@@ -12,7 +14,7 @@ use Energycalculator\Service\TwigRender;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-final class ViewController
+final class ReadController
 {
     /**
      * @var string
@@ -112,7 +114,7 @@ final class ViewController
             );
         }
 
-        return $this->twig->render($response, sprintf('@Energycalculator/%s/view.html.twig', strtolower($this->type)),
+        return $this->twig->render($response, sprintf('@Energycalculator/%s/read.html.twig', strtolower($this->type)),
             $this->templateData->aggregate($request, [
                 'element' => prepareForView($element),
             ])

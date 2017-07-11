@@ -1,16 +1,16 @@
 {% extends "@Energycalculator/baselayout.html.twig" %}
 
-{% block title %}{{ parent() }} - {{ "day.title.view"|translate(locale) }}{% endblock %}
+{% block title %}{{ parent() }} - {{ "comestible.title.read"|translate(locale) }}{% endblock %}
 
 {% block container %}
-    {% set day = element %}
+    {% set comestible = element %}
     <div class="row">
         <div class="col-xs-12">
-            <h1>{{ "day.title.view"|translate(locale) }}</h1>
+            <h1>{{ "comestible.title.read"|translate(locale) }}</h1>
             <table class="table table-striped">
-                {% for property, value in day %}
+                {% for property, value in comestible %}
                     <tr>
-                        <td>{{ ("day.label."~property)|translate(locale) }}</td>
+                        <td>{{ ("comestible.label."~property)|translate(locale) }}</td>
                         <td>
                             {% if value is iterable %}
                                 {% set subValueIsIteratable = false %}
@@ -72,10 +72,10 @@
                 {% endfor %}
             </table>
             <div class="form-group">
-                <a class="btn btn-default" href="{{ path_for('day_edit', {'locale': locale, 'id': day.id}) }}" title="{{ "day.action.edit"|translate(locale) }}">
+                <a class="btn btn-default" href="{{ path_for('comestible_edit', {'locale': locale, 'id': comestible.id}) }}" title="{{ "comestible.action.edit"|translate(locale) }}">
                     <i class="glyphicon glyphicon-pencil"></i>
                 </a>
-                <a class="btn btn-default" href="{{ path_for('day_list', {'locale': locale}) }}" title="{{ "day.action.list"|translate(locale) }}">
+                <a class="btn btn-default" href="{{ path_for('comestible_list', {'locale': locale}) }}" title="{{ "comestible.action.list"|translate(locale) }}">
                     <i class="glyphicon glyphicon-list-alt"></i>
                 </a>
             </div>

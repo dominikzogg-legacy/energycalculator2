@@ -40,7 +40,7 @@
                                 <a href="{{ path_for('day_edit', {'locale': locale, 'id': day.id}) }}" type="button" class="btn btn-default btn-sm" title="{{ "day.action.edit"|translate(locale) }}">
                                     <i class="glyphicon glyphicon-pencil"></i>
                                 </a>
-                                <a href="{{ path_for('day_view', {'locale': locale, 'id': day.id}) }}" type="button" class="btn btn-default btn-sm" title="{{ "day.action.view"|translate(locale) }}">
+                                <a href="{{ path_for('day_read', {'locale': locale, 'id': day.id}) }}" type="button" class="btn btn-default btn-sm" title="{{ "day.action.read"|translate(locale) }}">
                                     <i class="glyphicon glyphicon-eye-open"></i>
                                 </a>
                                 <form action="{{ path_for('day_delete', {'locale': locale, 'id': day.id}) }}" method="post" class="inline-form">

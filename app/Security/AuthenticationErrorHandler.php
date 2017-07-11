@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Energycalculator\Security;
 
 use Chubbyphp\Security\Authentication\AuthenticationErrorHandlerInterface;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Energycalculator\Command;
 
 use Chubbyphp\Security\Authentication\PasswordManagerInterface;

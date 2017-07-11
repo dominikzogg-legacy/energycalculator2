@@ -38,7 +38,7 @@
                                 <a href="{{ path_for('comestible_edit', {'locale': locale, 'id': comestible.id}) }}" type="button" class="btn btn-default btn-sm" title="{{ "comestible.action.edit"|translate(locale) }}">
                                     <i class="glyphicon glyphicon-pencil"></i>
                                 </a>
-                                <a href="{{ path_for('comestible_view', {'locale': locale, 'id': comestible.id}) }}" type="button" class="btn btn-default btn-sm" title="{{ "comestible.action.view"|translate(locale) }}">
+                                <a href="{{ path_for('comestible_read', {'locale': locale, 'id': comestible.id}) }}" type="button" class="btn btn-default btn-sm" title="{{ "comestible.action.read"|translate(locale) }}">
                                     <i class="glyphicon glyphicon-eye-open"></i>
                                 </a>
                                 <form action="{{ path_for('comestible_delete', {'locale': locale, 'id': comestible.id}) }}" method="post" class="inline-form">

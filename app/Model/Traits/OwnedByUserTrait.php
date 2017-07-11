@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Energycalculator\Model\Traits;
 
 use Chubbyphp\Model\ModelInterface;

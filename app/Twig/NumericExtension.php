@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Energycalculator\Twig;
 
 final class NumericExtension extends \Twig_Extension
