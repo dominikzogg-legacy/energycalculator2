@@ -95,33 +95,14 @@ final class TwigRender
             throw new \RuntimeException('The route has to be resolved');
         }
 
-        if (null === $locale = $request->getAttribute('locale')) {
-            $locale = $route->getArgument('locale');
-        }
-
         return array_replace_recursive([
             'authenticatedUser' => prepareForView($this->authentication->getAuthenticatedUser($request)),
             'csrf' => $this->session->get($request, CsrfErrorResponseMiddleware::CSRF_KEY),
             'debug' => $this->debug,
             'flashMessage' => $this->session->getFlash($request),
-            'locale' => $locale,
+            'locale' => $request->getAttribute('locale'),
             'trail' => $this->getTrailForRoute($route),
         ], $variables);
-    }
-
-    /**
-     * @param string $locale
-     * @param array  $errors
-     *
-     * @return array
-     */
-    public function getErrorMessages(string $locale, array $errors): array
-    {
-        $translate = function (string $key, array $args) use ($locale) {
-            return $this->translator->translate($locale, $key, $args);
-        };
-
-        return (new NestedErrorMessages($errors, $translate))->getMessages();
     }
 
     /**
@@ -138,5 +119,20 @@ final class TwigRender
         }
 
         return array_merge([$routeName], $this->trail[$routeName]);
+    }
+
+    /**
+     * @param string $locale
+     * @param array  $errors
+     *
+     * @return array
+     */
+    public function getErrorMessages(string $locale, array $errors): array
+    {
+        $translate = function (string $key, array $args) use ($locale) {
+            return $this->translator->translate($locale, $key, $args);
+        };
+
+        return (new NestedErrorMessages($errors, $translate))->getMessages();
     }
 }
