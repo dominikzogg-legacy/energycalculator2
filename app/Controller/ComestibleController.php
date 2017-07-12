@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Energycalculator\Controller;
 
 use Chubbyphp\Security\Authentication\AuthenticationInterface;

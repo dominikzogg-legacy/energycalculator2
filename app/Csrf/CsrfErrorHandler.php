@@ -11,7 +11,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Uri;
 
-class CsrfErrorHandler implements CsrfErrorHandlerInterface
+final class CsrfErrorHandler implements CsrfErrorHandlerInterface
 {
     /**
      * @var SessionInterface

@@ -12,7 +12,7 @@ use Chubbyphp\Security\Authentication\PasswordManagerInterface;
 use Chubbyphp\Security\Authorization\RoleHierarchyResolverInterface;
 use Energycalculator\Model\User;
 
-class UserMapping implements ObjectMappingInterface
+final class UserMapping implements ObjectMappingInterface
 {
     /**
      * @var PasswordManagerInterface

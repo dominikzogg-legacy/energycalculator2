@@ -13,7 +13,7 @@ use Chubbyphp\Validation\Mapping\PropertyMappingInterface;
 use Chubbyphp\ValidationModel\Constraint\ModelReferenceConstraint;
 use Energycalculator\Model\ComestibleWithinDay;
 
-class ComestibleWithinDayMapping implements ObjectMappingInterface
+final class ComestibleWithinDayMapping implements ObjectMappingInterface
 {
     /**
      * @return string

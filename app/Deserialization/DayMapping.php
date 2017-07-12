@@ -11,7 +11,7 @@ use Chubbyphp\DeserializationModel\Deserializer\PropertyModelCollectionDeseriali
 use Energycalculator\Model\ComestibleWithinDay;
 use Energycalculator\Model\Day;
 
-class DayMapping implements ObjectMappingInterface
+final class DayMapping implements ObjectMappingInterface
 {
     /**
      * @return string

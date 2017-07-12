@@ -87,11 +87,15 @@ final class ErrorResponseHandler
      */
     public function errorReponse(Request $request, Response $response, int $code, string $message = null): Response
     {
-        $reasonPhrase = self::getMessageByStatus($code);
+        $variables = ['code' => $code];
+
+        if (null !== $message) {
+            $variables['message'] = $message;
+        }
 
         return $this->twig->render($response, '@Energycalculator/error.html.twig',
-            $this->templateData->aggregate($request, ['code' => $code, 'message' => $message ?? $reasonPhrase])
-        )->withStatus($code, $reasonPhrase);
+            $this->templateData->aggregate($request, $variables)
+        )->withStatus($code, self::getMessageByStatus($code));
     }
 
     /**

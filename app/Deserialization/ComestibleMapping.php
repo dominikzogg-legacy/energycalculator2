@@ -9,7 +9,7 @@ use Chubbyphp\Deserialization\Mapping\PropertyMapping;
 use Chubbyphp\Deserialization\Mapping\PropertyMappingInterface;
 use Energycalculator\Model\Comestible;
 
-class ComestibleMapping implements ObjectMappingInterface
+final class ComestibleMapping implements ObjectMappingInterface
 {
     /**
      * @return string

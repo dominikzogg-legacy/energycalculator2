@@ -12,7 +12,7 @@ use Chubbyphp\Model\ResolverInterface;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Model\ComestibleWithinDay;
 
-class ComestibleWithinDayMapping implements ObjectMappingInterface
+final class ComestibleWithinDayMapping implements ObjectMappingInterface
 {
     /**
      * @var ResolverInterface

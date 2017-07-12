@@ -15,7 +15,7 @@ use Chubbyphp\Validation\Mapping\ObjectMappingInterface;
 use Chubbyphp\ValidationModel\Constraint\UniqueModelConstraint;
 use Energycalculator\Model\User;
 
-class UserMapping implements ObjectMappingInterface
+final class UserMapping implements ObjectMappingInterface
 {
     /**
      * @var ResolverInterface

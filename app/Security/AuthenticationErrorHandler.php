@@ -9,7 +9,7 @@ use Energycalculator\ErrorHandler\ErrorResponseHandler;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class AuthenticationErrorHandler implements AuthenticationErrorHandlerInterface
+final class AuthenticationErrorHandler implements AuthenticationErrorHandlerInterface
 {
     /**
      * @var ErrorResponseHandler

@@ -17,7 +17,7 @@ use Chubbyphp\ValidationModel\Constraint\ModelReferenceConstraint;
 use Chubbyphp\ValidationModel\Constraint\UniqueModelConstraint;
 use Energycalculator\Model\Day;
 
-class DayMapping implements ObjectMappingInterface
+final class DayMapping implements ObjectMappingInterface
 {
     /**
      * @var ResolverInterface

@@ -14,7 +14,7 @@ use Chubbyphp\Validation\Mapping\ObjectMappingInterface;
 use Chubbyphp\ValidationModel\Constraint\ModelReferenceConstraint;
 use Energycalculator\Model\Comestible;
 
-class ComestibleMapping implements ObjectMappingInterface
+final class ComestibleMapping implements ObjectMappingInterface
 {
     /**
      * @return string
