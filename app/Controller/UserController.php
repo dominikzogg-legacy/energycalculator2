@@ -135,7 +135,7 @@ final class UserController
      *
      * @return Response
      */
-    public function view(Request $request, Response $response)
+    public function read(Request $request, Response $response)
     {
         if (!$this->authorization->isGranted($this->authentication->getAuthenticatedUser($request), 'ADMIN')) {
             return $this->errorResponseHandler->errorReponse($request, $response, 403, 'user.error.permissiondenied');
@@ -148,7 +148,7 @@ final class UserController
             return $this->errorResponseHandler->errorReponse($request, $response, 404, 'user.error.notfound');
         }
 
-        return $this->twig->render($response, '@Energycalculator/user/view.html.twig',
+        return $this->twig->render($response, '@Energycalculator/user/read.html.twig',
             $this->twig->aggregate($request, [
                 'user' => prepareForView($user),
             ])
@@ -215,7 +215,7 @@ final class UserController
      *
      * @return Response
      */
-    public function edit(Request $request, Response $response)
+    public function update(Request $request, Response $response)
     {
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
@@ -241,7 +241,7 @@ final class UserController
                 $this->userRepository->persist($user);
                 $this->session->addFlash(
                     $request,
-                    new FlashMessage(FlashMessage::TYPE_SUCCESS, 'user.flash.edit.success')
+                    new FlashMessage(FlashMessage::TYPE_SUCCESS, 'user.flash.update.success')
                 );
 
                 return $this->redirectForPath->get($response, 302, 'user_update', [
@@ -254,13 +254,13 @@ final class UserController
 
             $this->session->addFlash(
                 $request,
-                new FlashMessage(FlashMessage::TYPE_DANGER, 'user.flash.edit.failed')
+                new FlashMessage(FlashMessage::TYPE_DANGER, 'user.flash.update.failed')
             );
         }
 
         $possibleRoles = $this->roleHierarchyResolver->resolve(['ADMIN']);
 
-        return $this->twig->render($response, '@Energycalculator/user/edit.html.twig',
+        return $this->twig->render($response, '@Energycalculator/user/update.html.twig',
             $this->twig->aggregate($request, [
                 'errorMessages' => $errorMessages ?? [],
                 'user' => prepareForView($user),

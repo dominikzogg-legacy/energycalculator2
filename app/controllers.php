@@ -215,7 +215,7 @@ $app->group('/{locale:'.implode('|', $container['locales']).'}', function () use
         $app->get('', UserController::class.':listAll')->setName('user_list');
         $app->map(['GET', 'POST'], '/create', UserController::class.':create')->setName('user_create');
         $app->get('/{id}/read', UserController::class.':read')->setName('user_read');
-        $app->map(['GET', 'POST'], '/{id}/update', UserController::class.':edit')->setName('user_update');
+        $app->map(['GET', 'POST'], '/{id}/update', UserController::class.':update')->setName('user_update');
         $app->post('/{id}/delete', UserController::class.':delete')->setName('user_delete');
     })->add($container['security.authentication.middleware']);
 });
