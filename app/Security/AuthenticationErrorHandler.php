@@ -17,6 +17,14 @@ class AuthenticationErrorHandler implements AuthenticationErrorHandlerInterface
     private $errorResponseHandler;
 
     /**
+     * @param ErrorResponseHandler $errorResponseHandler
+     */
+    public function __construct(ErrorResponseHandler $errorResponseHandler)
+    {
+        $this->errorResponseHandler = $errorResponseHandler;
+    }
+
+    /**
      * @param Request  $request
      * @param Response $response
      * @param int      $code
