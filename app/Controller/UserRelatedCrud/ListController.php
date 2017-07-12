@@ -45,12 +45,12 @@ final class ListController
     private $twig;
 
     /**
-     * @param string $type
+     * @param string                  $type
      * @param AuthenticationInterface $authentication
-     * @param AuthorizationInterface $authorization
-     * @param ErrorResponseHandler $errorResponseHandler
-     * @param RepositoryInterface $repository
-     * @param TwigRender $twig
+     * @param AuthorizationInterface  $authorization
+     * @param ErrorResponseHandler    $errorResponseHandler
+     * @param RepositoryInterface     $repository
+     * @param TwigRender              $twig
      */
     public function __construct(
         string $type,

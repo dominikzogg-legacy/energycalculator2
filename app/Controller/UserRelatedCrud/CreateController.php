@@ -77,17 +77,17 @@ final class CreateController
     private $validator;
 
     /**
-     * @param string $type
+     * @param string                  $type
      * @param AuthenticationInterface $authentication
-     * @param AuthorizationInterface $authorization
-     * @param DeserializerInterface $deserializer
-     * @param ErrorResponseHandler $errorResponseHandler
-     * @param callable $factory
-     * @param RedirectForPath $redirectForPath
-     * @param RepositoryInterface $repository
-     * @param SessionInterface $session
-     * @param TwigRender $twig
-     * @param ValidatorInterface $validator
+     * @param AuthorizationInterface  $authorization
+     * @param DeserializerInterface   $deserializer
+     * @param ErrorResponseHandler    $errorResponseHandler
+     * @param callable                $factory
+     * @param RedirectForPath         $redirectForPath
+     * @param RepositoryInterface     $repository
+     * @param SessionInterface        $session
+     * @param TwigRender              $twig
+     * @param ValidatorInterface      $validator
      */
     public function __construct(
         string $type,

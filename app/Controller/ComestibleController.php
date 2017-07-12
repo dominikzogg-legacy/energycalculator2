@@ -35,9 +35,9 @@ final class ComestibleController
 
     /**
      * @param AuthenticationInterface $authentication
-     * @param AuthorizationInterface $authorization
-     * @param ComestibleRepository $comestibleRepository
-     * @param ErrorResponseHandler $errorResponseHandler
+     * @param AuthorizationInterface  $authorization
+     * @param ComestibleRepository    $comestibleRepository
+     * @param ErrorResponseHandler    $errorResponseHandler
      */
     public function __construct(
         AuthenticationInterface $authentication,

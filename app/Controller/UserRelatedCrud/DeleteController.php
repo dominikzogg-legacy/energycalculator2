@@ -46,12 +46,12 @@ final class DeleteController
     private $repository;
 
     /**
-     * @param string $type
+     * @param string                  $type
      * @param AuthenticationInterface $authentication
-     * @param AuthorizationInterface $authorization
-     * @param ErrorResponseHandler $errorResponseHandler
-     * @param RedirectForPath $redirectForPath
-     * @param RepositoryInterface $repository
+     * @param AuthorizationInterface  $authorization
+     * @param ErrorResponseHandler    $errorResponseHandler
+     * @param RedirectForPath         $redirectForPath
+     * @param RepositoryInterface     $repository
      */
     public function __construct(
         string $type,

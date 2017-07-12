@@ -16,7 +16,7 @@ final class HomeController
     private $twig;
 
     /**
-     * @param TwigRender   $twig
+     * @param TwigRender $twig
      */
     public function __construct(TwigRender $twig)
     {
