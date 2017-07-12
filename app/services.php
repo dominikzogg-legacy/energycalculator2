@@ -32,7 +32,6 @@ use Energycalculator\Repository\ComestibleWithinDayRepository;
 use Energycalculator\Repository\UserRepository;
 use Energycalculator\Security\AuthenticationErrorHandler;
 use Energycalculator\Service\RedirectForPath;
-use Energycalculator\Service\TemplateData;
 use Energycalculator\Service\TwigRender;
 use Energycalculator\Twig\NumericExtension;
 use Energycalculator\Twig\RouterExtension;
@@ -247,7 +246,7 @@ $container[Resolver::class] = function () use ($container) {
 
 // services
 $container[ErrorResponseHandler::class] = function () use ($container) {
-    return new ErrorResponseHandler($container[TemplateData::class], $container[TwigRender::class]);
+    return new ErrorResponseHandler($container[TwigRender::class]);
 };
 
 $container[FormAuthentication::class] = function ($container) {
@@ -271,9 +270,9 @@ $container[RoleAuthorization::class] = function ($container) {
     return new RoleAuthorization($container['security.authorization.rolehierarchyresolver'], $container['logger']);
 };
 
-$container[TemplateData::class] = function () use ($container) {
-    return new TemplateData(
-        $container['security.authentication'],
+$container[TwigRender::class] = function () use ($container) {
+    return new TwigRender(
+                $container['security.authentication'],
         $container['debug'],
         $container['session'],
         [
@@ -293,12 +292,9 @@ $container[TemplateData::class] = function () use ($container) {
             'user_list' => [],
             'user_read' => ['user_list'],
         ],
-        $container['translator']
+        $container['translator'],
+        $container['twig']
     );
-};
-
-$container[TwigRender::class] = function () use ($container) {
-    return new TwigRender($container['twig']);
 };
 
 // validation

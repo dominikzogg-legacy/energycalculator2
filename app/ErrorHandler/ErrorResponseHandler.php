@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Energycalculator\ErrorHandler;
 
-use Energycalculator\Service\TemplateData;
 use Energycalculator\Service\TwigRender;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -58,22 +57,15 @@ final class ErrorResponseHandler
     const STATUS_511 = 'Network Authentication Required';
 
     /**
-     * @var TemplateData
-     */
-    private $templateData;
-
-    /**
      * @var TwigRender
      */
     private $twig;
 
     /**
-     * @param TemplateData $templateData
-     * @param TwigRender   $twig
+     * @param TwigRender $twig
      */
-    public function __construct(TemplateData $templateData, TwigRender $twig)
+    public function __construct(TwigRender $twig)
     {
-        $this->templateData = $templateData;
         $this->twig = $twig;
     }
 
@@ -94,7 +86,7 @@ final class ErrorResponseHandler
         }
 
         return $this->twig->render($response, '@Energycalculator/error.html.twig',
-            $this->templateData->aggregate($request, $variables)
+            $this->twig->aggregate($request, $variables)
         )->withStatus($code, self::getMessageByStatus($code));
     }
 

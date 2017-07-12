@@ -18,7 +18,6 @@ use Energycalculator\Model\User;
 use Chubbyphp\Session\FlashMessage;
 use Chubbyphp\Session\SessionInterface;
 use Energycalculator\Service\RedirectForPath;
-use Energycalculator\Service\TemplateData;
 use Energycalculator\Service\TwigRender;
 
 final class UserController
@@ -59,11 +58,6 @@ final class UserController
     private $session;
 
     /**
-     * @var TemplateData
-     */
-    private $templateData;
-
-    /**
      * @var TwigRender
      */
     private $twig;
@@ -86,7 +80,6 @@ final class UserController
      * @param RedirectForPath                $redirectForPath
      * @param RoleHierarchyResolverInterface $roleHierarchyResolver
      * @param SessionInterface               $session
-     * @param TemplateData                   $templateData
      * @param TwigRender                     $twig
      * @param UserRepository                 $userRepository
      * @param ValidatorInterface             $validator
@@ -99,7 +92,6 @@ final class UserController
         RedirectForPath $redirectForPath,
         RoleHierarchyResolverInterface $roleHierarchyResolver,
         SessionInterface $session,
-        TemplateData $templateData,
         TwigRender $twig,
         UserRepository $userRepository,
         ValidatorInterface $validator
@@ -111,7 +103,6 @@ final class UserController
         $this->redirectForPath = $redirectForPath;
         $this->roleHierarchyResolver = $roleHierarchyResolver;
         $this->session = $session;
-        $this->templateData = $templateData;
         $this->twig = $twig;
         $this->userRepository = $userRepository;
         $this->validator = $validator;
@@ -132,7 +123,7 @@ final class UserController
         $users = $this->userRepository->findBy([]);
 
         return $this->twig->render($response, '@Energycalculator/user/list.html.twig',
-            $this->templateData->aggregate($request, [
+            $this->twig->aggregate($request, [
                 'users' => prepareForView($users),
             ])
         );
@@ -158,7 +149,7 @@ final class UserController
         }
 
         return $this->twig->render($response, '@Energycalculator/user/view.html.twig',
-            $this->templateData->aggregate($request, [
+            $this->twig->aggregate($request, [
                 'user' => prepareForView($user),
             ])
         );
@@ -199,7 +190,7 @@ final class UserController
                 ]);
             }
 
-            $errorMessages = $this->templateData->getErrorMessages($locale, $errors);
+            $errorMessages = $this->twig->getErrorMessages($locale, $errors);
 
             $this->session->addFlash(
                 $request,
@@ -210,7 +201,7 @@ final class UserController
         $possibleRoles = $this->roleHierarchyResolver->resolve(['ADMIN']);
 
         return $this->twig->render($response, '@Energycalculator/user/create.html.twig',
-            $this->templateData->aggregate($request, [
+            $this->twig->aggregate($request, [
                 'errorMessages' => $errorMessages ?? [],
                 'user' => prepareForView($user),
                 'possibleRoles' => array_combine($possibleRoles, $possibleRoles),
@@ -259,7 +250,7 @@ final class UserController
                 ]);
             }
 
-            $errorMessages = $this->templateData->getErrorMessages($locale, $errors);
+            $errorMessages = $this->twig->getErrorMessages($locale, $errors);
 
             $this->session->addFlash(
                 $request,
@@ -270,7 +261,7 @@ final class UserController
         $possibleRoles = $this->roleHierarchyResolver->resolve(['ADMIN']);
 
         return $this->twig->render($response, '@Energycalculator/user/edit.html.twig',
-            $this->templateData->aggregate($request, [
+            $this->twig->aggregate($request, [
                 'errorMessages' => $errorMessages ?? [],
                 'user' => prepareForView($user),
                 'possibleRoles' => array_combine($possibleRoles, $possibleRoles),

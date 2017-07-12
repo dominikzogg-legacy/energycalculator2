@@ -9,7 +9,6 @@ use Chubbyphp\Model\RepositoryInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Energycalculator\ErrorHandler\ErrorResponseHandler;
-use Energycalculator\Service\TemplateData;
 use Energycalculator\Service\TwigRender;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -42,11 +41,6 @@ final class ReadController
     private $repository;
 
     /**
-     * @var TemplateData
-     */
-    private $templateData;
-
-    /**
      * @var TwigRender
      */
     private $twig;
@@ -57,7 +51,6 @@ final class ReadController
      * @param AuthorizationInterface $authorization
      * @param ErrorResponseHandler $errorResponseHandler
      * @param RepositoryInterface $repository
-     * @param TemplateData $templateData
      * @param TwigRender $twig
      */
     public function __construct(
@@ -66,14 +59,12 @@ final class ReadController
         AuthorizationInterface $authorization,
         ErrorResponseHandler $errorResponseHandler,
         RepositoryInterface $repository,
-        TemplateData $templateData,
         TwigRender $twig
     ) {
         $this->authentication = $authentication;
         $this->authorization = $authorization;
         $this->errorResponseHandler = $errorResponseHandler;
         $this->repository = $repository;
-        $this->templateData = $templateData;
         $this->type = $type;
         $this->twig = $twig;
     }
@@ -114,7 +105,7 @@ final class ReadController
         }
 
         return $this->twig->render($response, sprintf('@Energycalculator/%s/read.html.twig', $typeLower),
-            $this->templateData->aggregate($request, [
+            $this->twig->aggregate($request, [
                 'element' => prepareForView($element),
             ])
         );

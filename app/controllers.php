@@ -17,7 +17,6 @@ use Energycalculator\Repository\ComestibleRepository;
 use Energycalculator\Repository\DayRepository;
 use Energycalculator\Repository\UserRepository;
 use Energycalculator\Service\RedirectForPath;
-use Energycalculator\Service\TemplateData;
 use Energycalculator\Service\TwigRender;
 use Slim\App;
 use Slim\Container;
@@ -32,7 +31,6 @@ $container['comestible.constroller.list'] = function () use ($container) {
         $container['security.authorization'],
         $container[ErrorResponseHandler::class],
         $container[ComestibleRepository::class],
-        $container[TemplateData::class],
         $container[TwigRender::class]
     );
 };
@@ -48,7 +46,6 @@ $container['comestible.constroller.create'] = function () use ($container) {
         $container[RedirectForPath::class],
         $container[ComestibleRepository::class],
         $container['session'],
-        $container[TemplateData::class],
         $container[TwigRender::class],
         $container['validator']
     );
@@ -61,7 +58,6 @@ $container['comestible.constroller.read'] = function () use ($container) {
         $container['security.authorization'],
         $container[ErrorResponseHandler::class],
         $container[ComestibleRepository::class],
-        $container[TemplateData::class],
         $container[TwigRender::class]
     );
 };
@@ -76,7 +72,6 @@ $container['comestible.constroller.update'] = function () use ($container) {
         $container[RedirectForPath::class],
         $container[ComestibleRepository::class],
         $container['session'],
-        $container[TemplateData::class],
         $container[TwigRender::class],
         $container['validator']
     );
@@ -100,7 +95,6 @@ $container['day.constroller.list'] = function () use ($container) {
         $container['security.authorization'],
         $container[ErrorResponseHandler::class],
         $container[DayRepository::class],
-        $container[TemplateData::class],
         $container[TwigRender::class]
     );
 };
@@ -116,7 +110,6 @@ $container['day.constroller.create'] = function () use ($container) {
         $container[RedirectForPath::class],
         $container[DayRepository::class],
         $container['session'],
-        $container[TemplateData::class],
         $container[TwigRender::class],
         $container['validator']
     );
@@ -129,7 +122,6 @@ $container['day.constroller.read'] = function () use ($container) {
         $container['security.authorization'],
         $container[ErrorResponseHandler::class],
         $container[DayRepository::class],
-        $container[TemplateData::class],
         $container[TwigRender::class]
     );
 };
@@ -144,7 +136,6 @@ $container['day.constroller.update'] = function () use ($container) {
         $container[RedirectForPath::class],
         $container[DayRepository::class],
         $container['session'],
-        $container[TemplateData::class],
         $container[TwigRender::class],
         $container['validator']
     );
@@ -170,7 +161,7 @@ $container[AuthController::class] = function () use ($container) {
 };
 
 $container[HomeController::class] = function () use ($container) {
-    return new HomeController($container[TemplateData::class], $container[TwigRender::class]);
+    return new HomeController($container[TwigRender::class]);
 };
 
 $container[ComestibleController::class] = function () use ($container) {
@@ -191,7 +182,6 @@ $container[UserController::class] = function () use ($container) {
         $container[RedirectForPath::class],
         $container['security.authorization.rolehierarchyresolver'],
         $container['session'],
-        $container[TemplateData::class],
         $container[TwigRender::class],
         $container[UserRepository::class],
         $container['validator']

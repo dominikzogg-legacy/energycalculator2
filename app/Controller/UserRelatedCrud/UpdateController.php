@@ -14,7 +14,6 @@ use Chubbyphp\Session\SessionInterface;
 use Chubbyphp\Validation\ValidatorInterface;
 use Energycalculator\ErrorHandler\ErrorResponseHandler;
 use Energycalculator\Service\RedirectForPath;
-use Energycalculator\Service\TemplateData;
 use Energycalculator\Service\TwigRender;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -62,11 +61,6 @@ final class UpdateController
     private $session;
 
     /**
-     * @var TemplateData
-     */
-    private $templateData;
-
-    /**
      * @var TwigRender
      */
     private $twig;
@@ -85,7 +79,6 @@ final class UpdateController
      * @param RedirectForPath $redirectForPath
      * @param RepositoryInterface $repository
      * @param SessionInterface $session
-     * @param TemplateData $templateData
      * @param TwigRender $twig
      * @param ValidatorInterface $validator
      */
@@ -98,7 +91,6 @@ final class UpdateController
         RedirectForPath $redirectForPath,
         RepositoryInterface $repository,
         SessionInterface $session,
-        TemplateData $templateData,
         TwigRender $twig,
         ValidatorInterface $validator
     ) {
@@ -110,7 +102,6 @@ final class UpdateController
         $this->redirectForPath = $redirectForPath;
         $this->repository = $repository;
         $this->session = $session;
-        $this->templateData = $templateData;
         $this->twig = $twig;
         $this->validator = $validator;
     }
@@ -169,7 +160,7 @@ final class UpdateController
                 ]);
             }
 
-            $errorMessages = $this->templateData->getErrorMessages($locale, $errors);
+            $errorMessages = $this->twig->getErrorMessages($locale, $errors);
 
             $this->session->addFlash(
                 $request,
@@ -178,7 +169,7 @@ final class UpdateController
         }
 
         return $this->twig->render($response, sprintf('@Energycalculator/%s/update.html.twig', $typeLower),
-            $this->templateData->aggregate($request, [
+            $this->twig->aggregate($request, [
                 'errorMessages' => $errorMessages ?? [],
                 'element' => prepareForView($element),
             ])
