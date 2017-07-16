@@ -95,12 +95,16 @@ final class TwigRender
             throw new \RuntimeException('The route has to be resolved');
         }
 
+        if (null === $locale = $request->getAttribute('locale')) {
+            $locale = $route->getArgument('locale');
+        }
+
         return array_replace_recursive([
             'authenticatedUser' => prepareForView($this->authentication->getAuthenticatedUser($request)),
             'csrf' => $this->session->get($request, CsrfErrorResponseMiddleware::CSRF_KEY),
             'debug' => $this->debug,
             'flashMessage' => $this->session->getFlash($request),
-            'locale' => $request->getAttribute('locale'),
+            'locale' => $locale,
             'trail' => $this->getTrailForRoute($route),
         ], $variables);
     }

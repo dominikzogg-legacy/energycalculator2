@@ -7,6 +7,7 @@ use Energycalculator\Controller\UserRelatedCrud\ListController;
 use Energycalculator\Controller\UserRelatedCrud\ReadController;
 use Energycalculator\Controller\UserRelatedCrud\UpdateController;
 use Energycalculator\Controller\AuthController;
+use Energycalculator\Controller\ChartController;
 use Energycalculator\Controller\ComestibleController;
 use Energycalculator\Controller\HomeController;
 use Energycalculator\Controller\UserController;
@@ -24,7 +25,7 @@ use Slim\Container;
 /* @var App $app */
 /* @var Container $container */
 
-$container['comestible.constroller.list'] = function () use ($container) {
+$container['comestible.controller.list'] = function () use ($container) {
     return new ListController(
         'comestible',
         $container['security.authentication'],
@@ -35,7 +36,7 @@ $container['comestible.constroller.list'] = function () use ($container) {
     );
 };
 
-$container['comestible.constroller.create'] = function () use ($container) {
+$container['comestible.controller.create'] = function () use ($container) {
     return new CreateController(
         'comestible',
         $container['security.authentication'],
@@ -51,7 +52,7 @@ $container['comestible.constroller.create'] = function () use ($container) {
     );
 };
 
-$container['comestible.constroller.read'] = function () use ($container) {
+$container['comestible.controller.read'] = function () use ($container) {
     return new ReadController(
         'comestible',
         $container['security.authentication'],
@@ -62,7 +63,7 @@ $container['comestible.constroller.read'] = function () use ($container) {
     );
 };
 
-$container['comestible.constroller.update'] = function () use ($container) {
+$container['comestible.controller.update'] = function () use ($container) {
     return new UpdateController(
         'comestible',
         $container['security.authentication'],
@@ -77,7 +78,7 @@ $container['comestible.constroller.update'] = function () use ($container) {
     );
 };
 
-$container['comestible.constroller.delete'] = function () use ($container) {
+$container['comestible.controller.delete'] = function () use ($container) {
     return new DeleteController(
         'comestible',
         $container['security.authentication'],
@@ -88,7 +89,7 @@ $container['comestible.constroller.delete'] = function () use ($container) {
     );
 };
 
-$container['day.constroller.list'] = function () use ($container) {
+$container['day.controller.list'] = function () use ($container) {
     return new ListController(
         'day',
         $container['security.authentication'],
@@ -99,7 +100,7 @@ $container['day.constroller.list'] = function () use ($container) {
     );
 };
 
-$container['day.constroller.create'] = function () use ($container) {
+$container['day.controller.create'] = function () use ($container) {
     return new CreateController(
         'day',
         $container['security.authentication'],
@@ -115,7 +116,7 @@ $container['day.constroller.create'] = function () use ($container) {
     );
 };
 
-$container['day.constroller.read'] = function () use ($container) {
+$container['day.controller.read'] = function () use ($container) {
     return new ReadController(
         'day',
         $container['security.authentication'],
@@ -126,7 +127,7 @@ $container['day.constroller.read'] = function () use ($container) {
     );
 };
 
-$container['day.constroller.update'] = function () use ($container) {
+$container['day.controller.update'] = function () use ($container) {
     return new UpdateController(
         'day',
         $container['security.authentication'],
@@ -141,7 +142,7 @@ $container['day.constroller.update'] = function () use ($container) {
     );
 };
 
-$container['day.constroller.delete'] = function () use ($container) {
+$container['day.controller.delete'] = function () use ($container) {
     return new DeleteController(
         'day',
         $container['security.authentication'],
@@ -188,6 +189,17 @@ $container[UserController::class] = function () use ($container) {
     );
 };
 
+$container[ChartController::class] = function () use ($container) {
+    return new ChartController(
+        $container['security.authentication'],
+        $container['security.authorization'],
+        $container[DayRepository::class],
+        $container['deserializer'],
+        $container[ErrorResponseHandler::class],
+        $container[TwigRender::class]
+    );
+};
+
 $app->group('/{locale:'.implode('|', $container['locales']).'}', function () use ($app, $container) {
     $app->get('', HomeController::class.':home')->setName('home');
 
@@ -195,20 +207,20 @@ $app->group('/{locale:'.implode('|', $container['locales']).'}', function () use
     $app->post('/logout', AuthController::class.':logout')->setName('logout');
 
     $app->group('/comestibles', function () use ($app, $container) {
-        $app->get('', 'comestible.constroller.list')->setName('comestible_list');
-        $app->map(['GET', 'POST'], '/create', 'comestible.constroller.create')->setName('comestible_create');
-        $app->get('/{id}/read', 'comestible.constroller.read')->setName('comestible_read');
-        $app->map(['GET', 'POST'], '/{id}/update', 'comestible.constroller.update')->setName('comestible_update');
-        $app->post('/{id}/delete', 'comestible.constroller.delete')->setName('comestible_delete');
+        $app->get('', 'comestible.controller.list')->setName('comestible_list');
+        $app->map(['GET', 'POST'], '/create', 'comestible.controller.create')->setName('comestible_create');
+        $app->get('/{id}/read', 'comestible.controller.read')->setName('comestible_read');
+        $app->map(['GET', 'POST'], '/{id}/update', 'comestible.controller.update')->setName('comestible_update');
+        $app->post('/{id}/delete', 'comestible.controller.delete')->setName('comestible_delete');
         $app->get('/findbynamelike', ComestibleController::class.':findByNameLike')->setName('comestible_findbynamelike');
     })->add($container['security.authentication.middleware']);
 
     $app->group('/days', function () use ($app, $container) {
-        $app->get('', 'day.constroller.list')->setName('day_list');
-        $app->map(['GET', 'POST'], '/create', 'day.constroller.create')->setName('day_create');
-        $app->get('/{id}/read', 'day.constroller.read')->setName('day_read');
-        $app->map(['GET', 'POST'], '/{id}/update', 'day.constroller.update')->setName('day_update');
-        $app->post('/{id}/delete', 'day.constroller.delete')->setName('day_delete');
+        $app->get('', 'day.controller.list')->setName('day_list');
+        $app->map(['GET', 'POST'], '/create', 'day.controller.create')->setName('day_create');
+        $app->get('/{id}/read', 'day.controller.read')->setName('day_read');
+        $app->map(['GET', 'POST'], '/{id}/update', 'day.controller.update')->setName('day_update');
+        $app->post('/{id}/delete', 'day.controller.delete')->setName('day_delete');
     })->add($container['security.authentication.middleware']);
 
     $app->group('/users', function () use ($app, $container) {
@@ -217,5 +229,11 @@ $app->group('/{locale:'.implode('|', $container['locales']).'}', function () use
         $app->get('/{id}/read', UserController::class.':read')->setName('user_read');
         $app->map(['GET', 'POST'], '/{id}/update', UserController::class.':update')->setName('user_update');
         $app->post('/{id}/delete', UserController::class.':delete')->setName('user_delete');
+    })->add($container['security.authentication.middleware']);
+
+    $app->group('/chart', function () use ($app, $container) {
+        $app->get('/weight', ChartController::class . ':weight')->setName('chart_weight');
+        $app->get('/calorie', ChartController::class . ':calorie')->setName('chart_calorie');
+        $app->get('/energymix', ChartController::class . ':energymix')->setName('chart_energymix');
     })->add($container['security.authentication.middleware']);
 });

@@ -1,0 +1,15 @@
+<form name="daterange" method="get" action="" class="form-inline" role="form">
+    <div id="daterange">
+        <div class="form-group">
+            <label class="control-label sr-only required" for="daterange_from">{{ "chart.range.from"|translate(locale) }}</label>
+            <input id="daterange_from" name="from" required="required" data-provide="datepicker" data-date-format="yyyy-mm-dd" class="form-control" value="{{ dateRange.from|date("Y-m-d") }}" type="text">
+        </div>
+        &nbsp;
+        <div class="form-group">
+            <label class="control-label sr-only required" for="daterange_to">{{ "chart.range.to"|translate(locale) }}</label>
+            <input id="daterange_to" name="to" required="required" data-provide="datepicker" data-date-format="yyyy-mm-dd" class="form-control" value="{{ dateRange.to|date("Y-m-d") }}" type="text">
+        </div>
+        &nbsp;
+        <button type="submit" id="daterange_update" name="update" class="btn btn-primary">{{ "chart.range.update"|translate(locale) }}</button>
+    </div>
+</form>

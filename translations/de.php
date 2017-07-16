@@ -1,6 +1,17 @@
 <?php
 
 return [
+    'chart.calorie.calorie' => 'Kalorien',
+    'chart.calorie.title' => 'Kalorien',
+    'chart.energymix.carbohydrate' => 'Kohlenhydrate',
+    'chart.energymix.fat' => 'Fett',
+    'chart.energymix.protein' => 'Eiweiss',
+    'chart.energymix.title' => 'Energiemix',
+    'chart.weight.title' => 'Gewichtsverlauf',
+    'chart.weight.weight' => 'Gewicht',
+    'chart.range.from' => 'von',
+    'chart.range.to' => 'bis',
+    'chart.range.update' => 'aktualisieren',
     'comestible.action.create' => 'Nahrungsmittel erfassen',
     'comestible.action.update' => 'Nahrungsmittel bearbeiten',
     'comestible.action.delete' => 'Nahrungsmittel entfernen',
@@ -85,6 +96,10 @@ return [
     'login.flash.invalidcredentials' => 'Unbekannte E-Mail oder falsches Passwort!',
     'login.label.email' => 'E-Mail',
     'login.label.password' => 'Passwort',
+    'nav.charts' => 'Statistiken',
+    'nav.chart.calorie' => 'Kalorien',
+    'nav.chart.energymix' => 'Energiemix',
+    'nav.chart.weight' => 'Gewichtsverlauf',
     'nav.comestibles' => 'Nahrungsmittel',
     'nav.days' => 'Tag',
     'nav.users' => 'Benutzer',

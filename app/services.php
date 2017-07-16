@@ -18,11 +18,13 @@ use Chubbyphp\Validation\Provider\ValidationProvider;
 use Energycalculator\Csrf\CsrfErrorHandler;
 use Energycalculator\Deserialization\ComestibleMapping as DeserializationComestibleMapping;
 use Energycalculator\Deserialization\ComestibleWithinDayMapping as DeserializationComestibleWithinDayMapping;
+use Energycalculator\Deserialization\DateRangeMapping as DeserializationDateRangeMapping;
 use Energycalculator\Deserialization\DayMapping as DeserializationDayMapping;
 use Energycalculator\Deserialization\UserMapping as DeserializationUserMapping;
 use Energycalculator\ErrorHandler\ErrorResponseHandler;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Model\ComestibleWithinDay;
+use Energycalculator\Model\DateRange;
 use Energycalculator\Model\Day;
 use Energycalculator\Model\User;
 use Energycalculator\Provider\TwigProvider;
@@ -78,6 +80,13 @@ $container->extend('deserializer.objectmappings', function (array $objectMapping
         DeserializationComestibleWithinDayMapping::class,
         ComestibleWithinDay::class
     );
+
+    $objectMappings[] = new DeserializationLazyObjectMapping(
+        $container,
+        DeserializationDateRangeMapping::class,
+        DateRange::class
+    );
+
     $objectMappings[] = new DeserializationLazyObjectMapping(
         $container,
         DeserializationDayMapping::class,
@@ -120,6 +129,9 @@ $container->extend('security.authorization.rolehierarchy', function (array $role
         'DAY_CREATE',
         'DAY_UPDATE',
         'DAY_DELETE',
+        'CHART_WEIGHT',
+        'CHART_CALORIE',
+        'CHART_ENERGYMIX',
     ];
 
     return $rolehierarchy;
@@ -181,6 +193,10 @@ $container[DeserializationComestibleMapping::class] = function () use ($containe
 
 $container[DeserializationComestibleWithinDayMapping::class] = function () use ($container) {
     return new DeserializationComestibleWithinDayMapping($container[Resolver::class]);
+};
+
+$container[DeserializationDateRangeMapping::class] = function () use ($container) {
+    return new DeserializationDateRangeMapping();
 };
 
 $container[DeserializationDayMapping::class] = function () use ($container) {
@@ -276,6 +292,10 @@ $container[TwigRender::class] = function () use ($container) {
         $container['debug'],
         $container['session'],
         [
+            'chart_calorie' => ['charts'],
+            'chart_energymix' => ['charts'],
+            'chart_weight' => ['charts'],
+            'charts' => [],
             'comestible_create' => ['comestible_list'],
             'comestible_delete' => ['comestible_list'],
             'comestible_update' => ['comestible_list'],

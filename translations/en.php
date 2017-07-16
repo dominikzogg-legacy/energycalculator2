@@ -1,6 +1,17 @@
 <?php
 
 return [
+    'chart.calorie.calorie' => 'Calories',
+    'chart.calorie.title' => 'Calories',
+    'chart.energymix.carbohydrate' => 'Carbohydrate',
+    'chart.energymix.fat' => 'Fat',
+    'chart.energymix.protein' => 'Protein',
+    'chart.energymix.title' => 'Energymix',
+    'chart.weight.title' => 'Weight history',
+    'chart.weight.weight' => 'Weight',
+    'chart.range.from' => 'from',
+    'chart.range.to' => 'to',
+    'chart.range.update' => 'update',
     'comestible.action.create' => 'Create comestible',
     'comestible.action.update' => 'Edit comestible',
     'comestible.action.delete' => 'Delete comestible',
@@ -85,6 +96,10 @@ return [
     'login.flash.invalidcredentials' => 'Unknown email or wrong password!',
     'login.label.email' => 'E-Mail',
     'login.label.password' => 'Password',
+    'nav.charts' => 'Statistiken',
+    'nav.chart.calorie' => 'Calories',
+    'nav.chart.energymix' => 'Energymix',
+    'nav.chart.weight' => 'Weight history',
     'nav.comestibles' => 'Comestible',
     'nav.days' => 'Day',
     'nav.users' => 'User',

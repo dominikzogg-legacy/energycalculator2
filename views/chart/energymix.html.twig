@@ -1,0 +1,98 @@
+{% extends "@Energycalculator/baselayout.html.twig" %}
+
+{% import "@Energycalculator/_form.html.twig" as forms %}
+
+{% block title %}{{ parent() }} - {{ "chart.energymix.title"|translate(locale) }}{% endblock %}
+
+{% block container %}
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>{{ "chart.energymix.title"|translate(locale) }}</h1>
+            {% include "@Energycalculator/chart/_daterange.html.twig" %}
+            <div id="energymixChartWrapper" class="chartwrapper">
+                <canvas id="energymixChart" width="100" height="100"></canvas>
+                <ul class="chartdescription list-unstyled">
+                    <li>
+                        <span class="square" style="border-color: rgba(240,173,78,1); background-color: rgba(240,173,78,0.5);"></span>
+                        <span>{{ ("chart.energymix.protein")|translate(locale) }}</span>
+                    </li>
+                    <li>
+                        <span class="square" style="border-color: rgba(217,83,79,1); background-color: rgba(217,83,79,0.5);"></span>
+                        <span>{{ ("chart.energymix.carbohydrate")|translate(locale) }}</span>
+                    </li>
+                    <li>
+                        <span class="square" style="border-color: rgba(66,139,202,1); background-color: rgba(66,139,202,0.5);"></span>
+                        <span>{{ ("chart.energymix.fat")|translate(locale) }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {% set stepsize = 10 %}
+    {% set startValue = minenergymix|round - 20 %}
+    {% set stopValue = maxenergymix|round + 20 %}
+    {% set steps = (stopValue - startValue) / stepsize %}
+
+    <script type="text/javascript">
+
+        var $chart = $("#energymixChart");
+        var $chartWrapper = $chart.parent();
+
+        var sizeChart = function(){
+            $chart.attr('width', $chartWrapper.width());
+            $chart.attr('height', $chartWrapper.height());
+        };
+
+        var drawChart = function(){
+            var ctx = $chart.get(0).getContext("2d");
+            new Chart(ctx).Line({
+                labels : [{% for key, day in alldays %}'{{ key }}'{% if not loop.last %},{% endif %}{% endfor %}],
+                datasets : [
+                    {
+                        fillColor : "rgba(240,173,78,0.5)",
+                        strokeColor : "rgba(240,173,78,1)",
+                        pointColor : "rgba(240,173,78,1)",
+                        pointStrokeColor : '#fff',
+                        data : [{% for day in alldays %}{{ day.protein|default(0)|round(1) }}{% if not loop.last %},{% endif %}{% endfor %}]
+                    },
+                    {
+                        fillColor : "rgba(217,83,79,0.5)",
+                        strokeColor : "rgba(217,83,79,1)",
+                        pointColor : "rgba(217,83,79,1)",
+                        pointStrokeColor : '#fff',
+                        data : [{% for day in alldays %}{{ day.carbohydrate|default(0)|round(1) }}{% if not loop.last %},{% endif %}{% endfor %}]
+                    },
+                    {
+                        fillColor : "rgba(66,139,202,0.5)",
+                        strokeColor : "rgba(66,139,202,1)",
+                        pointColor : "rgba(66,139,202,1)",
+                        pointStrokeColor : "#fff",
+                        data : [{% for day in alldays %}{{ day.fat|default(0)|round(1) }}{% if not loop.last %},{% endif %}{% endfor %}]
+                    }
+                ]
+            }, {
+                scaleOverride: true,
+                scaleSteps: {{ steps }},
+                scaleStepWidth: {{ stepsize }},
+                scaleStartValue: {{ startValue }},
+                scaleFontFamily: '"Helvetica Neue",Helvetica,Arial,sans-serif',
+                scaleFontSize: 13,
+                scaleFontColor: '#333',
+                scaleGridLineColor: '#E7E7E7',
+                animation: false
+            });
+        };
+
+        sizeChart();
+        drawChart();
+
+        $(window).resize(function () {
+            sizeChart();
+            drawChart();
+        });
+
+    </script>
+{% endblock %}
