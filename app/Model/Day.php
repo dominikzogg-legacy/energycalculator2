@@ -43,7 +43,7 @@ final class Day implements ModelInterface, OwnedByUserModelInterface, \JsonSeria
         $day->user = new ModelReference();
         $day->date = (new \DateTime())->format('Y-m-d');
         $day->comestiblesWithinDay = new ModelCollection(
-            ComestibleWithinDay::class, 'dayId', $day->id, []
+            ComestibleWithinDay::class, 'dayId', $day->id, ['sorting' => 'ASC']
         );
 
         return $day;

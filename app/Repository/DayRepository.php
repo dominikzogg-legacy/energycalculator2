@@ -33,7 +33,7 @@ final class DayRepository extends AbstractRepository
         $row['user'] = new LazyModelReference($this->resolver, User::class, $row['userId']);
 
         $row['comestiblesWithinDay'] = new LazyModelCollection(
-            $this->resolver, ComestibleWithinDay::class, 'dayId', $row['id'], []
+            $this->resolver, ComestibleWithinDay::class, 'dayId', $row['id'], ['sorting' => 'ASC']
         );
 
         return Day::fromPersistence($row);

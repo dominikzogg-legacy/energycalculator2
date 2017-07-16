@@ -47,6 +47,7 @@ $comestiblesWithinDays->addColumn('id', 'guid');
 $comestiblesWithinDays->addColumn('createdAt', 'datetime');
 $comestiblesWithinDays->addColumn('updatedAt', 'datetime', ['notnull' => false]);
 $comestiblesWithinDays->addColumn('dayId', 'string');
+$comestiblesWithinDays->addColumn('sorting', 'integer');
 $comestiblesWithinDays->addColumn('comestibleId', 'string');
 $comestiblesWithinDays->addColumn('amount', 'decimal', ['precision' => 7, 'scale' => 1]);
 $comestiblesWithinDays->setPrimaryKey(['id']);

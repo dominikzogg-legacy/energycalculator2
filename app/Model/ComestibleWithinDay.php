@@ -17,6 +17,11 @@ final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
     private $dayId;
 
     /**
+     * @var int
+     */
+    private $sorting;
+
+    /**
      * @var ModelReference
      */
     private $comestible;
@@ -43,6 +48,22 @@ final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
 
     private function __construct()
     {
+    }
+
+    /**
+     * @return int
+     */
+    public function getSorting(): int
+    {
+        return $this->sorting;
+    }
+
+    /**
+     * @param int $sorting
+     */
+    public function setSorting(int $sorting)
+    {
+        $this->sorting = $sorting;
     }
 
     /**
@@ -156,6 +177,7 @@ final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
 
         $comestibleWithinDay->id = $data['id'];
         $comestibleWithinDay->dayId = $data['dayId'];
+        $comestibleWithinDay->sorting = $data['sorting'];
         $comestibleWithinDay->comestible = $data['comestible'];
         $comestibleWithinDay->amount = $data['amount'];
 
@@ -170,6 +192,7 @@ final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
         return [
             'id' => $this->id,
             'comestibleId' => $this->comestible->getId(),
+            'sorting' => $this->sorting,
             'dayId' => $this->dayId,
             'amount' => $this->amount,
         ];

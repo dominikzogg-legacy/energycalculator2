@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Energycalculator\Deserialization;
 
+use Chubbyphp\Deserialization\Deserializer\PropertyDeserializerCallback;
 use Chubbyphp\Deserialization\Mapping\ObjectMappingInterface;
 use Chubbyphp\Deserialization\Mapping\PropertyMapping;
 use Chubbyphp\Deserialization\Mapping\PropertyMappingInterface;
@@ -11,6 +12,7 @@ use Chubbyphp\DeserializationModel\Deserializer\PropertyModelReferenceDeserializ
 use Chubbyphp\Model\ResolverInterface;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Model\ComestibleWithinDay;
+use function Symfony\Component\VarDumper\Tests\Fixtures\bar;
 
 final class ComestibleWithinDayMapping implements ObjectMappingInterface
 {
@@ -49,8 +51,39 @@ final class ComestibleWithinDayMapping implements ObjectMappingInterface
     public function getPropertyMappings(): array
     {
         return [
+            new PropertyMapping(
+                'sorting',
+                new PropertyDeserializerCallback(
+                    function ($path) {
+                        $pathParts = $this->pathParts($path);
+                        array_pop($pathParts);
+                        $comestibleWithinDayPart = array_pop($pathParts);
+
+                        return $comestibleWithinDayPart['index'];
+                    }
+                )
+            ),
             new PropertyMapping('comestible', new PropertyModelReferenceDeserializer($this->resolver, Comestible::class)),
             new PropertyMapping('amount'),
         ];
+    }
+
+    /**
+     * @param string $path
+     * @return array
+     */
+    private function pathParts(string $path): array
+    {
+        $pathParts = [];
+        foreach (explode('.', $path) as $rawPathPart) {
+            $matches = [];
+            if (1 === preg_match('/(.+)\[(\d+)\]/', $rawPathPart, $matches)) {
+                $pathParts[] = ['property' => $matches[1], 'index' => (int) $matches[2]];
+            } else {
+                $pathParts[] = ['property' => $rawPathPart];
+            }
+        }
+
+        return $pathParts;
     }
 }

@@ -13,6 +13,7 @@
                 {{ forms.renderInputDate({'model': day, 'property': 'date', 'label': 'day.label.date', 'errorMessages': errorMessages, 'locale': locale}) }}
                 {{ forms.renderInputText({'model': day, 'property': 'weight', 'label': 'day.label.weight', 'errorMessages': errorMessages, 'locale': locale}) }}
                 {{ forms.renderCollection({'model': day, 'property': 'comestiblesWithinDay', 'label': 'day.label.comestiblesWithinDay', 'errorMessages': errorMessages, 'locale': locale, 'fields': [
+                    {'macro': 'renderInputHidden','parameters': {'property': 'sorting'}},
                     {'macro': 'renderAjaxSelect','parameters': {'property': 'comestible','label': 'day.label.comestiblesWithinDay.comestible','route': path_for('comestible_findbynamelike', {'locale': locale})}},
                     {'macro': 'renderInputText','parameters': {'property': 'amount','label': 'day.label.comestiblesWithinDay.amount'}}
                 ]}) }}
