@@ -13,6 +13,7 @@ use Chubbyphp\Session\FlashMessage;
 use Chubbyphp\Session\SessionInterface;
 use Chubbyphp\Validation\ValidatorInterface;
 use Energycalculator\ErrorHandler\ErrorResponseHandler;
+use Energycalculator\Model\Traits\OwnedByUserTrait;
 use Energycalculator\Service\RedirectForPath;
 use Energycalculator\Service\TwigRender;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -121,7 +122,7 @@ final class UpdateController
 
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
-        /** @var ModelInterface $element */
+        /** @var OwnedByUserTrait|ModelInterface $element */
         $element = $this->repository->findOneBy(['id' => $id, 'userId' => $authenticatedUser->getId()]);
         if (null === $element) {
             return $this->errorResponseHandler->errorReponse(
@@ -142,7 +143,7 @@ final class UpdateController
         }
 
         if ('POST' === $request->getMethod()) {
-            /** @var ModelInterface $element */
+            /** @var OwnedByUserTrait|ModelInterface $element */
             $element = $this->deserializer->deserializeByObject($request->getParsedBody(), $element);
 
             $locale = $request->getAttribute('locale');

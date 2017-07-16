@@ -9,6 +9,7 @@ use Chubbyphp\Model\RepositoryInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Energycalculator\ErrorHandler\ErrorResponseHandler;
+use Energycalculator\Model\Traits\OwnedByUserTrait;
 use Energycalculator\Service\TwigRender;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -84,7 +85,7 @@ final class ReadController
 
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
-        /** @var ModelInterface $element */
+        /** @var OwnedByUserTrait|ModelInterface $element */
         $element = $this->repository->findOneBy(['id' => $id, 'userId' => $authenticatedUser->getId()]);
         if (null === $element) {
             return $this->errorResponseHandler->errorReponse(
