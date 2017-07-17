@@ -86,9 +86,9 @@ final class Day implements ModelInterface, OwnedByUserModelInterface, \JsonSeria
     }
 
     /**
-     * @return float
+     * @return float|null
      */
-    public function getWeight(): float
+    public function getWeight()
     {
         return $this->weight;
     }
