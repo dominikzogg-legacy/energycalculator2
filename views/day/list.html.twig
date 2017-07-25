@@ -6,7 +6,6 @@
     {% set days = elements %}
     <div class="row">
         <div class="col-xs-12">
-            {% include "@Energycalculator/_listerrors.html.twig" %}
             <h1>{{ "day.title.list"|translate(locale) }}</h1>
             <div class="button-bar">
                 <a class="btn btn-default btn-sm" href="{{ path_for('day_create', {'locale': locale}) }}" title="{{ "day.action.create"|translate(locale) }}">
