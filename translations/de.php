@@ -152,12 +152,7 @@ return [
     'csrf.missingInBody' => 'CSRF Token: fehlt in der Anfrage',
     'csrf.isNotSame' => 'CSRF Token: der Anfrage weicht von jener in der Session ab',
 
-    'constraint.choice.invalidvalue' => 'Die Wahl {{input}} ist nicht innerhalb der möglichen Auswahl {{choices}}',
-    'constraint.date.invalidformat' => 'Datum "{{input}}" konnte nicht erkannt werden!',
     'constraint.modelcollection.outofrange' => 'Es müssten mindestens "{{min}}" und maximal "{{max}}" Elemente in dieser Kollektion sein. Es sind "{{count}}"!',
     'constraint.modelreference.null' => 'Referenz darf nicht leer sein!',
-    'constraint.notnull.null' => 'Darf nicht leer sein!',
-    'constraint.numericrange.outofrange' => 'Die Nummer "{{input}}" ist nicht innerhalb von min: "{{min}}" und max: "{{max}}"',
-    'constraint.numeric.notnumeric' => 'Keine Zahl!',
     'constraint.uniquemodel.notunique' => 'Dieser Wert wird bereits verwendet!'
 ];

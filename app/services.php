@@ -161,8 +161,20 @@ $container->extend('security.authorization.rolehierarchy', function (array $role
 });
 
 $container->extend('translator.providers', function (array $providers) use ($container) {
-    $providers[] = new LocaleTranslationProvider('de', require $container['translationDir'].'/de.php');
-    $providers[] = new LocaleTranslationProvider('en', require $container['translationDir'].'/en.php');
+    $providers[] = new LocaleTranslationProvider(
+        'de',
+        array_replace(
+            require $container['vendorDir'].'/chubbyphp/chubbyphp-validation/translations/de.php',
+            require $container['translationDir'].'/de.php'
+        )
+    );
+    $providers[] = new LocaleTranslationProvider(
+        'en',
+        array_replace(
+            require $container['vendorDir'].'/chubbyphp/chubbyphp-validation/translations/en.php',
+            require $container['translationDir'].'/en.php'
+        )
+    );
 
     return $providers;
 });

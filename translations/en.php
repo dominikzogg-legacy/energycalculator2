@@ -148,12 +148,7 @@ return [
     'user.title.list' => 'Userlist',
     'user.title.read' => 'View user',
 
-    'constraint.choice.invalidvalue' => 'The choice {{input}} is not within the avaiable {{choices}}',
-    'constraint.date.invalidformat' => 'Date "{{input}}" could not be detected!',
     'constraint.modelcollection.outofrange' => 'There have to at least "{{min}}" and at maximum "{{max}}" elements within this collection. There are "{{count}}"!',
     'constraint.modelreference.null' => 'Reference must not be empty!',
-    'constraint.notnull.null' => 'Must not be empty!',
-    'constraint.numeric.notnumeric' => 'Not numeric!',
-    'constraint.numericrange.outofrange' => 'The number {{input}} is not within min: "{{min}}" and max: "{{max}}"',
     'constraint.uniquemodel.notunique' => 'This value is already in use!'
 ];
