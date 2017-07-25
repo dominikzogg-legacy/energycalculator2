@@ -165,6 +165,7 @@ $container->extend('translator.providers', function (array $providers) use ($con
         'de',
         array_replace(
             require $container['vendorDir'].'/chubbyphp/chubbyphp-validation/translations/de.php',
+            require $container['vendorDir'].'/chubbyphp/chubbyphp-validation-model/translations/de.php',
             require $container['translationDir'].'/de.php'
         )
     );
@@ -172,6 +173,7 @@ $container->extend('translator.providers', function (array $providers) use ($con
         'en',
         array_replace(
             require $container['vendorDir'].'/chubbyphp/chubbyphp-validation/translations/en.php',
+            require $container['vendorDir'].'/chubbyphp/chubbyphp-validation-model/translations/en.php',
             require $container['translationDir'].'/en.php'
         )
     );
