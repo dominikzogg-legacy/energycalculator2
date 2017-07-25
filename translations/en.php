@@ -92,7 +92,7 @@ return [
     'error.424.title' => 'Failed Dependency',
     'error.424.text' => 'This error occurs for example, when a CSRF token is missing.',
     'home.title' => 'Homepage',
-    'home.text' => 'Welcome on the homepage of the Slim Skeleton.',
+    'home.text' => 'Welcome on the homepage of the Energycalculator2.',
     'login.action.login' => 'Login',
     'login.action.logout' => 'Logout',
     'login.flash.invalidcredentials' => 'Unknown email or wrong password!',

@@ -14,7 +14,7 @@ final class ConsoleProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container['console.name'] = 'slim-skeleton';
+        $container['console.name'] = 'energycalculator2';
         $container['console.version'] = '1.0';
 
         $container['console.helpers'] = function () {

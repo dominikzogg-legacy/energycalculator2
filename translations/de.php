@@ -92,7 +92,7 @@ return [
     'error.424.title' => 'Fehlgeschlagene Abhängigkeit',
     'error.424.text' => 'Dieser Fehler tritt zb. auf, wenn ein CSRF Token fehlt.',
     'home.title' => 'Startseite',
-    'home.text' => 'Herzlich Willkommen auf der Startseite des Slim Skeleton.',
+    'home.text' => 'Herzlich Willkommen auf der Startseite des Energycalculator2.',
     'login.action.login' => 'Login',
     'login.action.logout' => 'Logout',
     'login.flash.invalidcredentials' => 'Unbekannte E-Mail oder falsches Passwort!',
