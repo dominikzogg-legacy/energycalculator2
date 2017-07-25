@@ -17,10 +17,13 @@ use Chubbyphp\Validation\Mapping\LazyObjectMapping as ValidationLazyObjectMappin
 use Chubbyphp\Validation\Provider\ValidationProvider;
 use Energycalculator\Csrf\CsrfErrorHandler;
 use Energycalculator\Deserialization\ComestibleMapping as DeserializationComestibleMapping;
+use Energycalculator\Deserialization\ComestibleSearchMapping as DeserializationComestibleSearchMapping;
 use Energycalculator\Deserialization\ComestibleWithinDayMapping as DeserializationComestibleWithinDayMapping;
 use Energycalculator\Deserialization\DateRangeMapping as DeserializationDateRangeMapping;
 use Energycalculator\Deserialization\DayMapping as DeserializationDayMapping;
+use Energycalculator\Deserialization\DaySearchMapping as DeserializationDaySearchMapping;
 use Energycalculator\Deserialization\UserMapping as DeserializationUserMapping;
+use Energycalculator\Deserialization\UserSearchMapping as DeserializationUserSearchMapping;
 use Energycalculator\ErrorHandler\ErrorResponseHandler;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Model\ComestibleWithinDay;
@@ -32,15 +35,21 @@ use Energycalculator\Repository\DayRepository;
 use Energycalculator\Repository\ComestibleRepository;
 use Energycalculator\Repository\ComestibleWithinDayRepository;
 use Energycalculator\Repository\UserRepository;
+use Energycalculator\Search\ComestibleSearch;
+use Energycalculator\Search\DaySearch;
+use Energycalculator\Search\UserSearch;
 use Energycalculator\Security\AuthenticationErrorHandler;
 use Energycalculator\Service\RedirectForPath;
 use Energycalculator\Service\TwigRender;
 use Energycalculator\Twig\NumericExtension;
 use Energycalculator\Twig\RouterExtension;
 use Energycalculator\Validation\ComestibleMapping as ValidationComestibleMapping;
+use Energycalculator\Validation\ComestibleSearchMapping as ValidationComestibleSearchMapping;
 use Energycalculator\Validation\ComestibleWithinDayMapping as ValidationComestibleWithinDayMapping;
 use Energycalculator\Validation\DayMapping as ValidationDayMapping;
+use Energycalculator\Validation\DaySearchMapping as ValidationDaySearchMapping;
 use Energycalculator\Validation\UserMapping as ValidationUserMapping;
+use Energycalculator\Validation\UserSearchMapping as ValidationUserSearchMapping;
 use Negotiation\LanguageNegotiator;
 use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\MonologServiceProvider;
@@ -77,6 +86,11 @@ $container->extend('deserializer.objectmappings', function (array $objectMapping
     );
     $objectMappings[] = new DeserializationLazyObjectMapping(
         $container,
+        DeserializationComestibleSearchMapping::class,
+        ComestibleSearch::class
+    );
+    $objectMappings[] = new DeserializationLazyObjectMapping(
+        $container,
         DeserializationComestibleWithinDayMapping::class,
         ComestibleWithinDay::class
     );
@@ -86,7 +100,6 @@ $container->extend('deserializer.objectmappings', function (array $objectMapping
         DeserializationDateRangeMapping::class,
         DateRange::class
     );
-
     $objectMappings[] = new DeserializationLazyObjectMapping(
         $container,
         DeserializationDayMapping::class,
@@ -94,8 +107,18 @@ $container->extend('deserializer.objectmappings', function (array $objectMapping
     );
     $objectMappings[] = new DeserializationLazyObjectMapping(
         $container,
+        DeserializationDaySearchMapping::class,
+        DaySearch::class
+    );
+    $objectMappings[] = new DeserializationLazyObjectMapping(
+        $container,
         DeserializationUserMapping::class,
         User::class
+    );
+    $objectMappings[] = new DeserializationLazyObjectMapping(
+        $container,
+        DeserializationUserSearchMapping::class,
+        UserSearch::class
     );
 
     return $objectMappings;
@@ -169,6 +192,11 @@ $container->extend('validator.objectmappings', function (array $objectMappings) 
     );
     $objectMappings[] = new ValidationLazyObjectMapping(
         $container,
+        ValidationComestibleSearchMapping::class,
+        ComestibleSearch::class
+    );
+    $objectMappings[] = new ValidationLazyObjectMapping(
+        $container,
         ValidationComestibleWithinDayMapping::class,
         ComestibleWithinDay::class
     );
@@ -179,8 +207,18 @@ $container->extend('validator.objectmappings', function (array $objectMappings) 
     );
     $objectMappings[] = new ValidationLazyObjectMapping(
         $container,
+        ValidationDaySearchMapping::class,
+        DaySearch::class
+    );
+    $objectMappings[] = new ValidationLazyObjectMapping(
+        $container,
         ValidationUserMapping::class,
         User::class
+    );
+    $objectMappings[] = new ValidationLazyObjectMapping(
+        $container,
+        ValidationUserSearchMapping::class,
+        UserSearch::class
     );
 
     return $objectMappings;
@@ -189,6 +227,10 @@ $container->extend('validator.objectmappings', function (array $objectMappings) 
 // deserializer
 $container[DeserializationComestibleMapping::class] = function () use ($container) {
     return new DeserializationComestibleMapping();
+};
+
+$container[DeserializationComestibleSearchMapping::class] = function () use ($container) {
+    return new DeserializationComestibleSearchMapping();
 };
 
 $container[DeserializationComestibleWithinDayMapping::class] = function () use ($container) {
@@ -203,11 +245,19 @@ $container[DeserializationDayMapping::class] = function () use ($container) {
     return new DeserializationDayMapping();
 };
 
+$container[DeserializationDaySearchMapping::class] = function () use ($container) {
+    return new DeserializationDaySearchMapping();
+};
+
 $container[DeserializationUserMapping::class] = function () use ($container) {
     return new DeserializationUserMapping(
         $container['security.authentication.passwordmanager'],
         $container['security.authorization.rolehierarchyresolver']
     );
+};
+
+$container[DeserializationUserSearchMapping::class] = function () use ($container) {
+    return new DeserializationUserSearchMapping();
 };
 
 // repositories
@@ -288,7 +338,7 @@ $container[RoleAuthorization::class] = function ($container) {
 
 $container[TwigRender::class] = function () use ($container) {
     return new TwigRender(
-                $container['security.authentication'],
+        $container['security.authentication'],
         $container['debug'],
         $container['session'],
         [
@@ -322,6 +372,10 @@ $container[ValidationComestibleMapping::class] = function () use ($container) {
     return new ValidationComestibleMapping();
 };
 
+$container[ValidationComestibleSearchMapping::class] = function () use ($container) {
+    return new ValidationComestibleSearchMapping();
+};
+
 $container[ValidationComestibleWithinDayMapping::class] = function () use ($container) {
     return new ValidationComestibleWithinDayMapping();
 };
@@ -330,6 +384,14 @@ $container[ValidationDayMapping::class] = function () use ($container) {
     return new ValidationDayMapping($container[Resolver::class]);
 };
 
+$container[ValidationDaySearchMapping::class] = function () use ($container) {
+    return new ValidationDaySearchMapping();
+};
+
 $container[ValidationUserMapping::class] = function () use ($container) {
     return new ValidationUserMapping($container[Resolver::class]);
+};
+
+$container[ValidationUserSearchMapping::class] = function () use ($container) {
+    return new ValidationUserSearchMapping();
 };

@@ -12,7 +12,6 @@ use Chubbyphp\DeserializationModel\Deserializer\PropertyModelReferenceDeserializ
 use Chubbyphp\Model\ResolverInterface;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Model\ComestibleWithinDay;
-use function Symfony\Component\VarDumper\Tests\Fixtures\bar;
 
 final class ComestibleWithinDayMapping implements ObjectMappingInterface
 {
@@ -70,6 +69,7 @@ final class ComestibleWithinDayMapping implements ObjectMappingInterface
 
     /**
      * @param string $path
+     *
      * @return array
      */
     private function pathParts(string $path): array

@@ -11,6 +11,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Energycalculator\Model\ComestibleWithinDay;
 use Energycalculator\Model\Day;
 use Energycalculator\Model\User;
+use Energycalculator\Search\DaySearch;
 
 final class DayRepository extends AbstractRepository
 {
@@ -49,9 +50,28 @@ final class DayRepository extends AbstractRepository
     }
 
     /**
-     * @param  \DateTime $from
-     * @param  \DateTime $to
-     * @param  User      $user
+     * @param DaySearch $search
+     *
+     * @return DaySearch
+     */
+    public function search(DaySearch $search): DaySearch
+    {
+        $criteria = ['userId' => $search->getUserId()];
+        $orderBy = [$search->getSort() => $search->getOrder()];
+        $limit = $search->getPerPage();
+        $offset = $search->getPage() * $search->getPerPage() - $search->getPerPage();
+
+        $search->setElements($this->findBy($criteria, $orderBy, $limit, $offset));
+        $search->setElementCount($this->countBy($criteria));
+
+        return $search;
+    }
+
+    /**
+     * @param \DateTime $from
+     * @param \DateTime $to
+     * @param User      $user
+     *
      * @return Day[]
      */
     public function getInRange(\DateTime $from, \DateTime $to, User $user = null)
@@ -73,9 +93,10 @@ final class DayRepository extends AbstractRepository
     }
 
     /**
-     * @param  \DateTime $from
-     * @param  \DateTime $to
-     * @param  User      $user
+     * @param \DateTime $from
+     * @param \DateTime $to
+     * @param User      $user
+     *
      * @return QueryBuilder
      */
     public function getInRangeQueryBuilder(\DateTime $from, \DateTime $to, User $user = null)

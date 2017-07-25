@@ -49,11 +49,11 @@ final class ChartController
 
     /**
      * @param AuthenticationInterface $authentication
-     * @param AuthorizationInterface $authorization
-     * @param DayRepository $dayRepository
-     * @param DeserializerInterface $deserializer
-     * @param ErrorResponseHandler $errorResponseHandler
-     * @param TwigRender $twig
+     * @param AuthorizationInterface  $authorization
+     * @param DayRepository           $dayRepository
+     * @param DeserializerInterface   $deserializer
+     * @param ErrorResponseHandler    $errorResponseHandler
+     * @param TwigRender              $twig
      */
     public function __construct(
         AuthenticationInterface $authentication,
@@ -72,8 +72,9 @@ final class ChartController
     }
 
     /**
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
+     *
      * @return Response
      */
     public function weight(Request $request, Response $response): Response
@@ -117,8 +118,9 @@ final class ChartController
     }
 
     /**
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
+     *
      * @return Response
      */
     public function calorie(Request $request, Response $response): Response
@@ -162,8 +164,9 @@ final class ChartController
     }
 
     /**
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
+     *
      * @return Response
      */
     public function energymix(Request $request, Response $response): Response
@@ -207,9 +210,10 @@ final class ChartController
     }
 
     /**
-     * @param  Day[]     $days
-     * @param  \DateTime $from
-     * @param  \DateTime $to
+     * @param Day[]     $days
+     * @param \DateTime $from
+     * @param \DateTime $to
+     *
      * @return Day[]
      */
     private function getDaysOrNull(array $days, \DateTime $from, \DateTime $to): array
@@ -233,7 +237,8 @@ final class ChartController
     }
 
     /**
-     * @param  Day[] $days
+     * @param Day[] $days
+     *
      * @return float
      */
     private function getMinWeight(array $days): float
@@ -249,7 +254,8 @@ final class ChartController
     }
 
     /**
-     * @param  Day[] $days
+     * @param Day[] $days
+     *
      * @return float
      */
     private function getMaxWeight(array $days): float
@@ -265,7 +271,8 @@ final class ChartController
     }
 
     /**
-     * @param  Day[] $days
+     * @param Day[] $days
+     *
      * @return float
      */
     private function getMinCalorie(array $days): float
@@ -281,7 +288,8 @@ final class ChartController
     }
 
     /**
-     * @param  Day[] $days
+     * @param Day[] $days
+     *
      * @return float
      */
     private function getMaxCalorie(array $days): float
@@ -297,7 +305,8 @@ final class ChartController
     }
 
     /**
-     * @param  Day[] $days
+     * @param Day[] $days
+     *
      * @return float
      */
     private function getMinEnergyMix(array $days): float
@@ -319,7 +328,8 @@ final class ChartController
     }
 
     /**
-     * @param  Day[] $days
+     * @param Day[] $days
+     *
      * @return float
      */
     private function getMaxEnergyMix(array $days): float

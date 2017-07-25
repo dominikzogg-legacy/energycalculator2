@@ -21,6 +21,7 @@ return [
     'comestible.error.permissiondenied' => 'This comestible action could not be accomplished cause missing permissions!',
     'comestible.flash.create.failed' => 'Could not create comestible!',
     'comestible.flash.create.success' => 'Comestible successfully created.',
+    'comestible.flash.list.failed' => 'Comestible list could not be loaded!',
     'comestible.flash.update.failed' => 'Could not update comestible!',
     'comestible.flash.update.success' => 'Comestible successfully updated.',
     'comestible.label.actions' => 'Actions',
@@ -57,6 +58,7 @@ return [
     'day.error.permissiondenied' => 'This day action could not be accomplished cause missing permissions!',
     'day.flash.create.failed' => 'Could not create day!',
     'day.flash.create.success' => 'Day successfully created.',
+    'day.flash.list.failed' => 'Day list could not be loaded!',
     'day.flash.update.failed' => 'Could not update day!',
     'day.flash.update.success' => 'Day successfully updated.',
     'day.label.actions' => 'Actions',
@@ -114,6 +116,7 @@ return [
     'user.error.permissiondenied' => 'This user action could not be accomplished cause missing permissions!',
     'user.flash.create.failed' => 'Could not create user!',
     'user.flash.create.success' => 'User successfully created.',
+    'user.flash.list.failed' => 'User list could not be loaded!',
     'user.flash.update.failed' => 'Could not update user!',
     'user.flash.update.success' => 'User successfully updated.',
     'user.label.actions' => 'Actions',
@@ -145,10 +148,12 @@ return [
     'user.title.list' => 'Userlist',
     'user.title.read' => 'View user',
 
+    'constraint.choice.invalidvalue' => 'The choice {{input}} is not within the avaiable {{choices}}',
     'constraint.date.invalidformat' => 'Date "{{input}}" could not be detected!',
     'constraint.modelcollection.outofrange' => 'There have to at least "{{min}}" and at maximum "{{max}}" elements within this collection. There are "{{count}}"!',
     'constraint.modelreference.null' => 'Reference must not be empty!',
     'constraint.notnull.null' => 'Must not be empty!',
     'constraint.numeric.notnumeric' => 'Not numeric!',
+    'constraint.numericrange.outofrange' => 'The number {{input}} is not within min: "{{min}}" and max: "{{max}}"',
     'constraint.uniquemodel.notunique' => 'This value is already in use!'
 ];

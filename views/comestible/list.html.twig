@@ -6,6 +6,7 @@
     {% set comestibles = elements %}
     <div class="row">
         <div class="col-xs-12">
+            {% include "@Energycalculator/_listerrors.html.twig" %}
             <h1>{{ "comestible.title.list"|translate(locale) }}</h1>
             <div class="button-bar">
                 <a class="btn btn-default btn-sm" href="{{ path_for('comestible_create', {'locale': locale}) }}" title="{{ "comestible.action.create"|translate(locale) }}">
@@ -52,6 +53,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {% include "@Energycalculator/_pagination.html.twig" %}
         </div>
     </div>
 {% endblock %}

@@ -21,6 +21,7 @@ return [
     'comestible.error.permissiondenied' => 'Diese Nahrungsmittel Aktion kann aus mangelnden Rechten nicht durchgeführt werden!',
     'comestible.flash.create.failed' => 'Nahrungsmittel konnte nicht erfasst werden!',
     'comestible.flash.create.success' => 'Nahrungsmittel erfolgreich erfasst.',
+    'comestible.flash.list.failed' => 'Nahrungsmittelliste konnte nicht geladen werden!',
     'comestible.flash.update.failed' => 'Nahrungsmittel konnte nicht aktualisiert werden!',
     'comestible.flash.update.success' => 'Nahrungsmittel erfolgreich aktualisiert.',
     'comestible.label.actions' => 'Aktionen',
@@ -57,6 +58,7 @@ return [
     'day.error.permissiondenied' => 'Diese Tag Aktion kann aus mangelnden Rechten nicht durchgeführt werden!',
     'day.flash.create.failed' => 'Tag konnte nicht erfasst werden!',
     'day.flash.create.success' => 'Tag erfolgreich erfasst.',
+    'day.flash.list.failed' => 'Tagesliste konnte nicht geladen werden!',
     'day.flash.update.failed' => 'Tag konnte nicht aktualisiert werden!',
     'day.flash.update.success' => 'Tag erfolgreich aktualisiert.',
     'day.label.actions' => 'Aktionen',
@@ -114,6 +116,7 @@ return [
     'user.error.permissiondenied' => 'Diese Benutzer Aktion kann aus mangelnden Rechten nicht durchgeführt werden!',
     'user.flash.create.failed' => 'Benutzer konnte nicht erfasst werden!',
     'user.flash.create.success' => 'Benutzer erfolgreich erfasst.',
+    'user.flash.list.failed' => 'Benutzerliste konnte nicht geladen werden!',
     'user.flash.update.failed' => 'Benutzer konnte nicht aktualisiert werden!',
     'user.flash.update.success' => 'Benutzer erfolgreich aktualisiert.',
     'user.label.actions' => 'Aktionen',
@@ -149,11 +152,12 @@ return [
     'csrf.missingInBody' => 'CSRF Token: fehlt in der Anfrage',
     'csrf.isNotSame' => 'CSRF Token: der Anfrage weicht von jener in der Session ab',
 
-
+    'constraint.choice.invalidvalue' => 'Die Wahl {{input}} ist nicht innerhalb der möglichen Auswahl {{choices}}',
     'constraint.date.invalidformat' => 'Datum "{{input}}" konnte nicht erkannt werden!',
     'constraint.modelcollection.outofrange' => 'Es müssten mindestens "{{min}}" und maximal "{{max}}" Elemente in dieser Kollektion sein. Es sind "{{count}}"!',
     'constraint.modelreference.null' => 'Referenz darf nicht leer sein!',
     'constraint.notnull.null' => 'Darf nicht leer sein!',
+    'constraint.numericrange.outofrange' => 'Die Nummer "{{input}}" ist nicht innerhalb von min: "{{min}}" und max: "{{max}}"',
     'constraint.numeric.notnumeric' => 'Keine Zahl!',
     'constraint.uniquemodel.notunique' => 'Dieser Wert wird bereits verwendet!'
 ];

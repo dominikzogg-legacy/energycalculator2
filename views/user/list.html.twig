@@ -3,8 +3,10 @@
 {% block title %}{{ parent() }} - {{ "user.title.list"|translate(locale) }}{% endblock %}
 
 {% block container %}
+    {% set users = elements %}
     <div class="row">
         <div class="col-xs-12">
+            {% include "@Energycalculator/_listerrors.html.twig" %}
             <h1>{{ "user.title.list"|translate(locale) }}</h1>
             <div class="button-bar">
                 <a class="btn btn-default btn-sm" href="{{ path_for('user_create', {'locale': locale}) }}" title="{{ "user.action.create"|translate(locale) }}">
@@ -45,6 +47,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {% include "@Energycalculator/_pagination.html.twig" %}
         </div>
     </div>
 {% endblock %}

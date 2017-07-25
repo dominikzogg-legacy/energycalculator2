@@ -17,6 +17,9 @@ use Energycalculator\Model\Day;
 use Energycalculator\Repository\ComestibleRepository;
 use Energycalculator\Repository\DayRepository;
 use Energycalculator\Repository\UserRepository;
+use Energycalculator\Search\ComestibleSearch;
+use Energycalculator\Search\DaySearch;
+use Energycalculator\Search\UserSearch;
 use Energycalculator\Service\RedirectForPath;
 use Energycalculator\Service\TwigRender;
 use Slim\App;
@@ -28,11 +31,15 @@ use Slim\Container;
 $container['comestible.controller.list'] = function () use ($container) {
     return new ListController(
         'comestible',
+        ComestibleSearch::class,
         $container['security.authentication'],
         $container['security.authorization'],
+        $container['deserializer'],
         $container[ErrorResponseHandler::class],
         $container[ComestibleRepository::class],
-        $container[TwigRender::class]
+        $container['session'],
+        $container[TwigRender::class],
+        $container['validator']
     );
 };
 
@@ -92,11 +99,15 @@ $container['comestible.controller.delete'] = function () use ($container) {
 $container['day.controller.list'] = function () use ($container) {
     return new ListController(
         'day',
+        DaySearch::class,
         $container['security.authentication'],
         $container['security.authorization'],
+        $container['deserializer'],
         $container[ErrorResponseHandler::class],
         $container[DayRepository::class],
-        $container[TwigRender::class]
+        $container['session'],
+        $container[TwigRender::class],
+        $container['validator']
     );
 };
 
@@ -176,6 +187,7 @@ $container[ComestibleController::class] = function () use ($container) {
 
 $container[UserController::class] = function () use ($container) {
     return new UserController(
+        UserSearch::class,
         $container['security.authentication'],
         $container['security.authorization'],
         $container['deserializer'],
@@ -232,8 +244,8 @@ $app->group('/{locale:'.implode('|', $container['locales']).'}', function () use
     })->add($container['security.authentication.middleware']);
 
     $app->group('/chart', function () use ($app, $container) {
-        $app->get('/weight', ChartController::class . ':weight')->setName('chart_weight');
-        $app->get('/calorie', ChartController::class . ':calorie')->setName('chart_calorie');
-        $app->get('/energymix', ChartController::class . ':energymix')->setName('chart_energymix');
+        $app->get('/weight', ChartController::class.':weight')->setName('chart_weight');
+        $app->get('/calorie', ChartController::class.':calorie')->setName('chart_calorie');
+        $app->get('/energymix', ChartController::class.':energymix')->setName('chart_energymix');
     })->add($container['security.authentication.middleware']);
 });

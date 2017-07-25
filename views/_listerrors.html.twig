@@ -1,0 +1,9 @@
+{% if errorMessages > 0 %}
+    <div class="errorMessages">
+        {% for field, fieldErrorMessages in errorMessages %}
+            {% for fieldErrorMessage in fieldErrorMessages %}
+                <span class="label label-danger">{{ field }}: {{ fieldErrorMessage }}</span>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endif %}

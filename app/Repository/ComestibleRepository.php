@@ -8,6 +8,7 @@ use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Model\Reference\LazyModelReference;
 use Energycalculator\Model\Comestible;
 use Energycalculator\Model\User;
+use Energycalculator\Search\ComestibleSearch;
 
 final class ComestibleRepository extends AbstractRepository
 {
@@ -31,6 +32,24 @@ final class ComestibleRepository extends AbstractRepository
         $row['user'] = new LazyModelReference($this->resolver, User::class, $row['userId']);
 
         return Comestible::fromPersistence($row);
+    }
+
+    /**
+     * @param ComestibleSearch $search
+     *
+     * @return ComestibleSearch
+     */
+    public function search(ComestibleSearch $search): ComestibleSearch
+    {
+        $criteria = ['userId' => $search->getUserId()];
+        $orderBy = [$search->getSort() => $search->getOrder()];
+        $limit = $search->getPerPage();
+        $offset = $search->getPage() * $search->getPerPage() - $search->getPerPage();
+
+        $search->setElements($this->findBy($criteria, $orderBy, $limit, $offset));
+        $search->setElementCount($this->countBy($criteria));
+
+        return $search;
     }
 
     /**
