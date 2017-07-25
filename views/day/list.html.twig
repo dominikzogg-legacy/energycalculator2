@@ -16,7 +16,6 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>{{ "day.label.id"|translate(locale) }}</th>
                         <th>{{ "day.label.date"|translate(locale) }}</th>
                         <th>{{ "day.label.weight"|translate(locale) }}</th>
                         <th>{{ "day.label.calorie"|translate(locale) }}</th>
@@ -29,7 +28,6 @@
                 <tbody>
                     {% for day in days %}
                         <tr>
-                            <td>{{ day.id }}</td>
                             <td>{{ day.date }}</td>
                             <td>{{ day.weight }}</td>
                             <td>{{ day.calorie }}</td>

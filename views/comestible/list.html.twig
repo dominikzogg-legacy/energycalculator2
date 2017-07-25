@@ -16,7 +16,6 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>{{ "comestible.label.id"|translate(locale) }}</th>
                         <th>{{ "comestible.label.name"|translate(locale) }}</th>
                         <th>{{ "comestible.label.calorie"|translate(locale) }}</th>
                         <th>{{ "comestible.label.protein"|translate(locale) }}</th>
@@ -28,7 +27,6 @@
                 <tbody>
                     {% for comestible in comestibles %}
                         <tr>
-                            <td>{{ comestible.id }}</td>
                             <td>{{ comestible.name }}</td>
                             <td>{{ comestible.calorie }}</td>
                             <td>{{ comestible.protein }}</td>
