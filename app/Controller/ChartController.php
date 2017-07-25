@@ -245,8 +245,8 @@ final class ChartController
     {
         $minWeight = null;
         foreach ($days as $day) {
-            if (null === $minWeight || $day->getWeight() < $minWeight) {
-                $minWeight = $day->getWeight();
+            if (null === $minWeight || (null !== $day->getWeight() && $day->getWeight() < $minWeight)) {
+                $minWeight = (float) $day->getWeight();
             }
         }
 
@@ -262,8 +262,8 @@ final class ChartController
     {
         $maxWeight = null;
         foreach ($days as $day) {
-            if (null === $maxWeight || $day->getWeight() > $maxWeight) {
-                $maxWeight = $day->getWeight();
+            if (null === $maxWeight || (null !== $day->getWeight() && $day->getWeight() > $maxWeight)) {
+                $maxWeight = (float) $day->getWeight();
             }
         }
 
@@ -279,8 +279,8 @@ final class ChartController
     {
         $minCalorie = null;
         foreach ($days as $day) {
-            if (null === $minCalorie || $day->getCalorie() < $minCalorie) {
-                $minCalorie = $day->getCalorie();
+            if (null === $minCalorie || (null !== $day->getCalorie() && $day->getCalorie() < $minCalorie)) {
+                $minCalorie = (float) $day->getCalorie();
             }
         }
 
@@ -296,8 +296,8 @@ final class ChartController
     {
         $maxCalorie = null;
         foreach ($days as $day) {
-            if (null === $maxCalorie || $day->getCalorie() > $maxCalorie) {
-                $maxCalorie = $day->getCalorie();
+            if (null === $maxCalorie || (null !== $day->getCalorie() && $day->getCalorie() > $maxCalorie)) {
+                $maxCalorie = (float) $day->getCalorie();
             }
         }
 
