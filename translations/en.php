@@ -98,7 +98,7 @@ return [
     'login.flash.invalidcredentials' => 'Unknown email or wrong password!',
     'login.label.email' => 'E-Mail',
     'login.label.password' => 'Password',
-    'nav.charts' => 'Statistiken',
+    'nav.charts' => 'Statistics',
     'nav.chart.calorie' => 'Calories',
     'nav.chart.energymix' => 'Energymix',
     'nav.chart.weight' => 'Weight history',
