@@ -33,7 +33,7 @@ final class DaySearch implements \JsonSerializable
     /**
      * @var string
      */
-    private $order = self::ORDER_ASC;
+    private $order = self::ORDER_DESC;
 
     const ORDER_ASC = 'asc';
     const ORDER_DESC = 'desc';
