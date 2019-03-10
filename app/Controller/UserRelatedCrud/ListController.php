@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Energycalculator\Controller\UserRelatedCrud;
 
 use Chubbyphp\Deserialization\DeserializerInterface;
-use Chubbyphp\Model\RepositoryInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Session\FlashMessage;
 use Chubbyphp\Session\SessionInterface;
 use Chubbyphp\Validation\ValidatorInterface;
 use Energycalculator\ErrorHandler\ErrorResponseHandler;
+use Energycalculator\Repository\RepositoryInterface;
 use Energycalculator\Service\TwigRender;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class ListController
 {
@@ -26,7 +26,7 @@ final class ListController
     /**
      * @var string
      */
-    private $searchClass;
+    private $collectionClass;
 
     /**
      * @var AuthenticationInterface
@@ -70,7 +70,7 @@ final class ListController
 
     /**
      * @param string                  $type
-     * @param string                  $searchClass
+     * @param string                  $collectionClass
      * @param AuthenticationInterface $authentication
      * @param AuthorizationInterface  $authorization
      * @param DeserializerInterface   $deserializer
@@ -82,7 +82,7 @@ final class ListController
      */
     public function __construct(
         string $type,
-        string $searchClass,
+        string $collectionClass,
         AuthenticationInterface $authentication,
         AuthorizationInterface $authorization,
         DeserializerInterface $deserializer,
@@ -93,7 +93,7 @@ final class ListController
         ValidatorInterface $validator
     ) {
         $this->type = $type;
-        $this->searchClass = $searchClass;
+        $this->collectionClass = $collectionClass;
         $this->authentication = $authentication;
         $this->authorization = $authorization;
         $this->deserializer = $deserializer;
@@ -126,11 +126,11 @@ final class ListController
             );
         }
 
-        $search = $this->deserializer->deserializeByClass($request->getQueryParams(), $this->searchClass);
-        $search = $search->setUserId($authenticatedUser->getId());
+        $collection = $this->deserializer->denormalize($this->collectionClass, $request->getQueryParams());
+        $collection->setUser($authenticatedUser);
 
         $errorMessages = [];
-        if ([] !== $errors = $this->validator->validateObject($search)) {
+        if ([] !== $errors = $this->validator->validate($collection)) {
             $errorMessages = $this->twig->getErrorMessages($request->getAttribute('locale'), $errors);
 
             $this->session->addFlash(
@@ -138,12 +138,12 @@ final class ListController
                 new FlashMessage(FlashMessage::TYPE_DANGER, sprintf('%s.flash.list.failed', $typeLower))
             );
         } else {
-            $search = $this->repository->search($search);
+            $this->repository->resolveCollection($collection);
         }
 
         return $this->twig->render($response, sprintf('@Energycalculator/%s/list.html.twig', $typeLower),
             $this->twig->aggregate($request, array_replace_recursive(
-                prepareForView($search),
+                \Energycalculator\prepareForView($collection),
                 ['errorMessages' => $errorMessages]
             ))
         );

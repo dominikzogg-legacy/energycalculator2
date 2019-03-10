@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Energycalculator\Controller;
 
 use Chubbyphp\Deserialization\DeserializerInterface;
-use Chubbyphp\Model\ModelInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Security\Authorization\RoleHierarchyResolverInterface;
 use Chubbyphp\Validation\ValidatorInterface;
 use Energycalculator\ErrorHandler\ErrorResponseHandler;
 use Energycalculator\Repository\UserRepository;
-use Energycalculator\Search\UserSearch;
+use Energycalculator\Collection\UserCollection;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Energycalculator\Model\User;
@@ -20,14 +19,10 @@ use Chubbyphp\Session\FlashMessage;
 use Chubbyphp\Session\SessionInterface;
 use Energycalculator\Service\RedirectForPath;
 use Energycalculator\Service\TwigRender;
+use Energycalculator\Repository\RepositoryInterface;
 
 final class UserController
 {
-    /**
-     * @var string
-     */
-    private $searchClass;
-
     /**
      * @var AuthenticationInterface
      */
@@ -69,7 +64,7 @@ final class UserController
     private $twig;
 
     /**
-     * @var UserRepository
+     * @var RepositoryInterface
      */
     private $userRepository;
 
@@ -79,7 +74,6 @@ final class UserController
     private $validator;
 
     /**
-     * @param string                         $searchClass
      * @param AuthenticationInterface        $authentication
      * @param AuthorizationInterface         $authorization
      * @param DeserializerInterface          $deserializer
@@ -88,11 +82,10 @@ final class UserController
      * @param RoleHierarchyResolverInterface $roleHierarchyResolver
      * @param SessionInterface               $session
      * @param TwigRender                     $twig
-     * @param UserRepository                 $userRepository
+     * @param RepositoryInterface            $userRepository
      * @param ValidatorInterface             $validator
      */
     public function __construct(
-        string $searchClass,
         AuthenticationInterface $authentication,
         AuthorizationInterface $authorization,
         DeserializerInterface $deserializer,
@@ -101,10 +94,9 @@ final class UserController
         RoleHierarchyResolverInterface $roleHierarchyResolver,
         SessionInterface $session,
         TwigRender $twig,
-        UserRepository $userRepository,
+        RepositoryInterface $userRepository,
         ValidatorInterface $validator
     ) {
-        $this->searchClass = $searchClass;
         $this->authentication = $authentication;
         $this->authorization = $authorization;
         $this->deserializer = $deserializer;
@@ -129,11 +121,11 @@ final class UserController
             return $this->errorResponseHandler->errorReponse($request, $response, 403, 'user.error.permissiondenied');
         }
 
-        /** @var UserSearch $search */
-        $search = $this->deserializer->deserializeByClass($request->getQueryParams(), $this->searchClass);
+        /** @var UserCollection $collection */
+        $collection = $this->deserializer->denormalize(UserCollection::class, $request->getQueryParams());
 
         $errorMessages = [];
-        if ([] !== $errors = $this->validator->validateObject($search)) {
+        if ([] !== $errors = $this->validator->validate($collection)) {
             $errorMessages = $this->twig->getErrorMessages($request->getAttribute('locale'), $errors);
 
             $this->session->addFlash(
@@ -141,12 +133,12 @@ final class UserController
                 new FlashMessage(FlashMessage::TYPE_DANGER, 'user.flash.list.failed')
             );
         } else {
-            $search = $this->userRepository->search($search);
+            $this->userRepository->resolveCollection($collection);
         }
 
         return $this->twig->render($response, '@Energycalculator/user/list.html.twig',
             $this->twig->aggregate($request, array_replace_recursive(
-                prepareForView($search),
+                \Energycalculator\prepareForView($collection),
                 ['errorMessages' => $errorMessages]
             ))
         );
@@ -173,7 +165,7 @@ final class UserController
 
         return $this->twig->render($response, '@Energycalculator/user/read.html.twig',
             $this->twig->aggregate($request, [
-                'user' => prepareForView($user),
+                'user' => \Energycalculator\prepareForView($user),
             ])
         );
     }
@@ -192,16 +184,18 @@ final class UserController
             return $this->errorResponseHandler->errorReponse($request, $response, 403, 'user.error.permissiondenied');
         }
 
-        $user = User::create();
+        $user = new User();
 
         if ('POST' === $request->getMethod()) {
             /** @var User $user */
-            $user = $this->deserializer->deserializeByObject($request->getParsedBody(), $user);
+            $user = $this->deserializer->denormalize($user, $request->getParsedBody());
 
             $locale = $request->getAttribute('locale');
 
-            if ([] === $errors = $this->validator->validateObject($user)) {
+            if ([] === $errors = $this->validator->validate($user)) {
                 $this->userRepository->persist($user);
+                $this->userRepository->flush();
+
                 $this->session->addFlash(
                     $request,
                     new FlashMessage(FlashMessage::TYPE_SUCCESS, 'user.flash.create.success')
@@ -226,7 +220,7 @@ final class UserController
         return $this->twig->render($response, '@Energycalculator/user/create.html.twig',
             $this->twig->aggregate($request, [
                 'errorMessages' => $errorMessages ?? [],
-                'user' => prepareForView($user),
+                'user' => \Energycalculator\prepareForView($user),
                 'possibleRoles' => array_combine($possibleRoles, $possibleRoles),
             ])
         );
@@ -255,13 +249,15 @@ final class UserController
         }
 
         if ('POST' === $request->getMethod()) {
-            /** @var User|ModelInterface $user */
-            $user = $this->deserializer->deserializeByObject($request->getParsedBody(), $user);
+            /** @var User $user */
+            $user = $this->deserializer->denormalize($user, $request->getParsedBody());
 
             $locale = $request->getAttribute('locale');
 
-            if ([] === $errors = $this->validator->validateObject($user)) {
+            if ([] === $errors = $this->validator->validate($user)) {
                 $this->userRepository->persist($user);
+                $this->userRepository->flush();
+
                 $this->session->addFlash(
                     $request,
                     new FlashMessage(FlashMessage::TYPE_SUCCESS, 'user.flash.update.success')
@@ -286,7 +282,7 @@ final class UserController
         return $this->twig->render($response, '@Energycalculator/user/update.html.twig',
             $this->twig->aggregate($request, [
                 'errorMessages' => $errorMessages ?? [],
-                'user' => prepareForView($user),
+                'user' => \Energycalculator\prepareForView($user),
                 'possibleRoles' => array_combine($possibleRoles, $possibleRoles),
             ])
         );
@@ -324,6 +320,7 @@ final class UserController
         }
 
         $this->userRepository->remove($user);
+        $this->userRepository->flush();
 
         return $this->redirectForPath->get($response, 302, 'user_list', ['locale' => $request->getAttribute('locale')]);
     }

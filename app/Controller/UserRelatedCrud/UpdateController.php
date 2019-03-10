@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace Energycalculator\Controller\UserRelatedCrud;
 
 use Chubbyphp\Deserialization\DeserializerInterface;
-use Chubbyphp\Model\ModelInterface;
-use Chubbyphp\Model\RepositoryInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Session\FlashMessage;
 use Chubbyphp\Session\SessionInterface;
 use Chubbyphp\Validation\ValidatorInterface;
 use Energycalculator\ErrorHandler\ErrorResponseHandler;
-use Energycalculator\Model\Traits\OwnedByUserTrait;
 use Energycalculator\Service\RedirectForPath;
 use Energycalculator\Service\TwigRender;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Energycalculator\Repository\RepositoryInterface;
+use Energycalculator\Model\OwnedByUserModelInterface;
 
 final class UpdateController
 {
@@ -122,8 +121,8 @@ final class UpdateController
 
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
-        /** @var OwnedByUserTrait|ModelInterface $element */
-        $element = $this->repository->findOneBy(['id' => $id, 'userId' => $authenticatedUser->getId()]);
+        /** @var OwnedByUserModelInterface $element */
+        $element = $this->repository->findOneBy(['id' => $id, 'user' => $authenticatedUser->getId()]);
         if (null === $element) {
             return $this->errorResponseHandler->errorReponse(
                 $request,
@@ -143,13 +142,15 @@ final class UpdateController
         }
 
         if ('POST' === $request->getMethod()) {
-            /** @var OwnedByUserTrait|ModelInterface $element */
-            $element = $this->deserializer->deserializeByObject($request->getParsedBody(), $element);
+            /** @var OwnedByUserModelInterface $element */
+            $element = $this->deserializer->denormalize($element, $request->getParsedBody());
 
             $locale = $request->getAttribute('locale');
 
-            if ([] === $errors = $this->validator->validateObject($element)) {
+            if ([] === $errors = $this->validator->validate($element)) {
                 $this->repository->persist($element);
+                $this->repository->flush();
+
                 $this->session->addFlash(
                     $request,
                     new FlashMessage(FlashMessage::TYPE_SUCCESS, sprintf('%s.flash.update.success', $typeLower))
@@ -172,7 +173,7 @@ final class UpdateController
         return $this->twig->render($response, sprintf('@Energycalculator/%s/update.html.twig', $typeLower),
             $this->twig->aggregate($request, [
                 'errorMessages' => $errorMessages ?? [],
-                'element' => prepareForView($element),
+                'element' => \Energycalculator\prepareForView($element),
             ])
         );
     }

@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Energycalculator\Middleware;
 
-use Negotiation\AcceptLanguage;
-use Negotiation\LanguageNegotiator;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Chubbyphp\Negotiation\AcceptLanguageNegotiatorInterface;
 
 final class LocaleMiddleware
 {
     /**
-     * @var LanguageNegotiator
+     * @var AcceptLanguageNegotiatorInterface
      */
-    private $languageNegotiator;
+    private $acceptLanguageNegotiator;
 
     /**
      * @var string
@@ -22,20 +21,13 @@ final class LocaleMiddleware
     private $localeFallback;
 
     /**
-     * @var array
+     * @param AcceptLanguageNegotiatorInterface $acceptLanguageNegotiator
+     * @param string                            $localeFallback
      */
-    private $locales;
-
-    /**
-     * @param LanguageNegotiator $languageNegotiator
-     * @param string             $localeFallback
-     * @param array              $locales
-     */
-    public function __construct(LanguageNegotiator $languageNegotiator, string $localeFallback, array $locales)
+    public function __construct(AcceptLanguageNegotiatorInterface $acceptLanguageNegotiator, string $localeFallback)
     {
-        $this->languageNegotiator = $languageNegotiator;
+        $this->acceptLanguageNegotiator = $acceptLanguageNegotiator;
         $this->localeFallback = $localeFallback;
-        $this->locales = $locales;
     }
 
     /**
@@ -48,10 +40,8 @@ final class LocaleMiddleware
     public function __invoke(Request $request, Response $response, callable $next)
     {
         if ('/' === $request->getUri()->getPath()) {
-            $acceptLanguageHeader = $request->getHeaderLine('Accept-Language');
-            /** @var AcceptLanguage $acceptLanguage */
-            if (null !== $acceptLanguage = $this->languageNegotiator->getBest($acceptLanguageHeader, $this->locales)) {
-                $locale = $acceptLanguage->getType();
+            if (null !== $negotiatedValue = $this->acceptLanguageNegotiator->negotiate($request)) {
+                $locale = $negotiatedValue->getValue();
             } else {
                 $locale = $this->localeFallback;
             }

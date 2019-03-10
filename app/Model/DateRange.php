@@ -5,12 +5,12 @@ namespace Energycalculator\Model;
 final class DateRange
 {
     /**
-     * @var string
+     * @var \DateTime
      */
     private $from;
 
     /**
-     * @var string
+     * @var \DateTime
      */
     private $to;
 
@@ -21,7 +21,7 @@ final class DateRange
      */
     public function setFrom(\DateTime $from): self
     {
-        $this->from = $from->format('Y-m-d');
+        $this->from = $from;
 
         return $this;
     }
@@ -31,7 +31,7 @@ final class DateRange
      */
     public function getFrom(): \DateTime
     {
-        return new \DateTime($this->from);
+        return $this->from;
     }
 
     /**
@@ -41,7 +41,7 @@ final class DateRange
      */
     public function setTo(\DateTime $to): self
     {
-        $this->to = $to->format('Y-m-d');
+        $this->to = $to;
 
         return $this;
     }
@@ -51,6 +51,6 @@ final class DateRange
      */
     public function getTo(): \DateTime
     {
-        return new \DateTime($this->to);
+        return $this->to
     }
 }

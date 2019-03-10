@@ -2,22 +2,34 @@
 
 namespace Energycalculator\Model;
 
-use Chubbyphp\Model\Collection\ModelCollection;
-use Chubbyphp\Model\Collection\ModelCollectionInterface;
-use Chubbyphp\Model\ModelInterface;
-use Chubbyphp\Model\Reference\ModelReference;
-use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
-use Energycalculator\Model\Traits\IdTrait;
-use Energycalculator\Model\Traits\OwnedByUserTrait;
+use Doctrine\Common\Collections\Collection;
 use Ramsey\Uuid\Uuid;
+use Doctrine\Common\Collections\ArrayCollection;
 
-final class Day implements ModelInterface, OwnedByUserModelInterface, \JsonSerializable
+final class Day implements OwnedByUserModelInterface
 {
-    use IdTrait;
-    use OwnedByUserTrait;
-
     /**
      * @var string
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     */
+    private $updatedAt;
+
+    /**
+     * @var User
+     */
+    private $user;
+
+    /**
+     * @var \DateTime
      */
     private $date;
 
@@ -27,42 +39,80 @@ final class Day implements ModelInterface, OwnedByUserModelInterface, \JsonSeria
     private $weight;
 
     /**
-     * @var ModelCollectionInterface
+     * @var Collection
      */
     private $comestiblesWithinDay;
 
-    /**
-     * @param string|null $id
-     *
-     * @return Day
-     */
-    public static function create(string $id = null): Day
+    public function __construct()
     {
-        $day = new self();
-        $day->id = $id ?? (string) Uuid::uuid4();
-        $day->user = new ModelReference();
-        $day->date = (new \DateTime())->format('Y-m-d');
-        $day->comestiblesWithinDay = new ModelCollection(
-            ComestibleWithinDay::class, 'dayId', $day->id, ['sorting' => 'ASC']
-        );
-
-        return $day;
+        $this->id = (string) Uuid::uuid4();
+        $this->createdAt = new \DateTime();
+        $this->date = new \DateTime();
+        $this->comestiblesWithinDay = new ArrayCollection();
     }
 
-    private function __construct()
+    /**
+     * @return string
+     */
+    public function getId(): string
     {
+        return $this->id;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     */
+    public function setUpdatedAt(\DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt(): \DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOwnedByUserId(): string
+    {
+        return $this->user->getId();
     }
 
     /**
      * @param \DateTime $date
-     *
-     * @return Day
      */
-    public function setDate(\DateTime $date): Day
+    public function setDate(\DateTime $date): void
     {
-        $this->date = $date->format('Y-m-d');
-
-        return $this;
+        $this->date = $date;
     }
 
     /**
@@ -70,19 +120,15 @@ final class Day implements ModelInterface, OwnedByUserModelInterface, \JsonSeria
      */
     public function getDate(): \DateTime
     {
-        return new \DateTime($this->date);
+        return $this->date;
     }
 
     /**
      * @param float|null $weight
-     *
-     * @return Day
      */
-    public function setWeight(float $weight = null): Day
+    public function setWeight(?float $weight): void
     {
         $this->weight = $weight;
-
-        return $this;
     }
 
     /**
@@ -95,14 +141,10 @@ final class Day implements ModelInterface, OwnedByUserModelInterface, \JsonSeria
 
     /**
      * @param array $comestiblesWithinDay
-     *
-     * @return Day
      */
-    public function setComestiblesWithinDay(array $comestiblesWithinDay): Day
+    public function setComestiblesWithinDay(array $comestiblesWithinDay): void
     {
-        $this->comestiblesWithinDay->setModels($comestiblesWithinDay);
-
-        return $this;
+        $this->comestiblesWithinDay = new ArrayCollection($comestiblesWithinDay);
     }
 
     /**
@@ -110,13 +152,13 @@ final class Day implements ModelInterface, OwnedByUserModelInterface, \JsonSeria
      */
     public function getComestiblesWithinDay(): array
     {
-        return array_values($this->comestiblesWithinDay->getModels());
+        return $this->comestiblesWithinDay->toArray();
     }
 
     /**
      * @return float
      */
-    public function getCalorie()
+    public function getCalorie(): float
     {
         $calorie = 0;
         foreach ($this->getComestiblesWithinDay() as $comestiblesWithinDay) {
@@ -129,9 +171,9 @@ final class Day implements ModelInterface, OwnedByUserModelInterface, \JsonSeria
     /**
      * @return float
      */
-    public function getProtein()
+    public function getProtein(): float
     {
-        $protein = 0;
+        $protein = 0.0;
         foreach ($this->getComestiblesWithinDay() as $comestiblesWithinDay) {
             $protein += $comestiblesWithinDay->getProtein();
         }
@@ -142,9 +184,9 @@ final class Day implements ModelInterface, OwnedByUserModelInterface, \JsonSeria
     /**
      * @return float
      */
-    public function getCarbohydrate()
+    public function getCarbohydrate(): float
     {
-        $carbohydrate = 0;
+        $carbohydrate = 0.0;
         foreach ($this->getComestiblesWithinDay() as $comestiblesWithinDay) {
             $carbohydrate += $comestiblesWithinDay->getCarbohydrate();
         }
@@ -155,9 +197,9 @@ final class Day implements ModelInterface, OwnedByUserModelInterface, \JsonSeria
     /**
      * @return float
      */
-    public function getFat()
+    public function getFat(): float
     {
-        $fat = 0;
+        $fat = 0.0;
         foreach ($this->getComestiblesWithinDay() as $comestiblesWithinDay) {
             $fat += $comestiblesWithinDay->getFat();
         }
@@ -166,52 +208,25 @@ final class Day implements ModelInterface, OwnedByUserModelInterface, \JsonSeria
     }
 
     /**
-     * @param array $data
-     *
-     * @return Day|ModelInterface
-     */
-    public static function fromPersistence(array $data): ModelInterface
-    {
-        $day = new self();
-
-        $day->id = $data['id'];
-        $day->date = $data['date'];
-        $day->weight = $data['weight'];
-        $day->comestiblesWithinDay = $data['comestiblesWithinDay'];
-        $day->user = $data['user'];
-
-        return $day;
-    }
-
-    /**
-     * @return array
-     */
-    public function toPersistence(): array
-    {
-        return [
-            'id' => $this->id,
-            'userId' => $this->user->getId(),
-            'date' => $this->date,
-            'weight' => $this->weight,
-            'comestiblesWithinDay' => $this->comestiblesWithinDay,
-        ];
-    }
-
-    /**
      * @return array
      */
     public function jsonSerialize(): array
     {
+        $comestiblesWithinDay = [];
+        foreach ($this->getComestiblesWithinDay() as $comestiblesWithinDay) {
+            $comestiblesWithinDay[] = $comestiblesWithinDay->jsonSerialize();
+        }
+
         return [
             'id' => $this->id,
             'user' => $this->user->jsonSerialize(),
-            'date' => $this->date,
+            'date' => $this->date->format('Y-m-d'),
             'weight' => $this->weight,
             'calorie' => $this->getCalorie(),
             'protein' => $this->getProtein(),
             'carbohydrate' => $this->getCarbohydrate(),
             'fat' => $this->getFat(),
-            'comestiblesWithinDay' => $this->comestiblesWithinDay->jsonSerialize(),
+            'comestiblesWithinDay' => $comestiblesWithinDay,
         ];
     }
 }

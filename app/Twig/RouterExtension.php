@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Energycalculator\Twig;
 
-use Slim\Router;
+use Slim\Interfaces\RouterInterface;
 
 final class RouterExtension extends \Twig_Extension
 {
     /**
-     * @var Router
+     * @var RouterInterface
      */
     private $router;
 
     /**
-     * @param Router $router
+     * @param RouterInterface $router
      */
-    public function __construct(Router $router)
+    public function __construct(RouterInterface $router)
     {
         $this->router = $router;
     }

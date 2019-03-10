@@ -1,6 +1,13 @@
-.idea
+.DS_Store
+.idea/
 .php_cs.cache
-cache
-vendor
+.phpunit.result.cache
+.vscode/
+build/
 composer.lock
-var
+composer.symlink
+phpunit
+phpunit.xml
+var/cache
+var/log
+vendor/

@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Energycalculator\Controller\UserRelatedCrud;
 
-use Chubbyphp\Model\ModelInterface;
-use Chubbyphp\Model\RepositoryInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Energycalculator\ErrorHandler\ErrorResponseHandler;
-use Energycalculator\Model\Traits\OwnedByUserTrait;
 use Energycalculator\Service\RedirectForPath;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Energycalculator\Repository\RepositoryInterface;
+use Energycalculator\Model\OwnedByUserModelInterface;
 
 final class DeleteController
 {
@@ -85,8 +84,8 @@ final class DeleteController
 
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
-        /** @var OwnedByUserTrait|ModelInterface $element */
-        $element = $this->repository->findOneBy(['id' => $id, 'userId' => $authenticatedUser->getId()]);
+        /** @var OwnedByUserModelInterface $element */
+        $element = $this->repository->findOneBy(['id' => $id, 'user' => $authenticatedUser->getId()]);
         if (null === $element) {
             return $this->errorResponseHandler->errorReponse(
                 $request,
@@ -106,6 +105,7 @@ final class DeleteController
         }
 
         $this->repository->remove($element);
+        $this->repository->flush();
 
         return $this->redirectForPath->get(
             $response, 302, sprintf('%s_list', $typeLower), ['locale' => $request->getAttribute('locale')]

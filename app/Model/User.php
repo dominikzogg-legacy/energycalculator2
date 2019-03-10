@@ -2,19 +2,25 @@
 
 namespace Energycalculator\Model;
 
-use Chubbyphp\Model\ModelInterface;
-use Chubbyphp\Security\Authentication\UserPasswordInterface;
-use Energycalculator\Model\Traits\IdTrait;
 use Ramsey\Uuid\Uuid;
+use Chubbyphp\Security\UserInterface;
 
-final class User implements UserPasswordInterface, \JsonSerializable
+final class User implements ModelInterface, UserInterface
 {
-    use IdTrait;
-
     /**
      * @var string
      */
-    private $username;
+    private $id;
+
+    /**
+     * @var \DateTime
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     */
+    private $updatedAt;
 
     /**
      * @var string
@@ -31,42 +37,50 @@ final class User implements UserPasswordInterface, \JsonSerializable
      */
     private $roles;
 
-    /**
-     * @param string|null $id
-     *
-     * @return User
-     */
-    public static function create(string $id = null): User
+    public function __construct()
     {
-        $user = new self();
-        $user->id = $id ?? (string) Uuid::uuid4();
-
-        return $user;
-    }
-
-    private function __construct()
-    {
+        $this->id = (string) Uuid::uuid4();
+        $this->createdAt = new \DateTime();
     }
 
     /**
      * @return string
      */
-    public function getUsername(): string
+    public function getId(): string
     {
-        return $this->username;
+        return $this->id;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     */
+    public function setUpdatedAt(\DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt(): \DateTime
+    {
+        return $this->updatedAt;
     }
 
     /**
      * @param string $email
-     *
-     * @return User
      */
-    public function setEmail(string $email): User
+    public function setEmail(string $email): void
     {
         $this->email = $email;
-        $this->username = $email;
-
-        return $this;
     }
 
     /**
@@ -78,15 +92,19 @@ final class User implements UserPasswordInterface, \JsonSerializable
     }
 
     /**
-     * @param string $password
-     *
-     * @return User
+     * @return string
      */
-    public function setPassword(string $password): User
+    public function getUsername(): string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $password
+     */
+    public function setPassword(string $password): void
     {
         $this->password = $password;
-
-        return $this;
     }
 
     /**
@@ -107,46 +125,10 @@ final class User implements UserPasswordInterface, \JsonSerializable
 
     /**
      * @param array $roles
-     *
-     * @return User
      */
-    public function setRoles(array $roles): User
+    public function setRoles(array $roles): void
     {
         $this->roles = $roles;
-
-        return $this;
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return User|ModelInterface
-     */
-    public static function fromPersistence(array $data): ModelInterface
-    {
-        $user = new self();
-
-        $user->id = $data['id'];
-        $user->username = $data['username'];
-        $user->email = $data['email'];
-        $user->password = $data['password'];
-        $user->roles = json_decode($data['roles'], true);
-
-        return $user;
-    }
-
-    /**
-     * @return array
-     */
-    public function toPersistence(): array
-    {
-        return [
-            'id' => $this->id,
-            'username' => $this->username,
-            'email' => $this->email,
-            'password' => $this->password,
-            'roles' => json_encode($this->roles),
-        ];
     }
 
     /**
@@ -156,7 +138,6 @@ final class User implements UserPasswordInterface, \JsonSerializable
     {
         return [
             'id' => $this->id,
-            'username' => $this->username,
             'email' => $this->email,
             'roles' => $this->roles,
         ];
