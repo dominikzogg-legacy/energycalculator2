@@ -2,17 +2,29 @@
 
 namespace Energycalculator\Model;
 
-use Chubbyphp\Model\ModelInterface;
-use Chubbyphp\Model\Reference\ModelReference;
-use Chubbyphp\Security\Authorization\OwnedByUserModelInterface;
-use Energycalculator\Model\Traits\IdTrait;
-use Energycalculator\Model\Traits\OwnedByUserTrait;
 use Ramsey\Uuid\Uuid;
 
-final class Comestible implements ModelInterface, OwnedByUserModelInterface, \JsonSerializable
+final class Comestible implements OwnedByUserModelInterface
 {
-    use IdTrait;
-    use OwnedByUserTrait;
+    /**
+     * @var string
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     */
+    private $updatedAt;
+
+    /**
+     * @var User
+     */
+    private $user;
 
     /**
      * @var string
@@ -44,35 +56,74 @@ final class Comestible implements ModelInterface, OwnedByUserModelInterface, \Js
      */
     private $defaultValue;
 
-    /**
-     * @param string|null $id
-     *
-     * @return Comestible
-     */
-    public static function create(string $id = null): Comestible
+    public function __construct()
     {
-        $comestible = new self();
-
-        $comestible->id = $id ?? (string) Uuid::uuid4();
-        $comestible->user = new ModelReference();
-
-        return $comestible;
+        $this->id = (string) Uuid::uuid4();
+        $this->createdAt = new \DateTime();
     }
 
-    private function __construct()
+    /**
+     * @return string
+     */
+    public function getId(): string
     {
+        return $this->id;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     */
+    public function setUpdatedAt(\DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt(): \DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOwnedByUserId(): string
+    {
+        return $this->user->getId();
     }
 
     /**
      * @param string $name
-     *
-     * @return Comestible
      */
-    public function setName(string $name): Comestible
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
     /**
@@ -85,14 +136,10 @@ final class Comestible implements ModelInterface, OwnedByUserModelInterface, \Js
 
     /**
      * @param float $calorie
-     *
-     * @return Comestible
      */
-    public function setCalorie(float $calorie): Comestible
+    public function setCalorie(float $calorie): void
     {
         $this->calorie = $calorie;
-
-        return $this;
     }
 
     /**
@@ -105,14 +152,10 @@ final class Comestible implements ModelInterface, OwnedByUserModelInterface, \Js
 
     /**
      * @param float $protein
-     *
-     * @return Comestible
      */
-    public function setProtein(float $protein): Comestible
+    public function setProtein(float $protein): void
     {
         $this->protein = $protein;
-
-        return $this;
     }
 
     /**
@@ -125,14 +168,10 @@ final class Comestible implements ModelInterface, OwnedByUserModelInterface, \Js
 
     /**
      * @param float $carbohydrate
-     *
-     * @return Comestible
      */
-    public function setCarbohydrate(float $carbohydrate): Comestible
+    public function setCarbohydrate(float $carbohydrate): void
     {
         $this->carbohydrate = $carbohydrate;
-
-        return $this;
     }
 
     /**
@@ -145,14 +184,10 @@ final class Comestible implements ModelInterface, OwnedByUserModelInterface, \Js
 
     /**
      * @param float $fat
-     *
-     * @return Comestible
      */
-    public function setFat(float $fat): Comestible
+    public function setFat(float $fat): void
     {
         $this->fat = $fat;
-
-        return $this;
     }
 
     /**
@@ -165,14 +200,10 @@ final class Comestible implements ModelInterface, OwnedByUserModelInterface, \Js
 
     /**
      * @param float|null $defaultValue
-     *
-     * @return Comestible
      */
-    public function setDefaultValue(float $defaultValue = null): Comestible
+    public function setDefaultValue(?float $defaultValue): void
     {
         $this->defaultValue = $defaultValue;
-
-        return $this;
     }
 
     /**
@@ -181,44 +212,6 @@ final class Comestible implements ModelInterface, OwnedByUserModelInterface, \Js
     public function getDefaultValue()
     {
         return $this->defaultValue;
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return Comestible|ModelInterface
-     */
-    public static function fromPersistence(array $data): ModelInterface
-    {
-        $comestible = new self();
-
-        $comestible->id = $data['id'];
-        $comestible->user = $data['user'];
-        $comestible->name = $data['name'];
-        $comestible->calorie = $data['calorie'];
-        $comestible->protein = $data['protein'];
-        $comestible->carbohydrate = $data['carbohydrate'];
-        $comestible->fat = $data['fat'];
-        $comestible->defaultValue = $data['defaultValue'];
-
-        return $comestible;
-    }
-
-    /**
-     * @return array
-     */
-    public function toPersistence(): array
-    {
-        return [
-            'id' => $this->id,
-            'userId' => $this->user->getId(),
-            'name' => $this->name,
-            'calorie' => $this->calorie,
-            'protein' => $this->protein,
-            'carbohydrate' => $this->carbohydrate,
-            'fat' => $this->fat,
-            'defaultValue' => $this->defaultValue,
-        ];
     }
 
     /**

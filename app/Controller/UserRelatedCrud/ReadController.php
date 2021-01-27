@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Energycalculator\Controller\UserRelatedCrud;
 
-use Chubbyphp\Model\ModelInterface;
-use Chubbyphp\Model\RepositoryInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Energycalculator\ErrorHandler\ErrorResponseHandler;
-use Energycalculator\Model\Traits\OwnedByUserTrait;
 use Energycalculator\Service\TwigRender;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Energycalculator\Repository\RepositoryInterface;
+use Energycalculator\Model\OwnedByUserModelInterface;
 
 final class ReadController
 {
@@ -85,8 +84,8 @@ final class ReadController
 
         $authenticatedUser = $this->authentication->getAuthenticatedUser($request);
 
-        /** @var OwnedByUserTrait|ModelInterface $element */
-        $element = $this->repository->findOneBy(['id' => $id, 'userId' => $authenticatedUser->getId()]);
+        /** @var OwnedByUserModelInterface $element */
+        $element = $this->repository->findOneBy(['id' => $id, 'user' => $authenticatedUser->getId()]);
         if (null === $element) {
             return $this->errorResponseHandler->errorReponse(
                 $request,
@@ -107,7 +106,7 @@ final class ReadController
 
         return $this->twig->render($response, sprintf('@Energycalculator/%s/read.html.twig', $typeLower),
             $this->twig->aggregate($request, [
-                'element' => prepareForView($element),
+                'element' => \Energycalculator\prepareForView($element),
             ])
         );
     }

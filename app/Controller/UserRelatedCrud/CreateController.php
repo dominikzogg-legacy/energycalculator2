@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Energycalculator\Controller\UserRelatedCrud;
 
 use Chubbyphp\Deserialization\DeserializerInterface;
-use Chubbyphp\Model\ModelInterface;
-use Chubbyphp\Model\RepositoryInterface;
 use Chubbyphp\Security\Authentication\AuthenticationInterface;
 use Chubbyphp\Security\Authorization\AuthorizationInterface;
 use Chubbyphp\Session\FlashMessage;
@@ -18,6 +16,9 @@ use Energycalculator\Service\RedirectForPath;
 use Energycalculator\Service\TwigRender;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Energycalculator\Repository\RepositoryInterface;
+use Energycalculator\Factory\ModelFactoryInterface;
+use Energycalculator\Model\OwnedByUserModelInterface;
 
 final class CreateController
 {
@@ -47,7 +48,7 @@ final class CreateController
     private $errorResponseHandler;
 
     /**
-     * @var callable
+     * @var ModelFactoryInterface
      */
     private $factory;
 
@@ -82,7 +83,7 @@ final class CreateController
      * @param AuthorizationInterface  $authorization
      * @param DeserializerInterface   $deserializer
      * @param ErrorResponseHandler    $errorResponseHandler
-     * @param callable                $factory
+     * @param ModelFactoryInterface   $factory
      * @param RedirectForPath         $redirectForPath
      * @param RepositoryInterface     $repository
      * @param SessionInterface        $session
@@ -95,7 +96,7 @@ final class CreateController
         AuthorizationInterface $authorization,
         DeserializerInterface $deserializer,
         ErrorResponseHandler $errorResponseHandler,
-        callable $factory,
+        ModelFactoryInterface $factory,
         RedirectForPath $redirectForPath,
         RepositoryInterface $repository,
         SessionInterface $session,
@@ -137,21 +138,20 @@ final class CreateController
             );
         }
 
-        /** @var callable $factory */
-        $factory = $this->factory;
-
-        /** @var OwnedByUserTrait|ModelInterface $element */
-        $element = $factory();
+        /** @var OwnedByUserModelInterface $element */
+        $element = $this->factory->create();
         $element->setUser($authenticatedUser);
 
         if ('POST' === $request->getMethod()) {
             /** @var OwnedByUserTrait|ModelInterface $element */
-            $element = $this->deserializer->deserializeByObject($request->getParsedBody(), $element);
+            $element = $this->deserializer->denormalize($element, $request->getParsedBody());
 
             $locale = $request->getAttribute('locale');
 
-            if ([] === $errors = $this->validator->validateObject($element)) {
+            if ([] === $errors = $this->validator->validate($element)) {
                 $this->repository->persist($element);
+                $this->repository->flush();
+
                 $this->session->addFlash(
                     $request,
                     new FlashMessage(FlashMessage::TYPE_SUCCESS, sprintf('%s.flash.create.success', $typeLower))
@@ -174,7 +174,7 @@ final class CreateController
         return $this->twig->render($response, sprintf('@Energycalculator/%s/create.html.twig', $typeLower),
             $this->twig->aggregate($request, [
                 'errorMessages' => $errorMessages ?? [],
-                'element' => prepareForView($element),
+                'element' => \Energycalculator\prepareForView($element),
             ])
         );
     }

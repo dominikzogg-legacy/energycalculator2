@@ -4,55 +4,81 @@ declare(strict_types=1);
 
 namespace Energycalculator\Repository;
 
-use Chubbyphp\Model\ModelInterface;
-use Energycalculator\Model\User;
-use Energycalculator\Search\UserSearch;
+use Chubbyphp\Security\UserRepositoryInterface;
+use Energycalculator\Collection\CollectionInterface;
+use Energycalculator\Model\ModelInterface;
 
-final class UserRepository extends AbstractRepository
+class UserRepository implements RepositoryInterface, UserRepositoryInterface
 {
     /**
-     * @param string $modelClass
-     *
-     * @return bool
+     * @var RepositoryInterface
      */
-    public function isResponsible(string $modelClass): bool
+    private $repository;
+
+    /**
+     * @param RepositoryInterface $repository
+     */
+    public function __construct(RepositoryInterface $repository)
     {
-        return $modelClass === User::class;
+        $this->repository = $repository;
     }
 
     /**
-     * @param array $row
-     *
-     * @return ModelInterface
+     * @param CollectionInterface $collection
      */
-    protected function fromPersistence(array $row): ModelInterface
+    public function resolveCollection(CollectionInterface $collection): void
     {
-        return User::fromPersistence($row);
+        $this->repository->resolveCollection($collection);
     }
 
     /**
-     * @return string
+     * @param string $id
+     *
+     * @return ModelInterface|null
      */
-    protected function getTable(): string
+    public function find(string $id): ?ModelInterface
     {
-        return 'users';
+        return $this->repository->find($id);
     }
 
     /**
-     * @param UserSearch $search
+     * @param array $criteria
      *
-     * @return UserSearch
+     * @return ModelInterface|null
      */
-    public function search(UserSearch $search): UserSearch
+    public function findOneBy(array $criteria): ?ModelInterface
     {
-        $criteria = [];
-        $orderBy = [$search->getSort() => $search->getOrder()];
-        $limit = $search->getPerPage();
-        $offset = $search->getPage() * $search->getPerPage() - $search->getPerPage();
+        return $this->repository->findOneBy($criteria);
+    }
 
-        $search->setElements($this->findBy($criteria, $orderBy, $limit, $offset));
-        $search->setElementCount($this->countBy($criteria));
+    /**
+     * @param ModelInterface $model
+     */
+    public function persist(ModelInterface $model): void
+    {
+        $this->repository->persist($model);
+    }
 
-        return $search;
+    /**
+     * @param ModelInterface $model
+     */
+    public function remove(ModelInterface $model): void
+    {
+        $this->repository->remove($model);
+    }
+
+    public function flush(): void
+    {
+        $this->repository->flush();
+    }
+
+    /**
+     * @param string $username
+     *
+     * @return UserInterface|null
+     */
+    public function findByUsername(string $username)
+    {
+        return $this->repository->findOneBy(['email' => $username]);
     }
 }

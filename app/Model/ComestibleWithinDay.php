@@ -2,19 +2,34 @@
 
 namespace Energycalculator\Model;
 
-use Chubbyphp\Model\ModelInterface;
-use Chubbyphp\Model\Reference\ModelReference;
-use Energycalculator\Model\Traits\IdTrait;
 use Ramsey\Uuid\Uuid;
 
-final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
+final class ComestibleWithinDay implements ModelInterface
 {
-    use IdTrait;
-
     /**
      * @var string
      */
-    private $dayId;
+    private $id;
+
+    /**
+     * @var \DateTime
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     */
+    private $updatedAt;
+
+    /**
+     * @var Day
+     */
+    private $day;
+
+    /**
+     * @var Day
+     */
+    private $comestible;
 
     /**
      * @var int
@@ -22,32 +37,78 @@ final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
     private $sorting;
 
     /**
-     * @var ModelReference
-     */
-    private $comestible;
-
-    /**
      * @var float
      */
     private $amount = 0;
 
-    /**
-     * @param string|null $id
-     *
-     * @return ComestibleWithinDay
-     */
-    public static function create(string $id = null): ComestibleWithinDay
+    public function __construct()
     {
-        $comestibleWithinDay = new self();
-
-        $comestibleWithinDay->id = $id ?? (string) Uuid::uuid4();
-        $comestibleWithinDay->comestible = new ModelReference();
-
-        return $comestibleWithinDay;
+        $this->id = (string) Uuid::uuid4();
+        $this->createdAt = new \DateTime();
     }
 
-    private function __construct()
+    /**
+     * @return string
+     */
+    public function getId(): string
     {
+        return $this->id;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     */
+    public function setUpdatedAt(\DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt(): \DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param DayInterface $day
+     */
+    public function setDay(DayInterface $day): void
+    {
+        $this->day = $day;
+    }
+
+    /**
+     * @return DayInterface|null
+     */
+    public function getDay()
+    {
+        return $this->day;
+    }
+
+    /**
+     * @param ComestibleInterface $comestible
+     */
+    public function setComestible(ComestibleInterface $comestible): void
+    {
+        $this->comestible = $comestible;
+    }
+
+    /**
+     * @return ComestibleInterface|null
+     */
+    public function getComestible()
+    {
+        return $this->comestible;
     }
 
     /**
@@ -61,29 +122,9 @@ final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
     /**
      * @param int $sorting
      */
-    public function setSorting(int $sorting)
+    public function setSorting(int $sorting): void
     {
         $this->sorting = $sorting;
-    }
-
-    /**
-     * @param Comestible $comestible
-     *
-     * @return ComestibleWithinDay
-     */
-    public function setComestible(Comestible $comestible): ComestibleWithinDay
-    {
-        $this->comestible = $comestible;
-
-        return $this;
-    }
-
-    /**
-     * @return Comestible|ModelInterface|null
-     */
-    public function getComestible()
-    {
-        return $this->comestible->getModel();
     }
 
     /**
@@ -91,10 +132,6 @@ final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
      */
     public function getName()
     {
-        if (null === $this->getComestible()) {
-            return '___NO_COMESTIBLE___';
-        }
-
         return $this->getComestible()->getName();
     }
 
@@ -167,44 +204,13 @@ final class ComestibleWithinDay implements ModelInterface, \JsonSerializable
     }
 
     /**
-     * @param array $data
-     *
-     * @return Comestible|ModelInterface
-     */
-    public static function fromPersistence(array $data): ModelInterface
-    {
-        $comestibleWithinDay = new self();
-
-        $comestibleWithinDay->id = $data['id'];
-        $comestibleWithinDay->dayId = $data['dayId'];
-        $comestibleWithinDay->sorting = $data['sorting'];
-        $comestibleWithinDay->comestible = $data['comestible'];
-        $comestibleWithinDay->amount = $data['amount'];
-
-        return $comestibleWithinDay;
-    }
-
-    /**
-     * @return array
-     */
-    public function toPersistence(): array
-    {
-        return [
-            'id' => $this->id,
-            'comestibleId' => $this->comestible->getId(),
-            'sorting' => $this->sorting,
-            'dayId' => $this->dayId,
-            'amount' => $this->amount,
-        ];
-    }
-
-    /**
      * @return array
      */
     public function jsonSerialize(): array
     {
         return [
             'id' => $this->id,
+            'day' => $this->day->jsonSerialize(),
             'comestible' => $this->comestible->jsonSerialize(),
             'name' => $this->getName(),
             'calorie' => $this->getCalorie(),

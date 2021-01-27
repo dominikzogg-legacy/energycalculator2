@@ -12,6 +12,7 @@ use Chubbyphp\Validation\Error\NestedErrorMessages;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Route;
+use Twig\Environment;
 
 final class TwigRender
 {
@@ -41,7 +42,7 @@ final class TwigRender
     private $translator;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $twig;
 
@@ -51,6 +52,7 @@ final class TwigRender
      * @param SessionInterface        $session
      * @param array                   $trail
      * @param TranslatorInterface     $translator
+     * @param Environment             $twig
      */
     public function __construct(
         AuthenticationInterface $authentication,
@@ -58,7 +60,7 @@ final class TwigRender
         SessionInterface $session,
         array $trail,
         TranslatorInterface $translator,
-        \Twig_Environment $twig
+        Environment $twig
     ) {
         $this->authentication = $authentication;
         $this->debug = $debug;
@@ -100,7 +102,7 @@ final class TwigRender
         }
 
         return array_replace_recursive([
-            'authenticatedUser' => prepareForView($this->authentication->getAuthenticatedUser($request)),
+            'authenticatedUser' => \Energycalculator\prepareForView($this->authentication->getAuthenticatedUser($request)),
             'csrf' => $this->session->get($request, CsrfErrorResponseMiddleware::CSRF_KEY),
             'debug' => $this->debug,
             'flashMessage' => $this->session->getFlash($request),
